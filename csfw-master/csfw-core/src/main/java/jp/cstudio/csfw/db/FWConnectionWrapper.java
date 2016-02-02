@@ -23,335 +23,348 @@ import jp.cstudio.csfw.db.FWStatement;
 // Connectionのメソッドを隠蔽したアプリケーション利用クラス
 public class FWConnectionWrapper implements FWFullConnection {
 
-    private Connection connection;
+  private Connection connection;
 
-    FWConnectionWrapper(Connection connection) {
+  FWConnectionWrapper(Connection connection) {
 
-        this.connection = connection;
-    }
+    this.connection = connection;
+  }
 
-    /* ラッパーメソッド */
+  /* ラッパーメソッド */
 
-    @Override
-    public FWStatement createStatement() throws SQLException {
+  @Override
+  public FWStatement createStatement() throws SQLException {
 
-        return new FWStatementWrapper(connection.createStatement());
-    }
+    return new FWStatementWrapper(connection.createStatement());
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql) throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql));
-    }
+    return new FWPreparedStatementWrapper(connection.prepareStatement(sql));
+  }
 
-    @Override
-    public FWCallableStatementWrapper prepareCall(String sql) throws SQLException {
+  @Override
+  public FWCallableStatementWrapper prepareCall(String sql) throws SQLException {
 
-        return new FWCallableStatementWrapper(connection.prepareCall(sql));
-    }
+    return new FWCallableStatementWrapper(connection.prepareCall(sql));
+  }
 
-    @Override
-    public String nativeSQL(String sql) throws SQLException {
+  @Override
+  public String nativeSQL(String sql) throws SQLException {
 
-        return connection.nativeSQL(sql);
-    }
+    return connection.nativeSQL(sql);
+  }
 
-    @Override
-    public boolean getAutoCommit() throws SQLException {
+  @Override
+  public boolean getAutoCommit() throws SQLException {
 
-        return connection.getAutoCommit();
-    }
+    return connection.getAutoCommit();
+  }
 
-    @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
+  @Override
+  public DatabaseMetaData getMetaData() throws SQLException {
 
-        return connection.getMetaData();
-    }
+    return connection.getMetaData();
+  }
 
-    @Override
-    public String getCatalog() throws SQLException {
+  @Override
+  public String getCatalog() throws SQLException {
 
-        return connection.getCatalog();
-    }
+    return connection.getCatalog();
+  }
 
-    @Override
-    public void setTransactionIsolation(int level) throws SQLException {
+  @Override
+  public void setTransactionIsolation(int level) throws SQLException {
 
-        connection.setTransactionIsolation(level);
-    }
+    connection.setTransactionIsolation(level);
+  }
 
-    @Override
-    public int getTransactionIsolation() throws SQLException {
+  @Override
+  public int getTransactionIsolation() throws SQLException {
 
-        return connection.getTransactionIsolation();
-    }
+    return connection.getTransactionIsolation();
+  }
 
-    @Override
-    public FWStatement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+  @Override
+  public FWStatement createStatement(int resultSetType, int resultSetConcurrency)
+      throws SQLException {
 
-        return new FWStatementWrapper(connection.createStatement(resultSetType, resultSetConcurrency));
-    }
+    return new FWStatementWrapper(connection.createStatement(resultSetType, resultSetConcurrency));
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql, int resultSetType,
+      int resultSetConcurrency) throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql, resultSetType, resultSetConcurrency));
-    }
+    return new FWPreparedStatementWrapper(
+        connection.prepareStatement(sql, resultSetType, resultSetConcurrency));
+  }
 
-    @Override
-    public FWCallableStatementWrapper prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+  @Override
+  public FWCallableStatementWrapper prepareCall(String sql, int resultSetType,
+      int resultSetConcurrency) throws SQLException {
 
-        return new FWCallableStatementWrapper(connection.prepareCall(sql, resultSetType, resultSetConcurrency));
-    }
+    return new FWCallableStatementWrapper(
+        connection.prepareCall(sql, resultSetType, resultSetConcurrency));
+  }
 
-    @Override
-    public Map<String, Class<?>> getTypeMap() throws SQLException {
+  @Override
+  public Map<String, Class<?>> getTypeMap() throws SQLException {
 
-        return connection.getTypeMap();
-    }
+    return connection.getTypeMap();
+  }
 
-    @Override
-    public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
+  @Override
+  public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
 
-        connection.setTypeMap(map);
-    }
+    connection.setTypeMap(map);
+  }
 
-    @Override
-    public FWStatement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+  @Override
+  public FWStatement createStatement(int resultSetType, int resultSetConcurrency,
+      int resultSetHoldability) throws SQLException {
 
-        return new FWStatementWrapper(connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
-    }
+    return new FWStatementWrapper(
+        connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql, int resultSetType,
+      int resultSetConcurrency, int resultSetHoldability) throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-    }
+    return new FWPreparedStatementWrapper(connection.prepareStatement(sql, resultSetType,
+        resultSetConcurrency, resultSetHoldability));
+  }
 
-    @Override
-    public FWCallableStatementWrapper prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+  @Override
+  public FWCallableStatementWrapper prepareCall(String sql, int resultSetType,
+      int resultSetConcurrency, int resultSetHoldability) throws SQLException {
 
-        return new FWCallableStatementWrapper(connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-    }
+    return new FWCallableStatementWrapper(
+        connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
+      throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql, autoGeneratedKeys));
-    }
+    return new FWPreparedStatementWrapper(connection.prepareStatement(sql, autoGeneratedKeys));
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql, columnIndexes));
-    }
+    return new FWPreparedStatementWrapper(connection.prepareStatement(sql, columnIndexes));
+  }
 
-    @Override
-    public FWPreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+  @Override
+  public FWPreparedStatement prepareStatement(String sql, String[] columnNames)
+      throws SQLException {
 
-        return new FWPreparedStatementWrapper(connection.prepareStatement(sql, columnNames));
-    }
+    return new FWPreparedStatementWrapper(connection.prepareStatement(sql, columnNames));
+  }
 
-    @Override
-    public Clob createClob() throws SQLException {
+  @Override
+  public Clob createClob() throws SQLException {
 
-        return connection.createClob();
-    }
+    return connection.createClob();
+  }
 
-    @Override
-    public Blob createBlob() throws SQLException {
+  @Override
+  public Blob createBlob() throws SQLException {
 
-        return connection.createBlob();
-    }
+    return connection.createBlob();
+  }
 
-    @Override
-    public NClob createNClob() throws SQLException {
+  @Override
+  public NClob createNClob() throws SQLException {
 
-        return connection.createNClob();
-    }
+    return connection.createNClob();
+  }
 
-    @Override
-    public SQLXML createSQLXML() throws SQLException {
+  @Override
+  public SQLXML createSQLXML() throws SQLException {
 
-        return connection.createSQLXML();
-    }
+    return connection.createSQLXML();
+  }
 
-    @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+  @Override
+  public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
 
-        return connection.createArrayOf(typeName, elements);
-    }
+    return connection.createArrayOf(typeName, elements);
+  }
 
-    @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+  @Override
+  public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 
-        return connection.createStruct(typeName, attributes);
-    }
+    return connection.createStruct(typeName, attributes);
+  }
 
-    @Override
-    public void setSchema(String schema) throws SQLException {
+  @Override
+  public void setSchema(String schema) throws SQLException {
 
-        connection.setSchema(schema);
-    }
+    connection.setSchema(schema);
+  }
 
-    @Override
-    public String getSchema() throws SQLException {
+  @Override
+  public String getSchema() throws SQLException {
 
-        return connection.getSchema();
-    }
+    return connection.getSchema();
+  }
 
-    @Override
-    public int getNetworkTimeout() throws SQLException {
+  @Override
+  public int getNetworkTimeout() throws SQLException {
 
-        return connection.getNetworkTimeout();
-    }
+    return connection.getNetworkTimeout();
+  }
 
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+  public <T> T unwrap(Class<T> iface) throws SQLException {
 
-        return connection.unwrap(iface);
-    }
+    return connection.unwrap(iface);
+  }
 
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+  public boolean isWrapperFor(Class<?> iface) throws SQLException {
 
-        return connection.isWrapperFor(iface);
-    }
+    return connection.isWrapperFor(iface);
+  }
 
-    @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+  @Override
+  public void setAutoCommit(boolean autoCommit) throws SQLException {
 
-        connection.setAutoCommit(autoCommit);
-    }
+    connection.setAutoCommit(autoCommit);
+  }
 
-    @Override
-    public void commit() throws SQLException {
+  @Override
+  public void commit() throws SQLException {
 
-        connection.commit();
-    }
+    connection.commit();
+  }
 
-    @Override
-    public void rollback() throws SQLException {
+  @Override
+  public void rollback() throws SQLException {
 
-        connection.rollback();
-    }
+    connection.rollback();
+  }
 
-    @Override
-    public void close() throws SQLException {
+  @Override
+  public void close() throws SQLException {
 
-        connection.close();
-    }
+    connection.close();
+  }
 
-    @Override
-    public boolean isClosed() throws SQLException {
+  @Override
+  public boolean isClosed() throws SQLException {
 
-        return connection.isClosed();
-    }
+    return connection.isClosed();
+  }
 
-    @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
+  @Override
+  public void setReadOnly(boolean readOnly) throws SQLException {
 
-        connection.setReadOnly(readOnly);
-    }
+    connection.setReadOnly(readOnly);
+  }
 
-    @Override
-    public boolean isReadOnly() throws SQLException {
+  @Override
+  public boolean isReadOnly() throws SQLException {
 
-        return connection.isReadOnly();
-    }
+    return connection.isReadOnly();
+  }
 
-    @Override
-    public void setCatalog(String catalog) throws SQLException {
+  @Override
+  public void setCatalog(String catalog) throws SQLException {
 
-        connection.setCatalog(catalog);
-    }
+    connection.setCatalog(catalog);
+  }
 
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
+  @Override
+  public SQLWarning getWarnings() throws SQLException {
 
-        return connection.getWarnings();
-    }
+    return connection.getWarnings();
+  }
 
-    @Override
-    public void clearWarnings() throws SQLException {
+  @Override
+  public void clearWarnings() throws SQLException {
 
-        connection.clearWarnings();
-    }
+    connection.clearWarnings();
+  }
 
-    @Override
-    public void setHoldability(int holdability) throws SQLException {
+  @Override
+  public void setHoldability(int holdability) throws SQLException {
 
-        connection.setHoldability(holdability);
-    }
+    connection.setHoldability(holdability);
+  }
 
-    @Override
-    public int getHoldability() throws SQLException {
+  @Override
+  public int getHoldability() throws SQLException {
 
-        return connection.getHoldability();
-    }
+    return connection.getHoldability();
+  }
 
-    @Override
-    public Savepoint setSavepoint() throws SQLException {
+  @Override
+  public Savepoint setSavepoint() throws SQLException {
 
-        return connection.setSavepoint();
-    }
+    return connection.setSavepoint();
+  }
 
-    @Override
-    public Savepoint setSavepoint(String name) throws SQLException {
+  @Override
+  public Savepoint setSavepoint(String name) throws SQLException {
 
-        return connection.setSavepoint(name);
-    }
+    return connection.setSavepoint(name);
+  }
 
-    @Override
-    public void rollback(Savepoint savepoint) throws SQLException {
+  @Override
+  public void rollback(Savepoint savepoint) throws SQLException {
 
-        connection.rollback(savepoint);
-    }
+    connection.rollback(savepoint);
+  }
 
-    @Override
-    public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+  @Override
+  public void releaseSavepoint(Savepoint savepoint) throws SQLException {
 
-        connection.releaseSavepoint(savepoint);
-    }
+    connection.releaseSavepoint(savepoint);
+  }
 
-    @Override
-    public boolean isValid(int timeout) throws SQLException {
+  @Override
+  public boolean isValid(int timeout) throws SQLException {
 
-        return connection.isValid(timeout);
-    }
+    return connection.isValid(timeout);
+  }
 
-    @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+  @Override
+  public void setClientInfo(String name, String value) throws SQLClientInfoException {
 
-        connection.setClientInfo(name, value);
-    }
+    connection.setClientInfo(name, value);
+  }
 
-    @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+  @Override
+  public void setClientInfo(Properties properties) throws SQLClientInfoException {
 
-        connection.setClientInfo(properties);
-    }
+    connection.setClientInfo(properties);
+  }
 
-    @Override
-    public String getClientInfo(String name) throws SQLException {
+  @Override
+  public String getClientInfo(String name) throws SQLException {
 
-        return connection.getClientInfo(name);
-    }
+    return connection.getClientInfo(name);
+  }
 
-    @Override
-    public Properties getClientInfo() throws SQLException {
+  @Override
+  public Properties getClientInfo() throws SQLException {
 
-        return connection.getClientInfo();
-    }
+    return connection.getClientInfo();
+  }
 
-    @Override
-    public void abort(Executor executor) throws SQLException {
+  @Override
+  public void abort(Executor executor) throws SQLException {
 
-        connection.abort(executor);
-    }
+    connection.abort(executor);
+  }
 
-    @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+  @Override
+  public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
 
-        connection.setNetworkTimeout(executor, milliseconds);
-    }
+    connection.setNetworkTimeout(executor, milliseconds);
+  }
 
 }

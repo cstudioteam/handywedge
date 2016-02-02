@@ -2,14 +2,14 @@ package jp.cstudio.csfw.db;
 
 public interface FWFullConnectionManager extends FWConnectionManager {
 
-    FWFullConnection getConnection(String dataSource);
+  FWFullConnection getConnection(String dataSource);
 
-    @Override
-    FWFullConnection getConnection();
+  @Override
+  FWFullConnection getConnection();
 
-    void addStatement(FWStatement statement);
+  void addStatement(FWStatement statement);
 
-    void addResltSet(FWResultSet resultSet);
+  void addResltSet(FWResultSet resultSet);
 
-    void close();
+  void close();
 }

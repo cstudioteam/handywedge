@@ -21,68 +21,68 @@ import jp.cstudio.csfw.log.FWLogger;
 @RequestScoped
 public class FWConnectionManagerImpl implements FWFullConnectionManager {
 
-    // REQUIRED以外のネストしたトランザクションは考慮していない
-    private FWFullConnection connection = null;
-    private List<FWStatement> statements = new ArrayList<>();
-    private List<FWResultSet> resultSets = new ArrayList<>();
+  // REQUIRED以外のネストしたトランザクションは考慮していない
+  private FWFullConnection connection = null;
+  private List<FWStatement> statements = new ArrayList<>();
+  private List<FWResultSet> resultSets = new ArrayList<>();
 
-    @Inject
-    private FWLogger logger;
+  @Inject
+  private FWLogger logger;
 
-    @Override
-    public FWFullConnection getConnection(String dataSourceName) {
+  @Override
+  public FWFullConnection getConnection(String dataSourceName) {
 
-        DataSource dataSource;
-        try {
-            dataSource = (DataSource) InitialContext.doLookup("java:comp/env/" + dataSourceName);
-        } catch (NamingException e) {
-            throw new FWRuntimeException(FWConstantCode.DS_LOOKUP_FAIL, e);
+    DataSource dataSource;
+    try {
+      dataSource = (DataSource) InitialContext.doLookup("java:comp/env/" + dataSourceName);
+    } catch (NamingException e) {
+      throw new FWRuntimeException(FWConstantCode.DS_LOOKUP_FAIL, e);
+    }
+    try {
+      connection = new FWConnectionWrapper(dataSource.getConnection());
+      return connection;
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
+  }
+
+  @Override
+  public FWFullConnection getConnection() {
+
+    return connection;
+  }
+
+  @Override
+  public void addStatement(FWStatement statement) {
+
+    statements.add(statement);
+  }
+
+  @Override
+  public void addResltSet(FWResultSet resultSet) {
+
+    resultSets.add(resultSet);
+  }
+
+  @Override
+  public void close() {
+
+    try {
+      for (FWResultSet rs : resultSets) {
+        if (!rs.isClosed()) {
+          logger.warn("FWResulstSet not closed.");
+          rs.close();
         }
-        try {
-            connection = new FWConnectionWrapper(dataSource.getConnection());
-            return connection;
-        } catch (SQLException e) {
-            throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+      }
+      for (FWStatement s : statements) {
+        if (!s.isClosed()) {
+          logger.warn("FWStatement not closed.");
+          s.close();
         }
+      }
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
-
-    @Override
-    public FWFullConnection getConnection() {
-
-        return connection;
-    }
-
-    @Override
-    public void addStatement(FWStatement statement) {
-
-        statements.add(statement);
-    }
-
-    @Override
-    public void addResltSet(FWResultSet resultSet) {
-
-        resultSets.add(resultSet);
-    }
-
-    @Override
-    public void close() {
-
-        try {
-            for (FWResultSet rs : resultSets) {
-                if (!rs.isClosed()) {
-                    logger.warn("FWResulstSet not closed.");
-                    rs.close();
-                }
-            }
-            for (FWStatement s : statements) {
-                if (!s.isClosed()) {
-                    logger.warn("FWStatement not closed.");
-                    s.close();
-                }
-            }
-        } catch (SQLException e) {
-            throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
-        }
-    }
+  }
 
 }

@@ -9,9 +9,9 @@ import jp.cstudio.csfw.log.FWLogger;
 @Dependent
 public class FWLoggerProducer {
 
-    @Produces
-    public FWLogger getLogger(InjectionPoint ip) {
+  @Produces
+  public FWLogger getLogger(InjectionPoint ip) {
 
-        return FWLoggerFactory.getLogger(ip.getMember().getDeclaringClass());
-    }
+    return FWLoggerFactory.getLogger(ip.getMember().getDeclaringClass());
+  }
 }

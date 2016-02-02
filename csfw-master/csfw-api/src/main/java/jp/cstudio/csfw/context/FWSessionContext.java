@@ -10,12 +10,12 @@ import jp.cstudio.csfw.user.FWFullUser;
  */
 public interface FWSessionContext extends Serializable {
 
-    Date getLastAccessTime();
+  Date getLastAccessTime();
 
-    void setLastAccessTime(Date lastAccessTime);
+  void setLastAccessTime(Date lastAccessTime);
 
-    FWFullUser getUser();
+  FWFullUser getUser();
 
-    void setUser(FWFullUser user);
+  void setUser(FWFullUser user);
 
 }

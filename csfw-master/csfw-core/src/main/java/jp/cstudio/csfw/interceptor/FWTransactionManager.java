@@ -5,21 +5,21 @@ import javax.enterprise.context.RequestScoped;
 @RequestScoped
 public class FWTransactionManager {
 
-    private int layer = 0;
+  private int layer = 0;
 
-    boolean isTopLayer() {
+  boolean isTopLayer() {
 
-        return layer == 0;
-    }
+    return layer == 0;
+  }
 
-    void incrementLayer() {
+  void incrementLayer() {
 
-        layer++;
-    }
+    layer++;
+  }
 
-    void decrementLayer() {
+  void decrementLayer() {
 
-        layer--;
-    }
+    layer--;
+  }
 
 }

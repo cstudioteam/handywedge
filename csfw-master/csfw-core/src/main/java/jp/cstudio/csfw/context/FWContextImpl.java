@@ -15,97 +15,97 @@ import jp.cstudio.csfw.user.FWUser;
 @RequestScoped
 public class FWContextImpl implements FWFullContext {
 
-    @Inject
-    private FWApplicationContext applicationContext;
+  @Inject
+  private FWApplicationContext applicationContext;
 
-    @Inject
-    private FWSessionContext sessionContext;
+  @Inject
+  private FWSessionContext sessionContext;
 
-    @Inject
-    private FWRequestContext requestContext;
+  @Inject
+  private FWRequestContext requestContext;
 
-    @Override
-    public String getRequestId() {
+  @Override
+  public String getRequestId() {
 
-        return requestContext.getRequestId();
-    }
+    return requestContext.getRequestId();
+  }
 
-    @Override
-    public void setRequestId(String requestId) {
+  @Override
+  public void setRequestId(String requestId) {
 
-        requestContext.setRequestId(requestId);
-    }
+    requestContext.setRequestId(requestId);
+  }
 
-    @Override
-    public String getApplicationId() {
+  @Override
+  public String getApplicationId() {
 
-        return applicationContext.getApplicationId();
-    }
+    return applicationContext.getApplicationId();
+  }
 
-    @Override
-    public Date getLastAccessTime() {
+  @Override
+  public Date getLastAccessTime() {
 
-        return sessionContext.getLastAccessTime();
-    }
+    return sessionContext.getLastAccessTime();
+  }
 
-    @Override
-    public void setLastAccessTime(Date lastAccessTime) {
+  @Override
+  public void setLastAccessTime(Date lastAccessTime) {
 
-        sessionContext.setLastAccessTime(lastAccessTime);
-    }
+    sessionContext.setLastAccessTime(lastAccessTime);
+  }
 
-    @Override
-    public String getContextPath() {
+  @Override
+  public String getContextPath() {
 
-        return requestContext.getContextPath();
-    }
+    return requestContext.getContextPath();
+  }
 
-    @Override
-    public void setContextPath(String contextPath) {
+  @Override
+  public void setContextPath(String contextPath) {
 
-        requestContext.setContextPath(contextPath);
-    }
+    requestContext.setContextPath(contextPath);
+  }
 
-    @Override
-    public String getHostName() {
+  @Override
+  public String getHostName() {
 
-        return applicationContext.getHostName();
-    }
+    return applicationContext.getHostName();
+  }
 
-    @Override
-    public void setHostName(String hostName) {
+  @Override
+  public void setHostName(String hostName) {
 
-        applicationContext.setHostName(hostName);
-    }
+    applicationContext.setHostName(hostName);
+  }
 
-    @Override
-    public Date getRequestStartTime() {
+  @Override
+  public Date getRequestStartTime() {
 
-        return requestContext.getRequestStartTime();
-    }
+    return requestContext.getRequestStartTime();
+  }
 
-    @Override
-    public void setRequestStartTime(Date requestStartTime) {
+  @Override
+  public void setRequestStartTime(Date requestStartTime) {
 
-        requestContext.setRequestStartTime(requestStartTime);
-    }
+    requestContext.setRequestStartTime(requestStartTime);
+  }
 
-    @Override
-    public void setApplicationId(String applicationId) {
+  @Override
+  public void setApplicationId(String applicationId) {
 
-        applicationContext.setApplicationId(applicationId);
-    }
+    applicationContext.setApplicationId(applicationId);
+  }
 
-    @Override
-    public void setUser(FWFullUser user) {
+  @Override
+  public void setUser(FWFullUser user) {
 
-        sessionContext.setUser(user);
-    }
+    sessionContext.setUser(user);
+  }
 
-    @Override
-    public FWUser getUser() {
+  @Override
+  public FWUser getUser() {
 
-        return sessionContext.getUser();
-    }
+    return sessionContext.getUser();
+  }
 
 }

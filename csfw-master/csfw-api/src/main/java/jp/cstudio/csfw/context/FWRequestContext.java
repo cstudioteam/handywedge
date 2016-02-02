@@ -7,16 +7,16 @@ import java.util.Date;
  */
 public interface FWRequestContext {
 
-    String getRequestId();
+  String getRequestId();
 
-    void setRequestId(String requestId);
+  void setRequestId(String requestId);
 
-    String getContextPath();
+  String getContextPath();
 
-    void setContextPath(String contextPath);
+  void setContextPath(String contextPath);
 
-    Date getRequestStartTime();
+  Date getRequestStartTime();
 
-    void setRequestStartTime(Date requestStartTime);
+  void setRequestStartTime(Date requestStartTime);
 
 }

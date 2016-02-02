@@ -12,325 +12,325 @@ import jp.cstudio.csfw.util.FWBeanManager;
 
 public class FWStatementWrapper implements FWFullStatement {
 
-    private Statement statement;
+  private Statement statement;
 
-    FWStatementWrapper(Statement statement) {
-        this.statement = statement;
-        FWFullConnectionManager manager = FWBeanManager.getBean(FWFullConnectionManager.class);
-        manager.addStatement(this);
-    }
+  FWStatementWrapper(Statement statement) {
+    this.statement = statement;
+    FWFullConnectionManager manager = FWBeanManager.getBean(FWFullConnectionManager.class);
+    manager.addStatement(this);
+  }
 
-    /* ラッパーメソッド */
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+  /* ラッパーメソッド */
+  @Override
+  public <T> T unwrap(Class<T> iface) throws SQLException {
 
-        return statement.unwrap(iface);
-    }
+    return statement.unwrap(iface);
+  }
 
-    @Override
-    public FWResultSet executeQuery(String sql) throws SQLException {
+  @Override
+  public FWResultSet executeQuery(String sql) throws SQLException {
 
-        return new FWResultSetWrapper(statement.executeQuery(sql));
-    }
+    return new FWResultSetWrapper(statement.executeQuery(sql));
+  }
 
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+  @Override
+  public boolean isWrapperFor(Class<?> iface) throws SQLException {
 
-        return statement.isWrapperFor(iface);
-    }
+    return statement.isWrapperFor(iface);
+  }
 
-    @Override
-    public int executeUpdate(String sql) throws SQLException {
+  @Override
+  public int executeUpdate(String sql) throws SQLException {
 
-        return statement.executeUpdate(sql);
-    }
+    return statement.executeUpdate(sql);
+  }
 
-    @Override
-    public void close() throws SQLException {
+  @Override
+  public void close() throws SQLException {
 
-        statement.close();
-    }
+    statement.close();
+  }
 
-    @Override
-    public int getMaxFieldSize() throws SQLException {
+  @Override
+  public int getMaxFieldSize() throws SQLException {
 
-        return statement.getMaxFieldSize();
-    }
+    return statement.getMaxFieldSize();
+  }
 
-    @Override
-    public void setMaxFieldSize(int max) throws SQLException {
+  @Override
+  public void setMaxFieldSize(int max) throws SQLException {
 
-        statement.setMaxFieldSize(max);
-    }
+    statement.setMaxFieldSize(max);
+  }
 
-    @Override
-    public int getMaxRows() throws SQLException {
+  @Override
+  public int getMaxRows() throws SQLException {
 
-        return statement.getMaxRows();
-    }
+    return statement.getMaxRows();
+  }
 
-    @Override
-    public void setMaxRows(int max) throws SQLException {
+  @Override
+  public void setMaxRows(int max) throws SQLException {
 
-        statement.setMaxRows(max);
-    }
+    statement.setMaxRows(max);
+  }
 
-    @Override
-    public void setEscapeProcessing(boolean enable) throws SQLException {
+  @Override
+  public void setEscapeProcessing(boolean enable) throws SQLException {
 
-        statement.setEscapeProcessing(enable);
-    }
+    statement.setEscapeProcessing(enable);
+  }
 
-    @Override
-    public int getQueryTimeout() throws SQLException {
+  @Override
+  public int getQueryTimeout() throws SQLException {
 
-        return statement.getQueryTimeout();
-    }
+    return statement.getQueryTimeout();
+  }
 
-    @Override
-    public void setQueryTimeout(int seconds) throws SQLException {
+  @Override
+  public void setQueryTimeout(int seconds) throws SQLException {
 
-        statement.setQueryTimeout(seconds);
-    }
+    statement.setQueryTimeout(seconds);
+  }
 
-    @Override
-    public void cancel() throws SQLException {
+  @Override
+  public void cancel() throws SQLException {
 
-        statement.cancel();
-    }
+    statement.cancel();
+  }
 
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
+  @Override
+  public SQLWarning getWarnings() throws SQLException {
 
-        return statement.getWarnings();
-    }
+    return statement.getWarnings();
+  }
 
-    @Override
-    public void clearWarnings() throws SQLException {
+  @Override
+  public void clearWarnings() throws SQLException {
 
-        statement.clearWarnings();
-    }
+    statement.clearWarnings();
+  }
 
-    @Override
-    public void setCursorName(String name) throws SQLException {
+  @Override
+  public void setCursorName(String name) throws SQLException {
 
-        statement.setCursorName(name);
-    }
+    statement.setCursorName(name);
+  }
 
-    @Override
-    public boolean execute(String sql) throws SQLException {
+  @Override
+  public boolean execute(String sql) throws SQLException {
 
-        return statement.execute(sql);
-    }
+    return statement.execute(sql);
+  }
 
-    @Override
-    public FWResultSet getResultSet() throws SQLException {
+  @Override
+  public FWResultSet getResultSet() throws SQLException {
 
-        return new FWResultSetWrapper(statement.getResultSet());
-    }
+    return new FWResultSetWrapper(statement.getResultSet());
+  }
 
-    @Override
-    public int getUpdateCount() throws SQLException {
+  @Override
+  public int getUpdateCount() throws SQLException {
 
-        return statement.getUpdateCount();
-    }
+    return statement.getUpdateCount();
+  }
 
-    @Override
-    public boolean getMoreResults() throws SQLException {
+  @Override
+  public boolean getMoreResults() throws SQLException {
 
-        return statement.getMoreResults();
-    }
+    return statement.getMoreResults();
+  }
 
-    @Override
-    public void setFetchDirection(int direction) throws SQLException {
+  @Override
+  public void setFetchDirection(int direction) throws SQLException {
 
-        statement.setFetchDirection(direction);
-    }
+    statement.setFetchDirection(direction);
+  }
 
-    @Override
-    public int getFetchDirection() throws SQLException {
+  @Override
+  public int getFetchDirection() throws SQLException {
 
-        return statement.getFetchDirection();
-    }
+    return statement.getFetchDirection();
+  }
 
-    @Override
-    public void setFetchSize(int rows) throws SQLException {
+  @Override
+  public void setFetchSize(int rows) throws SQLException {
 
-        statement.setFetchSize(rows);
-    }
+    statement.setFetchSize(rows);
+  }
 
-    @Override
-    public int getFetchSize() throws SQLException {
+  @Override
+  public int getFetchSize() throws SQLException {
 
-        return statement.getFetchSize();
-    }
+    return statement.getFetchSize();
+  }
 
-    @Override
-    public int getResultSetConcurrency() throws SQLException {
+  @Override
+  public int getResultSetConcurrency() throws SQLException {
 
-        return statement.getResultSetConcurrency();
-    }
+    return statement.getResultSetConcurrency();
+  }
 
-    @Override
-    public int getResultSetType() throws SQLException {
+  @Override
+  public int getResultSetType() throws SQLException {
 
-        return statement.getResultSetType();
-    }
+    return statement.getResultSetType();
+  }
 
-    @Override
-    public void addBatch(String sql) throws SQLException {
+  @Override
+  public void addBatch(String sql) throws SQLException {
 
-        statement.addBatch(sql);
-    }
+    statement.addBatch(sql);
+  }
 
-    @Override
-    public void clearBatch() throws SQLException {
+  @Override
+  public void clearBatch() throws SQLException {
 
-        statement.clearBatch();
-    }
+    statement.clearBatch();
+  }
 
-    @Override
-    public int[] executeBatch() throws SQLException {
+  @Override
+  public int[] executeBatch() throws SQLException {
 
-        return statement.executeBatch();
-    }
+    return statement.executeBatch();
+  }
 
-    @Override
-    public FWConnection getConnection() throws SQLException {
+  @Override
+  public FWConnection getConnection() throws SQLException {
 
-        return new FWConnectionWrapper(statement.getConnection());
-    }
+    return new FWConnectionWrapper(statement.getConnection());
+  }
 
-    @Override
-    public boolean getMoreResults(int current) throws SQLException {
+  @Override
+  public boolean getMoreResults(int current) throws SQLException {
 
-        return statement.getMoreResults(current);
-    }
+    return statement.getMoreResults(current);
+  }
 
-    @Override
-    public FWResultSet getGeneratedKeys() throws SQLException {
+  @Override
+  public FWResultSet getGeneratedKeys() throws SQLException {
 
-        return new FWResultSetWrapper(statement.getGeneratedKeys());
-    }
+    return new FWResultSetWrapper(statement.getGeneratedKeys());
+  }
 
-    @Override
-    public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
+  @Override
+  public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
 
-        return statement.executeUpdate(sql, autoGeneratedKeys);
-    }
+    return statement.executeUpdate(sql, autoGeneratedKeys);
+  }
 
-    @Override
-    public int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
+  @Override
+  public int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
 
-        return statement.executeUpdate(sql, columnIndexes);
-    }
+    return statement.executeUpdate(sql, columnIndexes);
+  }
 
-    @Override
-    public int executeUpdate(String sql, String[] columnNames) throws SQLException {
+  @Override
+  public int executeUpdate(String sql, String[] columnNames) throws SQLException {
 
-        return statement.executeUpdate(sql, columnNames);
-    }
+    return statement.executeUpdate(sql, columnNames);
+  }
 
-    @Override
-    public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
+  @Override
+  public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
 
-        return statement.execute(sql, autoGeneratedKeys);
-    }
+    return statement.execute(sql, autoGeneratedKeys);
+  }
 
-    @Override
-    public boolean execute(String sql, int[] columnIndexes) throws SQLException {
+  @Override
+  public boolean execute(String sql, int[] columnIndexes) throws SQLException {
 
-        return statement.execute(sql, columnIndexes);
-    }
+    return statement.execute(sql, columnIndexes);
+  }
 
-    @Override
-    public boolean execute(String sql, String[] columnNames) throws SQLException {
+  @Override
+  public boolean execute(String sql, String[] columnNames) throws SQLException {
 
-        return statement.execute(sql, columnNames);
-    }
+    return statement.execute(sql, columnNames);
+  }
 
-    @Override
-    public int getResultSetHoldability() throws SQLException {
+  @Override
+  public int getResultSetHoldability() throws SQLException {
 
-        return statement.getResultSetHoldability();
-    }
+    return statement.getResultSetHoldability();
+  }
 
-    @Override
-    public boolean isClosed() throws SQLException {
+  @Override
+  public boolean isClosed() throws SQLException {
 
-        return statement.isClosed();
-    }
+    return statement.isClosed();
+  }
 
-    @Override
-    public void setPoolable(boolean poolable) throws SQLException {
+  @Override
+  public void setPoolable(boolean poolable) throws SQLException {
 
-        statement.setPoolable(poolable);
-    }
+    statement.setPoolable(poolable);
+  }
 
-    @Override
-    public boolean isPoolable() throws SQLException {
+  @Override
+  public boolean isPoolable() throws SQLException {
 
-        return statement.isPoolable();
-    }
+    return statement.isPoolable();
+  }
 
-    @Override
-    public void closeOnCompletion() throws SQLException {
+  @Override
+  public void closeOnCompletion() throws SQLException {
 
-        statement.closeOnCompletion();
-    }
+    statement.closeOnCompletion();
+  }
 
-    @Override
-    public boolean isCloseOnCompletion() throws SQLException {
+  @Override
+  public boolean isCloseOnCompletion() throws SQLException {
 
-        return statement.isCloseOnCompletion();
-    }
+    return statement.isCloseOnCompletion();
+  }
 
-    @Override
-    public long getLargeUpdateCount() throws SQLException {
+  @Override
+  public long getLargeUpdateCount() throws SQLException {
 
-        return statement.getLargeUpdateCount();
-    }
+    return statement.getLargeUpdateCount();
+  }
 
-    @Override
-    public void setLargeMaxRows(long max) throws SQLException {
+  @Override
+  public void setLargeMaxRows(long max) throws SQLException {
 
-        statement.setLargeMaxRows(max);
-    }
+    statement.setLargeMaxRows(max);
+  }
 
-    @Override
-    public long getLargeMaxRows() throws SQLException {
+  @Override
+  public long getLargeMaxRows() throws SQLException {
 
-        return statement.getLargeMaxRows();
-    }
+    return statement.getLargeMaxRows();
+  }
 
-    @Override
-    public long[] executeLargeBatch() throws SQLException {
+  @Override
+  public long[] executeLargeBatch() throws SQLException {
 
-        return statement.executeLargeBatch();
-    }
+    return statement.executeLargeBatch();
+  }
 
-    @Override
-    public long executeLargeUpdate(String sql) throws SQLException {
+  @Override
+  public long executeLargeUpdate(String sql) throws SQLException {
 
-        return statement.executeLargeUpdate(sql);
-    }
+    return statement.executeLargeUpdate(sql);
+  }
 
-    @Override
-    public long executeLargeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
+  @Override
+  public long executeLargeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
 
-        return statement.executeLargeUpdate(sql, autoGeneratedKeys);
-    }
+    return statement.executeLargeUpdate(sql, autoGeneratedKeys);
+  }
 
-    @Override
-    public long executeLargeUpdate(String sql, int[] columnIndexes) throws SQLException {
+  @Override
+  public long executeLargeUpdate(String sql, int[] columnIndexes) throws SQLException {
 
-        return statement.executeLargeUpdate(sql, columnIndexes);
-    }
+    return statement.executeLargeUpdate(sql, columnIndexes);
+  }
 
-    @Override
-    public long executeLargeUpdate(String sql, String[] columnNames) throws SQLException {
+  @Override
+  public long executeLargeUpdate(String sql, String[] columnNames) throws SQLException {
 
-        return statement.executeLargeUpdate(sql, columnNames);
-    }
+    return statement.executeLargeUpdate(sql, columnNames);
+  }
 
 }

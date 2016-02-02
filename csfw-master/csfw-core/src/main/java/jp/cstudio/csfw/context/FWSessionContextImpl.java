@@ -17,12 +17,12 @@ import lombok.Data;
 @SessionScoped
 public class FWSessionContextImpl implements FWSessionContext {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private Date lastAccessTime;
-    private Locale locale;
+  private Date lastAccessTime;
+  private Locale locale;
 
-    @Inject
-    private FWFullUser user;
+  @Inject
+  private FWFullUser user;
 
 }

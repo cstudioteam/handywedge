@@ -5,12 +5,12 @@ import java.util.Locale;
 
 public interface FWUser extends Serializable {
 
-    String getId();
+  String getId();
 
-    String getName();
+  String getName();
 
-    Locale getLanguage();
+  Locale getLanguage();
 
-    void setLanguage(Locale language);
+  void setLanguage(Locale language);
 
 }

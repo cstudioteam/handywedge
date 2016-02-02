@@ -11,8 +11,8 @@ import lombok.Data;
 @RequestScoped
 public class FWRequestContextImpl implements FWRequestContext {
 
-    private String requestId;
-    private String contextPath;
-    private Date requestStartTime;
+  private String requestId;
+  private String contextPath;
+  private Date requestStartTime;
 
 }

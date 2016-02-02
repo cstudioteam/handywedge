@@ -9,7 +9,7 @@ import lombok.Data;
 @ApplicationScoped
 public class FWApplicationContextImpl implements FWApplicationContext {
 
-    private String hostName;
-    private String applicationId;
+  private String hostName;
+  private String applicationId;
 
 }

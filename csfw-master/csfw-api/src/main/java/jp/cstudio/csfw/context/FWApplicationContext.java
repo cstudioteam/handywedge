@@ -2,12 +2,12 @@ package jp.cstudio.csfw.context;
 
 public interface FWApplicationContext {
 
-    String getHostName();
+  String getHostName();
 
-    void setHostName(String hostName);
+  void setHostName(String hostName);
 
-    String getApplicationId();
+  String getApplicationId();
 
-    void setApplicationId(String applicationId);
+  void setApplicationId(String applicationId);
 
 }

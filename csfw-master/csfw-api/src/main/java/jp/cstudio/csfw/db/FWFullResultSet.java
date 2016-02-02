@@ -5,10 +5,10 @@ import java.sql.SQLWarning;
 
 public interface FWFullResultSet extends FWResultSet {
 
-    SQLWarning getWarnings() throws SQLException;
+  SQLWarning getWarnings() throws SQLException;
 
-    void clearWarnings() throws SQLException;
+  void clearWarnings() throws SQLException;
 
-    String getCursorName() throws SQLException;
+  String getCursorName() throws SQLException;
 
 }
