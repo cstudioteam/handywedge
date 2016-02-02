@@ -1,1 +1,5 @@
 /target/
+src/test/*
+!src/test/java/
+!src/test/resources/
+!.gitkeep
