@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+  <Properties>
+    <!-- Eclipseでフォーマット改行させないためにCDATAセクションに -->
+    <Property name="pattern"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[%mdc{logName}]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
+    <!-- JDBC関連ログをAOPでlogNameを設定したい。とりあえずはAppenderを分けてフォーマットを分ける -->
+    <Property name="pattern_jdbc"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[JDBC]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
+    <Property name="catalina_home">/opt/tomcat</Property>
+  </Properties>
+  <Appenders>
+    <Console
+      name="console"
+      target="SYSTEM_OUT"
+    >
+      <PatternLayout pattern="${pattern}" />
+    </Console>
+    <RollingFile
+      name="csf_test_app"
+      fileName="${catalina_home}/logs/csf_test_app.log"
+      filePattern="${catalina_home}/logs/csf_test_app_%d{yyyy-MM-dd}.gz"
+    >
+      <PatternLayout
+        pattern="${pattern}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+    <RollingFile
+      name="csf_test_app_jdbc"
+      fileName="${catalina_home}/logs/csf_test_app.log"
+      filePattern="${catalina_home}/logs/csf_test_app_%d{yyyy-MM-dd}.gz"
+    >
+      <PatternLayout
+        pattern="${pattern_jdbc}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+    <RollingFile
+      name="error"
+      fileName="${catalina_home}/logs/csf_error.log"
+      filePattern="${catalina_home}/logs/csf_error_%d{yyyy-MM-dd}.gz"
+    >
+      <PatternLayout
+        pattern="${pattern}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger
+      name="com.csframe"
+      level="debug"
+      additivity="false"
+    >
+      <AppenderRef ref="console" />
+      <AppenderRef ref="csf_test_app" />
+      <AppenderRef
+        ref="error"
+        level="warn" />
+    </Logger>
+    <Logger
+      name="jdbc.connection"
+      level="info"
+    >
+      <AppenderRef ref="console" />
+      <AppenderRef ref="csf_test_app_jdbc" />
+    </Logger>
+    <Logger
+      name="jdbc.sqltiming"
+      level="info"
+    >
+      <AppenderRef ref="console" />
+      <AppenderRef ref="csf_test_app_jdbc" />
+    </Logger>
+    <Logger
+      name="jdbc.audit"
+      level="info"
+    >
+      <AppenderRef ref="console" />
+      <AppenderRef ref="csf_test_app_jdbc" />
+    </Logger>
+    <Logger
+      name="jdbc.resultset"
+      level="info"
+    >
+      <AppenderRef ref="console" />
+      <AppenderRef ref="csf_test_app_jdbc" />
+    </Logger>
+    <Root level="info">
+      <AppenderRef ref="console" />
+      <AppenderRef ref="catalina" />
+    </Root>
+  </Loggers>
+</Configuration>

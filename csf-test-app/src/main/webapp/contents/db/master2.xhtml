@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/layout.xhtml">
+	<ui:define name="title">マスタ参照</ui:define>
+	<ui:define name="content">
+		<p:dataTable editable="true" editMode="cell" var="test"
+			value="#{dbMaster.test}" rowKey="#{test.key}">
+			<f:facet name="header">testテーブル</f:facet>
+			<p:ajax event="cellEdit" immediate="true"
+				listener="#{dbMaster.onCellEdit}" />
+			<p:column headerText="KEY">
+				<h:outputText value="#{test.key}" />
+			</p:column>
+			<p:column headerText="VALUE">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{test.value}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{test.value}" style="width:96%" label="VALUE" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+</ui:composition>

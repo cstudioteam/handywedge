@@ -1,0 +1,9 @@
+/* PrimeFacesの文字サイズを小さく */
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+
+/* メニューの枠線を消去 */
+.ui-menu {
+	border: none !important;
+}

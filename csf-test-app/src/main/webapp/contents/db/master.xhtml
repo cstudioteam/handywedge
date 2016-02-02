@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/layout.xhtml">
+	<ui:define name="title">マスタ参照</ui:define>
+	<ui:define name="content">
+		<p:dataScroller var="test" value="#{dbMaster.test}" chunkSize="10"
+			mode="inline" scrollHeight="300">
+			<f:facet name="header">
+				<span>TESTテーブル</span>
+			</f:facet>
+			<p:outputPanel>
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputText value="KEY:" />
+					<h:outputText value="#{test.key}" />
+					<h:outputText value="VALUE:" />
+					<h:outputText value="#{test.value}" />
+				</h:panelGrid>
+			</p:outputPanel>
+		</p:dataScroller>
+	</ui:define>
+</ui:composition>
