@@ -11,10 +11,6 @@ public interface FWRequestContext {
 
   void setRequestId(String requestId);
 
-  String getContextPath();
-
-  void setContextPath(String contextPath);
-
   Date getRequestStartTime();
 
   void setRequestStartTime(Date requestStartTime);

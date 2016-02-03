@@ -10,4 +10,8 @@ public interface FWApplicationContext {
 
   void setApplicationId(String applicationId);
 
+  String getContextPath();
+
+  void setContextPath(String contextPath);
+
 }

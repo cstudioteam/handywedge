@@ -1,37 +1,80 @@
 <!DOCTYPE html>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:jsf="http://xmlns.jcp.org/jsf/"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
-	<p:toolbar id="tb">
-		<f:facet name="left">
-			<h:outputLink value="http://www.cstudio.jp/">
-				<h:graphicImage url="/images/cstudio.png" height="17" />
-			</h:outputLink>
-			<h:outputLink value="/csfw-test-app/" style="text-decoration: none;">
-				<span style="margin-left: 2px;">Cスタジオフレームワーク</span>
-			</h:outputLink>
-		</f:facet>
-		<f:facet name="right" style="vertical-align: middle;">
-			<span class="ui-separator"> <span
-				class="ui-icon ui-icon-grip-dotted-vertical" />
-			</span>
-			<h:outputText value="#{topPage.user.name}" style="margin:5px;" />
-			<span class="ui-separator"> <span
-				class="ui-icon ui-icon-grip-dotted-vertical" />
-			</span>
-			<p:commandButton id="menu_btn" icon="fa fa-bars" />
-			<p:overlayPanel id="menu_panel" for="menu_btn" hideEffect="fade">
-				<h:panelGrid columns="1" cellpadding="0">
-					<h:commandLink action="#{menuView.setting}" value="設定"
-						style="text-decoration: none;" />
-					<h:commandLink action="#{menuView.logout}" value="ログアウト"
-						style="text-decoration: none;" />
-				</h:panelGrid>
-			</p:overlayPanel>
-		</f:facet>
-	</p:toolbar>
-	<p:sticky target="tb" />
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:jsf="http://xmlns.jcp.org/jsf/"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+>
+    <p:toolbar id="tb">
+        <f:facet name="left">
+            <h:outputLink value="http://www.cstudio.jp/">
+                <h:graphicImage
+                    url="/images/cstudio.png"
+                    height="17"
+                />
+            </h:outputLink>
+            <h:outputLink
+                value="#{fwContext.contextPath}/"
+                style="text-decoration: none;"
+            >
+                <span
+                    jsf:id="appTitle"
+                    style="margin-left: 2px;"
+                >#{messageResouces.get("app.title")}</span>
+            </h:outputLink>
+        </f:facet>
+        <f:facet
+            name="right"
+            style="vertical-align: middle;"
+        >
+            <h:selectOneMenu value="#{menuView.lang}">
+                <f:selectItems value="#{menuView.languages}" />
+                <f:ajax
+                    event="change"
+                    execute="@this"
+                    listener="#{menuView.change}"
+                    render="@form"
+                />
+            </h:selectOneMenu>
+            <span class="ui-separator"> <span class="ui-icon ui-icon-grip-dotted-vertical" />
+            </span>
+            <h:outputText value="#{fwContext.applicationId}" />
+            <span class="ui-separator"> <span class="ui-icon ui-icon-grip-dotted-vertical" />
+            </span>
+            <h:outputText
+                value="#{topPage.user.name}"
+                style="margin:5px;"
+            />
+            <span class="ui-separator"> <span class="ui-icon ui-icon-grip-dotted-vertical" />
+            </span>
+            <p:commandButton
+                id="menu_btn"
+                icon="fa fa-bars"
+            />
+            <p:overlayPanel
+                id="menu_panel"
+                for="menu_btn"
+                hideEffect="fade"
+            >
+                <h:panelGrid
+                    columns="1"
+                    cellpadding="0"
+                >
+                    <h:commandLink
+                        action="#{menuView.setting}"
+                        value="設定"
+                        style="text-decoration: none;"
+                    />
+                    <h:commandLink
+                        action="#{menuView.logout}"
+                        value="ログアウト"
+                        style="text-decoration: none;"
+                    />
+                </h:panelGrid>
+            </p:overlayPanel>
+        </f:facet>
+    </p:toolbar>
+    <p:sticky target="tb" />
 </ui:composition>

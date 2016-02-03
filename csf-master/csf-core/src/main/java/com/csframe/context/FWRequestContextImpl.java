@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 
-import com.csframe.context.FWRequestContext;
-
 import lombok.Data;
 
 @Data

@@ -45,4 +45,8 @@
     <param-name>primefaces.FONT_AWESOME</param-name>
     <param-value>true</param-value>
   </context-param>
+  <context-param>
+    <param-name>csf.app_id</param-name>
+    <param-value>csf-test-app</param-value>
+  </context-param>
 </web-app>

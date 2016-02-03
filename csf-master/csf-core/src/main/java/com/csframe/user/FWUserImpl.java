@@ -2,14 +2,13 @@ package com.csframe.user;
 
 import java.util.Locale;
 
-import javax.enterprise.context.Dependent;
-
-import com.csframe.user.FWFullUser;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 
 import lombok.Data;
 
 @Data
-@Dependent
+@SessionScoped
 public class FWUserImpl implements FWFullUser {
 
   private static final long serialVersionUID = 1L;
@@ -17,5 +16,10 @@ public class FWUserImpl implements FWFullUser {
   private String id;
   private String name;
   private Locale language;
+
+  @PostConstruct
+  public void init() {
+    language = Locale.getDefault();
+  }
 
 }

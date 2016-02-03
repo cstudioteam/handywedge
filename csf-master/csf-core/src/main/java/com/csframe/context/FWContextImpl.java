@@ -4,15 +4,13 @@ import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import com.csframe.context.FWApplicationContext;
-import com.csframe.context.FWFullContext;
-import com.csframe.context.FWRequestContext;
-import com.csframe.context.FWSessionContext;
 import com.csframe.user.FWFullUser;
 import com.csframe.user.FWUser;
 
 @RequestScoped
+@Named("fwContext")
 public class FWContextImpl implements FWFullContext {
 
   @Inject
@@ -57,13 +55,13 @@ public class FWContextImpl implements FWFullContext {
   @Override
   public String getContextPath() {
 
-    return requestContext.getContextPath();
+    return applicationContext.getContextPath();
   }
 
   @Override
   public void setContextPath(String contextPath) {
 
-    requestContext.setContextPath(contextPath);
+    applicationContext.setContextPath(contextPath);
   }
 
   @Override

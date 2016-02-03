@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.faces.FacesException;
@@ -19,12 +18,15 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWRuntimeException;
 import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
 import com.csframe.context.FWSessionContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWFullUser;
+import com.csframe.util.FWStringUtil;
 import com.csframe.util.FWThreadLocal;
 
 @WebFilter(filterName = "csf_session_filter")
@@ -53,6 +55,12 @@ public class FWSessionFilter implements Filter {
     } catch (UnknownHostException e) {
       appCtx.setHostName("unknown");
     }
+    String appId = filterConfig.getServletContext().getInitParameter("csf.app_id");
+    if (FWStringUtil.isEmpty(appId)) {
+      throw new FWRuntimeException(FWConstantCode.NO_APP_ID);
+    }
+    appCtx.setApplicationId(appId);
+    appCtx.setContextPath(filterConfig.getServletContext().getContextPath());
   }
 
   @Override
@@ -68,10 +76,6 @@ public class FWSessionFilter implements Filter {
         return;
       }
 
-      context.setContextPath(httpServletRequest.getContextPath());
-
-      // TODO ルール作成
-      context.setApplicationId("DEV");
       context.setRequestId(UUID.randomUUID().toString());
       FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
 
@@ -79,7 +83,6 @@ public class FWSessionFilter implements Filter {
       FWFullUser user = sessionCtx.getUser();
       user.setId("test_id");
       user.setName("テストユーザ");
-      user.setLanguage(Locale.JAPAN);
 
       long start = logger.perfStart("doFilter");
       try {
