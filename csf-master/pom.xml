@@ -5,9 +5,10 @@
 >
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.csframe</groupId>
-  <artifactId>master</artifactId>
+  <artifactId>csf-master</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <description>csFrameのルートプロジェクト</description>
   <modules>
     <module>csf-api</module>
     <module>csf-core</module>
@@ -20,7 +21,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dependencies-reference</artifactId>
+      <artifactId>csf-dependencies-reference</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
       <type>pom</type>

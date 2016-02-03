@@ -9,7 +9,7 @@
     <artifactId>dependencies</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>dependencies-jsf</artifactId>
+  <artifactId>csf-dependencies-jsf</artifactId>
   <packaging>pom</packaging>
   <dependencies>
     <dependency>

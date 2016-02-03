@@ -6,8 +6,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.csframe</groupId>
-    <artifactId>master</artifactId>
+    <artifactId>csf-master</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>api</artifactId>
+  <artifactId>csf-api</artifactId>
 </project>
