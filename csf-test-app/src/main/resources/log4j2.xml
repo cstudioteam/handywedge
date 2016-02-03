@@ -6,6 +6,7 @@
     <!-- JDBC関連ログをAOPでlogNameを設定したい。とりあえずはAppenderを分けてフォーマットを分ける -->
     <Property name="pattern_jdbc"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[JDBC]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
     <Property name="catalina_home">/opt/tomcat</Property>
+    <Property name="app_id">csf-test-app</Property>
   </Properties>
   <Appenders>
     <Console
@@ -15,9 +16,9 @@
       <PatternLayout pattern="${pattern}" />
     </Console>
     <RollingFile
-      name="csf_test_app"
-      fileName="${catalina_home}/logs/csf_test_app.log"
-      filePattern="${catalina_home}/logs/csf_test_app_%d{yyyy-MM-dd}.gz"
+      name="${app_id}"
+      fileName="${catalina_home}/logs/${app_id}.log"
+      filePattern="${catalina_home}/logs/archive/${app_id}_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout
         pattern="${pattern}"
@@ -27,9 +28,9 @@
       </Policies>
     </RollingFile>
     <RollingFile
-      name="csf_test_app_jdbc"
-      fileName="${catalina_home}/logs/csf_test_app.log"
-      filePattern="${catalina_home}/logs/csf_test_app_%d{yyyy-MM-dd}.gz"
+      name="${app_id}_jdbc"
+      fileName="${catalina_home}/logs/${app_id}.log"
+      filePattern="${catalina_home}/logs/archive/${app_id}_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout
         pattern="${pattern_jdbc}"
@@ -41,7 +42,7 @@
     <RollingFile
       name="error"
       fileName="${catalina_home}/logs/csf_error.log"
-      filePattern="${catalina_home}/logs/csf_error_%d{yyyy-MM-dd}.gz"
+      filePattern="${catalina_home}/logs/archive/csf_error_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout
         pattern="${pattern}"
@@ -58,7 +59,7 @@
       additivity="false"
     >
       <AppenderRef ref="console" />
-      <AppenderRef ref="csf_test_app" />
+      <AppenderRef ref="${app_id}" />
       <AppenderRef
         ref="error"
         level="warn" />
@@ -68,32 +69,31 @@
       level="info"
     >
       <AppenderRef ref="console" />
-      <AppenderRef ref="csf_test_app_jdbc" />
+      <AppenderRef ref="${app_id}_jdbc" />
     </Logger>
     <Logger
       name="jdbc.sqltiming"
       level="info"
     >
       <AppenderRef ref="console" />
-      <AppenderRef ref="csf_test_app_jdbc" />
+      <AppenderRef ref="${app_id}_jdbc" />
     </Logger>
     <Logger
       name="jdbc.audit"
       level="info"
     >
       <AppenderRef ref="console" />
-      <AppenderRef ref="csf_test_app_jdbc" />
+      <AppenderRef ref="${app_id}_jdbc" />
     </Logger>
     <Logger
       name="jdbc.resultset"
       level="info"
     >
       <AppenderRef ref="console" />
-      <AppenderRef ref="csf_test_app_jdbc" />
+      <AppenderRef ref="${app_id}_jdbc" />
     </Logger>
     <Root level="info">
       <AppenderRef ref="console" />
-      <AppenderRef ref="catalina" />
     </Root>
   </Loggers>
 </Configuration>

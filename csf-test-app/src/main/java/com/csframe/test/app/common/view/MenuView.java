@@ -31,6 +31,7 @@ public class MenuView implements Serializable {
   @Inject
   private transient FWLogger logger;
 
+  @Getter
   @Inject
   private FWContext ctx;
 
@@ -47,7 +48,7 @@ public class MenuView implements Serializable {
     DefaultSubMenu menu = new DefaultSubMenu("ログ");
     DefaultMenuItem item = new DefaultMenuItem("アプリケーションログ");
     item.setIcon("fa fa-file-text");
-    item.setUrl("/contents/log/app_log.xhtml");
+    item.setOutcome("/contents/log/app_log.xhtml");
     menu.addElement(item);
 
     item = new DefaultMenuItem("サーバログ");
@@ -56,25 +57,21 @@ public class MenuView implements Serializable {
 
     item = new DefaultMenuItem("エラーログ");
     item.setIcon("fa fa-ban");
-    item.setUrl("/contents/log/error_log.xhtml");
+    item.setOutcome("/contents/log/error_log.xhtml");
     menu.addElement(item);
-
-    model.addElement(menu);
 
     menu = new DefaultSubMenu("データベース");
     item = new DefaultMenuItem("マスタ参照");
-    item.setUrl("/contents/db/master.xhtml");
+    item.setOutcome("/contents/db/master.xhtml");
     item.setIcon("fa fa-database");
     menu.addElement(item);
-
     model.addElement(menu);
 
     menu = new DefaultSubMenu("プロパティ");
     item = new DefaultMenuItem("プロパティ一覧");
-    item.setUrl("/contents/config/resources.xhtml");
+    item.setOutcome("/contents/config/resources.xhtml");
     item.setIcon("fa fa-wrench");
     menu.addElement(item);
-
     model.addElement(menu);
 
     new Thread(new AppLogReader(1000)).start();

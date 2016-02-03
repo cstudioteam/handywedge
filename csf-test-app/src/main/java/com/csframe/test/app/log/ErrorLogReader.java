@@ -7,7 +7,7 @@ import javax.websocket.Session;
 public class ErrorLogReader extends LogReader {
 
   public ErrorLogReader(int myInterval) {
-    super("/opt/tomcat/logs/cfw_error.log", myInterval);
+    super("/opt/tomcat/logs/csf_error.log", myInterval);
   }
 
   @Override
