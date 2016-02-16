@@ -59,6 +59,7 @@ public class MenuView implements Serializable {
     item.setIcon("fa fa-ban");
     item.setOutcome("/contents/log/error_log.xhtml");
     menu.addElement(item);
+    model.addElement(menu);
 
     menu = new DefaultSubMenu("データベース");
     item = new DefaultMenuItem("マスタ参照");
