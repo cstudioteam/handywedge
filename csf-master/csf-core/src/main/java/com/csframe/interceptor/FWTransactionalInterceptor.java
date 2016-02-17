@@ -42,6 +42,7 @@ public class FWTransactionalInterceptor {
 
     FWFullConnection connection = null;
     if (txMgr.isTopLayer()) {
+      logger.debug("toplayer. txType={}, dataSourceName={}", txType, dataSourceName);
       switch (txType) {
         case REQUIRED:
           connection = connectionManager.getConnection(dataSourceName);
@@ -70,15 +71,16 @@ public class FWTransactionalInterceptor {
         try {
           try {
             connection.commit();
+            logger.debug("transaction commit.");
           } finally {
             SQLWarning sw = connection.getWarnings();
             while (sw != null) {
-              logger.warn("FWTransactionalInterceptor SQLWarning.", sw);
+              logger.warn("SQLWarning.", sw);
               sw = sw.getNextWarning();
             }
           }
         } catch (SQLException e) {
-          logger.error("FWTransactionalInterceptor SQLException.", e);
+          logger.error("SQLException.", e);
           FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true);
           throw e;
         }
@@ -93,7 +95,7 @@ public class FWTransactionalInterceptor {
         FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true); // フィルタで二重出力させないようにする
 
         // TODO 業務例外みたいなものを作る？
-        logger.error("FWTransactionalInterceptor Exception.", t);
+        logger.error("Exception.", t);
 
         // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
         boolean rollback = true;
@@ -107,8 +109,10 @@ public class FWTransactionalInterceptor {
 
         if (rollback) {
           connection.rollback();
+          logger.debug("transaction rollback.");
         } else {
           connection.commit();
+          logger.debug("transaction commit.");
         }
       }
       throw t;

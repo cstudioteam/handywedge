@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.csframe</groupId>
-    <artifactId>dependencies</artifactId>
+    <artifactId>csf-dependencies</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>csf-dependencies-reference</artifactId>
@@ -14,25 +14,25 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dependencies-api</artifactId>
+      <artifactId>csf-dependencies-api</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dependencies-cdi</artifactId>
+      <artifactId>csf-dependencies-cdi</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dependencies-logging</artifactId>
+      <artifactId>csf-dependencies-logging</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dependencies-jsf</artifactId>
+      <artifactId>csf-dependencies-jsf</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>

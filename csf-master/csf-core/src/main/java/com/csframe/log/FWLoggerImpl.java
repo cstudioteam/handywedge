@@ -3,16 +3,35 @@ package com.csframe.log;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-import com.csframe.log.FWLogName;
-import com.csframe.log.FWLogger;
-import com.csframe.log.FWMDC;
-
 public class FWLoggerImpl implements FWLogger {
 
   private Logger logger;
 
   FWLoggerImpl(Logger logger) {
     this.logger = logger;
+  }
+
+  private static final String FW_PREFIX = "com.csframe";
+
+  private boolean start() {
+
+    if (FWMDC.getCurrentLogName() == null) {
+      if (getName().startsWith(FW_PREFIX)) {
+        FWMDC.setLogName(FWLogName.FW);
+      } else {
+        FWMDC.setLogName(FWLogName.AP);
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private void end(boolean remove) {
+
+    if (remove) {
+      FWMDC.remove(FWMDC.LOG_NAME);
+    }
   }
 
   /* FW独自 API */
@@ -58,121 +77,161 @@ public class FWLoggerImpl implements FWLogger {
   @Override
   public void debug(Marker arg0, String arg1, Object arg2, Object arg3) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1, arg2, arg3);
+    end(remove);
   }
 
   @Override
   public void debug(Marker arg0, String arg1, Object... arg2) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void debug(Marker arg0, String arg1, Object arg2) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void debug(Marker arg0, String arg1, Throwable arg2) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void debug(Marker arg0, String arg1) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void debug(String arg0, Object arg1, Object arg2) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void debug(String arg0, Object... arg1) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void debug(String arg0, Object arg1) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void debug(String arg0, Throwable arg1) {
 
+    boolean remove = start();
     logger.debug(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void debug(String arg0) {
 
+    boolean remove = start();
     logger.debug(arg0);
+    end(remove);
   }
 
   @Override
   public void error(Marker arg0, String arg1, Object arg2, Object arg3) {
 
+    boolean remove = start();
     logger.error(arg0, arg1, arg2, arg3);
+    end(remove);
   }
 
   @Override
   public void error(Marker arg0, String arg1, Object... arg2) {
 
+    boolean remove = start();
     logger.error(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void error(Marker arg0, String arg1, Object arg2) {
 
+    boolean remove = start();
     logger.error(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void error(Marker arg0, String arg1, Throwable arg2) {
 
+    boolean remove = start();
     logger.error(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void error(Marker arg0, String arg1) {
 
+    boolean remove = start();
     logger.error(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void error(String arg0, Object arg1, Object arg2) {
 
+    boolean remove = start();
     logger.error(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void error(String arg0, Object... arg1) {
 
+    boolean remove = start();
     logger.error(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void error(String arg0, Object arg1) {
 
+    boolean remove = start();
     logger.error(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void error(String arg0, Throwable arg1) {
 
+    boolean remove = start();
     logger.error(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void error(String arg0) {
 
+    boolean remove = start();
     logger.error(arg0);
+    end(remove);
   }
 
   @Override
@@ -184,61 +243,81 @@ public class FWLoggerImpl implements FWLogger {
   @Override
   public void info(Marker arg0, String arg1, Object arg2, Object arg3) {
 
+    boolean remove = start();
     logger.info(arg0, arg1, arg2, arg3);
+    end(remove);
   }
 
   @Override
   public void info(Marker arg0, String arg1, Object... arg2) {
 
+    boolean remove = start();
     logger.info(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void info(Marker arg0, String arg1, Object arg2) {
 
+    boolean remove = start();
     logger.info(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void info(Marker arg0, String arg1, Throwable arg2) {
 
+    boolean remove = start();
     logger.info(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void info(Marker arg0, String arg1) {
 
+    boolean remove = start();
     logger.info(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void info(String arg0, Object arg1, Object arg2) {
 
+    boolean remove = start();
     logger.info(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void info(String arg0, Object... arg1) {
 
+    boolean remove = start();
     logger.info(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void info(String arg0, Object arg1) {
 
+    boolean remove = start();
     logger.info(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void info(String arg0, Throwable arg1) {
 
+    boolean remove = start();
     logger.info(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void info(String arg0) {
 
+    boolean remove = start();
     logger.info(arg0);
+    end(remove);
   }
 
   @Override
@@ -304,121 +383,161 @@ public class FWLoggerImpl implements FWLogger {
   @Override
   public void trace(Marker arg0, String arg1, Object arg2, Object arg3) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1, arg2, arg3);
+    end(remove);
   }
 
   @Override
   public void trace(Marker arg0, String arg1, Object... arg2) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void trace(Marker arg0, String arg1, Object arg2) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void trace(Marker arg0, String arg1, Throwable arg2) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void trace(Marker arg0, String arg1) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void trace(String arg0, Object arg1, Object arg2) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void trace(String arg0, Object... arg1) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void trace(String arg0, Object arg1) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void trace(String arg0, Throwable arg1) {
 
+    boolean remove = start();
     logger.trace(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void trace(String arg0) {
 
+    boolean remove = start();
     logger.trace(arg0);
+    end(remove);
   }
 
   @Override
   public void warn(Marker arg0, String arg1, Object arg2, Object arg3) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1, arg2, arg3);
+    end(remove);
   }
 
   @Override
   public void warn(Marker arg0, String arg1, Object... arg2) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void warn(Marker arg0, String arg1, Object arg2) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void warn(Marker arg0, String arg1, Throwable arg2) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void warn(Marker arg0, String arg1) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void warn(String arg0, Object arg1, Object arg2) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1, arg2);
+    end(remove);
   }
 
   @Override
   public void warn(String arg0, Object... arg1) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void warn(String arg0, Object arg1) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void warn(String arg0, Throwable arg1) {
 
+    boolean remove = start();
     logger.warn(arg0, arg1);
+    end(remove);
   }
 
   @Override
   public void warn(String arg0) {
 
+    boolean remove = start();
     logger.warn(arg0);
+    end(remove);
   }
 
 }

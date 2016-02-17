@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class FWThreadLocal {
 
-  public static final String INTERCEPTOR_ERROR = "cfw.interceptor.error";
+  public static final String INTERCEPTOR_ERROR = "csf.interceptor.error";
+  public static final String LOGIN = "csf.login";
 
   private static final ThreadLocal<ConcurrentHashMap> instance =
       new ThreadLocal<ConcurrentHashMap>() {

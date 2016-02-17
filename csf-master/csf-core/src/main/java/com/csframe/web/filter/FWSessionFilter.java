@@ -38,9 +38,6 @@ public class FWSessionFilter implements Filter {
   @Inject
   private FWSessionContext sessionCtx;
 
-  // @Inject
-  // private FWFullUser user;
-
   @Inject
   private FWFullContext context;
 
@@ -67,22 +64,28 @@ public class FWSessionFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
 
+    logger.debug("FWSessionFilter start.");
     long filterStart = System.currentTimeMillis();
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+    if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/")) {
+      chain.doFilter(httpServletRequest, httpServletResponse);
+      logger.debug("FWSessionFilter resources return end.");
+      return;
+    }
     try {
-      if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/")) {
-        chain.doFilter(httpServletRequest, httpServletResponse);
-        return;
-      }
-
       context.setRequestId(UUID.randomUUID().toString());
       FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
 
-      // TODO ユーザー機能がないので取り敢えず固定値
+      String loginUrl = FWStringUtil.getLoginUrl();
+      String requestUrl = httpServletRequest.getRequestURI();
       FWFullUser user = sessionCtx.getUser();
-      user.setId("test_id");
-      user.setName("テストユーザ");
+      if (!requestUrl.contains(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
+        logger.debug("ログインされていません。ログインページにリダイレクトします。 url={}", loginUrl);
+        httpServletResponse.sendRedirect(loginUrl);
+        return;
+      }
+      FWMDC.put(FWMDC.USER_ID, user.getId());
 
       long start = logger.perfStart("doFilter");
       try {
@@ -95,10 +98,18 @@ public class FWSessionFilter implements Filter {
         context.setLastAccessTime(new Date());
       }
     } catch (Exception e) {
-      // TODO AFWを倣うとJSFの場合にレスポンスがコミット済の場合があるので考慮が必要かも
+      // TODO JSFの場合にレスポンスがコミット済の場合があるかもしれないので考慮が必要かも
       terminateError(e);
       throw new ServletException(e);
     } finally {
+      Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
+      if (login != null) {
+        if (login) {
+          httpServletRequest.changeSessionId(); // セッションは維持してIDだけ変更(Session Fixation)
+        } else {
+          httpServletRequest.getSession().invalidate();
+        }
+      }
       logger.respLog(httpServletRequest.getRequestURI(), filterStart);
       FWThreadLocal.destroy();
       FWMDC.clear();

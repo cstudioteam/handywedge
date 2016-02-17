@@ -11,6 +11,16 @@
     initialSize="2"
     maxWaitMillis="10000" />
   <Resource
+    name="jdbc/fw"
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="net.sf.log4jdbc.DriverSpy"
+    url="jdbc:log4jdbc:postgresql://localhost:5432/csf_test_app"
+    username="csf"
+    password="csf"
+    initialSize="2"
+    maxWaitMillis="10000" />
+  <Resource
     name="BeanManager"
     auth="Container"
     type="javax.enterprise.inject.spi.BeanManager"

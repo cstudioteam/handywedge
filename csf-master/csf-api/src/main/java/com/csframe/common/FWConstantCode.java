@@ -27,4 +27,9 @@ public interface FWConstantCode {
    */
   String DS_LOOKUP_FAIL = "00102E";
 
+  /**
+   * ログイン認証時にパスワードテーブルからデータ取得に失敗。
+   */
+  String AUTH_DB_FAIL = "00103E";
+
 }

@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.csframe</groupId>
-    <artifactId>dependencies</artifactId>
+    <artifactId>csf-dependencies</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>csf-dependencies-api</artifactId>
@@ -16,6 +16,11 @@
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>de.svenkubiak</groupId>
+      <artifactId>jBCrypt</artifactId>
+      <version>0.4.1</version>
     </dependency>
   </dependencies>
 </project>

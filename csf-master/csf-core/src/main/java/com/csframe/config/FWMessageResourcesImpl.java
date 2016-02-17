@@ -10,6 +10,7 @@ import javax.inject.Named;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.context.FWContext;
+import com.csframe.log.FWLogger;
 
 @ApplicationScoped
 @Named("messageResouces")
@@ -17,6 +18,9 @@ public class FWMessageResourcesImpl implements FWMessageResources {
 
   @Inject
   private FWContext ctx;
+
+  @Inject
+  private FWLogger logger;
 
   @Override
   public String get(String key) {
@@ -27,11 +31,15 @@ public class FWMessageResourcesImpl implements FWMessageResources {
   @Override
   public String get(String key, Locale locale) {
 
+    logger.debug("get(). key={}, locale={}", key, locale);
+
     ResourceBundle rb = ResourceBundle.getBundle(ctx.getApplicationId(), locale);
     if (!rb.containsKey(key)) {
       throw new FWMissingResourceException(FWConstantCode.NO_KEY);
     } else {
-      return rb.getString(key);
+      String value = rb.getString(key);
+      logger.debug("get() return. value={}", value);
+      return value;
     }
   }
 

@@ -5,6 +5,12 @@
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
   version="2.2"
 >
+  <application>
+    <resource-bundle>
+      <base-name>jp.cstudio.csframe.test.app.i18n.labels</base-name>
+      <var>labels</var>
+    </resource-bundle>
+  </application>
   <factory>
     <exception-handler-factory>com.csframe.log.FWCustomExceptionHandlerFactory</exception-handler-factory>
   </factory>
