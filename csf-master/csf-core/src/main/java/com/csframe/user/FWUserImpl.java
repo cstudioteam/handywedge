@@ -1,5 +1,6 @@
 package com.csframe.user;
 
+import java.sql.Timestamp;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ public class FWUserImpl implements FWFullUser {
   private String id;
   private String name;
   private Locale language;
+  private Timestamp lastLoginTime;
 
   @PostConstruct
   public void init() {

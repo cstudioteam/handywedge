@@ -1,12 +1,11 @@
 package com.csframe.user.auth;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.db.FWConnection;
@@ -16,6 +15,7 @@ import com.csframe.db.FWResultSet;
 import com.csframe.db.FWTransactional;
 import com.csframe.log.FWLogger;
 import com.csframe.user.FWFullUser;
+import com.csframe.util.FWPasswordUtil;
 import com.csframe.util.FWStringUtil;
 import com.csframe.util.FWThreadLocal;
 
@@ -43,8 +43,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
     FWPreparedStatement ps = null;
     FWResultSet rs = null;
     String dbPass = null;
+    FWConnection con = cm.getConnection();
     try {
-      FWConnection con = cm.getConnection();
       ps = con.prepareStatement("select * from fw_user_passwd where id = ?");
       ps.setString(1, id);
       rs = ps.executeQuery();
@@ -70,9 +70,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
       }
     }
 
-    if (BCrypt.checkpw(password, dbPass)) {
+    if (FWPasswordUtil.checkPassword(password, dbPass)) {
       try {
-        ps = cm.getConnection().prepareStatement("select * from fw_user where id = ?");
+        ps = con.prepareStatement("select * from fw_user where id = ?");
         ps.setString(1, id);
         rs = ps.executeQuery();
         if (rs.next()) {
@@ -83,9 +83,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
             String country = rs.getString("country");
             user.setLanguage(new Locale.Builder().setLanguage(lang).setRegion(country).build());
           }
+          user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
           logger.debug("login succeed.");
-          FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ
-          return true;
+          FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする。
         } else {
           logger.warn("ユーザー情報が取得できません。");
           return false; // FKがあるため基本的に起こり得ない
@@ -106,6 +106,28 @@ public class FWLoginManagerImpl implements FWLoginManager {
         } catch (Exception e) {
         }
       }
+
+      try {
+        ps = con.prepareStatement("update fw_user set last_login_date = ? where id = ?");
+        ps.setTimestamp(1, user.getLastLoginTime());
+        ps.setString(2, user.getId());
+        int i = ps.executeUpdate();
+        if (i == 1) {
+          logger.debug("update 'last_login_date'.");
+        } else {
+          logger.warn("fail update 'last_login_date'.");
+        }
+      } catch (SQLException e) {
+        logger.warn("fail update 'last_login_date'.", e);
+      } finally {
+        try {
+          if (ps != null) {
+            ps.close();
+          }
+        } catch (Exception e) {
+        }
+      }
+      return true;
     } else {
       logger.debug("login failed.");
       return false;

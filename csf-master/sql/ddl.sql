@@ -7,6 +7,7 @@ create table fw_user(
 	country varchar(64),
 	language varchar(64),
 	create_date timestamp not null,
+	last_login_date timestamp,
 	constraint pk_fw_user primary key(id)
 );
 

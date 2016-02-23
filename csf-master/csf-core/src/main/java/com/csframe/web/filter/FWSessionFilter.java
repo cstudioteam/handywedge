@@ -64,19 +64,22 @@ public class FWSessionFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
 
+    context.setRequestId(UUID.randomUUID().toString());
+    FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
     logger.debug("FWSessionFilter start.");
     long filterStart = System.currentTimeMillis();
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
     if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/")) {
-      chain.doFilter(httpServletRequest, httpServletResponse);
-      logger.debug("FWSessionFilter resources return end.");
-      return;
+      try {
+        chain.doFilter(httpServletRequest, httpServletResponse);
+        logger.debug("FWSessionFilter resources return end.");
+        return;
+      } finally {
+        FWMDC.clear();
+      }
     }
     try {
-      context.setRequestId(UUID.randomUUID().toString());
-      FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
-
       String loginUrl = FWStringUtil.getLoginUrl();
       String requestUrl = httpServletRequest.getRequestURI();
       FWFullUser user = sessionCtx.getUser();
