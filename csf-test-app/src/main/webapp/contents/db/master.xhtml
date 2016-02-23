@@ -8,27 +8,63 @@
 >
     <ui:define name="title">マスタ参照</ui:define>
     <ui:define name="content">
-        <p:dataScroller
+        <p:dataTable
+            id="testTbl"
+            editable="true"
+            editMode="cell"
             var="test"
             value="#{dbMaster.test}"
-            chunkSize="10"
-            mode="inline"
-            scrollHeight="300"
+            rowKey="#{test.key}"
         >
-            <f:facet name="header">
-                <span>TESTテーブル</span>
-            </f:facet>
-            <p:outputPanel>
-                <h:panelGrid
-                    columns="2"
-                    cellpadding="5"
-                >
-                    <h:outputText value="KEY:" />
-                    <h:outputText value="#{test.key}" />
-                    <h:outputText value="VALUE:" />
-                    <h:outputText value="#{test.value}" />
-                </h:panelGrid>
-            </p:outputPanel>
-        </p:dataScroller>
+            <f:facet name="header">testテーブル</f:facet>
+            <p:ajax
+                event="cellEdit"
+                listener="#{dbMaster.onCellEdit}"
+            />
+            <p:column headerText="KEY">
+                <h:outputText value="#{test.key}" />
+            </p:column>
+            <p:column headerText="VALUE">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{test.value}" />
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText
+                            value="#{test.value}"
+                            style="width:96%"
+                            label="VALUE"
+                        />
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+        </p:dataTable>
+        <p:separator />
+        <h:panelGrid
+            id="addData"
+            columns="2"
+        >
+            <h:outputLabel
+                for="addKey"
+                value="KEY"
+            />
+            <p:inputText
+                id="addKey"
+                value="#{dbMaster.addKey}"
+            />
+            <h:outputLabel
+                for="addValue"
+                value="VALUE"
+            />
+            <p:inputText
+                id="addValue"
+                value="#{dbMaster.addValue}"
+            />
+            <p:commandButton
+                action="#{dbMaster.addData}"
+                value="追加"
+                update="testTbl"
+            />
+        </h:panelGrid>
     </ui:define>
 </ui:composition>

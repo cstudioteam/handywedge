@@ -24,6 +24,5 @@ public class FWStringUtil {
       loginUrl = "/" + loginUrl;
     }
     return contextPath + loginUrl;
-
   }
 }

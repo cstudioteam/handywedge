@@ -23,11 +23,11 @@ public class LoginAction {
 
   @Setter
   @Getter
-  private String id;
+  private String id = "csf-test-app"; // デフォルトユーザ（入力を省略したい）
 
   @Setter
   @Getter
-  private String password;
+  private String password = "password";
 
   @Inject
   private FWContext ctx;

@@ -56,4 +56,29 @@ public class DBMasterService {
     }
   }
 
+  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  public void insert(Test test) throws SQLException {
+
+    logger.info("テストテーブル追加");
+    logger.debug("DATA=" + test);
+    try (FWPreparedStatement stmt =
+        cm.getConnection().prepareStatement("insert into test values(?, ?)")) {
+      stmt.setString(1, test.getKey());
+      stmt.setString(2, test.getValue());
+      stmt.executeUpdate();
+    }
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  public void delete(String key) throws SQLException {
+
+    logger.info("テストテーブル削除");
+    logger.debug("DATA=" + key);
+    try (FWPreparedStatement stmt =
+        cm.getConnection().prepareStatement("delete from test where key = ?")) {
+      stmt.setString(1, key);
+      stmt.executeUpdate();
+    }
+  }
+
 }
