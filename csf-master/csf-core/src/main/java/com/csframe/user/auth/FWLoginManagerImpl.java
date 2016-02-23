@@ -1,5 +1,7 @@
 package com.csframe.user.auth;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Locale;
@@ -8,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWRuntimeException;
 import com.csframe.db.FWConnection;
 import com.csframe.db.FWConnectionManager;
 import com.csframe.db.FWPreparedStatement;
@@ -35,8 +38,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
   @Override
   public boolean login(String id, String password) throws FWAuthException {
 
+    logger.debug("login start.");
+
     // TODO 既にログイン済みの場合はそのまま利用？
     if (!FWStringUtil.isEmpty(user.getId())) {
+      logger.debug("login end.(exist session)");
       return true;
     }
 
@@ -127,6 +133,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
         } catch (Exception e) {
         }
       }
+      logger.debug("login end.");
       return true;
     } else {
       logger.debug("login failed.");
@@ -140,4 +147,93 @@ public class FWLoginManagerImpl implements FWLoginManager {
     FWThreadLocal.put(FWThreadLocal.LOGIN, false); // ログアウトリクエストフラグ
   }
 
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  @Override
+  public String publishAPIToken(String id) {
+
+    logger.debug("publishAPIToken start.");
+    String token = null;
+    try {
+      SecureRandom sr = SecureRandom.getInstanceStrong();
+      logger.debug("token Algorithme={}", sr.getAlgorithm());
+      byte[] b = new byte[16];
+      sr.nextBytes(b);
+      StringBuilder buf = new StringBuilder();
+      for (int i = 0; i < b.length; i++) {
+        buf.append(String.format("%02x", b[i]));
+      }
+      token = buf.toString();
+    } catch (NoSuchAlgorithmException e) {
+      logger.error("abort.", e);
+    }
+
+    FWPreparedStatement ps = null;
+    FWResultSet rs = null;
+    FWConnection con = cm.getConnection();
+    try {
+      ps = con.prepareStatement("select id from fw_api_token where id = ?");
+      ps.setString(1, id);
+      rs = ps.executeQuery();
+      boolean update = rs.next();
+      ps.close();
+      ps = null;
+      if (update) {
+        logger.debug("token update.");
+        ps = con
+            .prepareStatement("update fw_api_token set token = ?, create_date = ? where id = ?");
+        ps.setString(1, token);
+        ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+        ps.setString(3, id);
+        ps.executeUpdate();
+      } else {
+        logger.debug("token insert.");
+        ps = con.prepareStatement("insert into fw_api_token values(?, ?, ?)");
+        ps.setString(1, id);
+        ps.setString(2, token);
+        ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+        ps.executeUpdate();
+      }
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.AUTH_DB_FAIL);
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (Exception e) {
+      }
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+      } catch (Exception e) {
+      }
+    }
+    logger.debug("publishAPIToken end.");
+    return token;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  @Override
+  public void removeAPIToken(String id) {
+
+    logger.debug("removeAPIToken start.");
+    FWPreparedStatement ps = null;
+    FWConnection con = cm.getConnection();
+    try {
+      ps = con.prepareStatement("delete from fw_api_token where id = ?");
+      ps.setString(1, id);
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL);
+    } finally {
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+      } catch (Exception e) {
+      }
+    }
+    logger.debug("removeAPIToken end.");
+  }
 }

@@ -70,7 +70,9 @@ public class FWSessionFilter implements Filter {
     long filterStart = System.currentTimeMillis();
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/")) {
+    // TODO REST用フィルターを別に作成する
+    if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/") || httpServletRequest
+        .getRequestURI().startsWith(httpServletRequest.getContextPath() + "/rest/")) {
       try {
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter resources return end.");
