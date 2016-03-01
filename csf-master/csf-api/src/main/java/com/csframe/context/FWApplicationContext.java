@@ -1,5 +1,7 @@
 package com.csframe.context;
 
+import java.util.Map;
+
 public interface FWApplicationContext {
 
   String getHostName();
@@ -13,5 +15,7 @@ public interface FWApplicationContext {
   String getContextPath();
 
   void setContextPath(String contextPath);
+
+  Map<String, String> getTokenMap();
 
 }

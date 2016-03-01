@@ -1,6 +1,7 @@
 package com.csframe.context;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.csframe.user.FWFullUser;
 
@@ -54,5 +55,7 @@ public interface FWFullContext extends FWContext {
   void setAPITokenAuth(boolean apiToken);
 
   void setUser(FWFullUser user);
+
+  Map<String, String> getTokenMap();
 
 }

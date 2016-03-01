@@ -3,6 +3,7 @@ package com.csframe.util;
 import com.csframe.config.FWMessageResources;
 import com.csframe.context.FWContext;
 
+// TODO 合成文字「"か" + '\u3099'」とかは考慮しない
 public class FWStringUtil {
 
   public static boolean isEmpty(String src) {

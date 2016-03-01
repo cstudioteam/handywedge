@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWRuntimeException;
+import com.csframe.context.FWApplicationContext;
 import com.csframe.db.FWConnection;
 import com.csframe.db.FWConnectionManager;
 import com.csframe.db.FWPreparedStatement;
@@ -34,6 +35,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
   @Inject
   private FWLogger logger;
+
+  @Inject
+  private FWApplicationContext appCtx;
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
@@ -140,6 +144,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
         ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
         ps.executeUpdate();
       }
+      appCtx.getTokenMap().put(id, token);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL);
     } finally {
@@ -205,6 +210,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       ps = con.prepareStatement("delete from fw_api_token where id = ?");
       ps.setString(1, id);
       ps.executeUpdate();
+      appCtx.getTokenMap().remove(id);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL);
     } finally {
