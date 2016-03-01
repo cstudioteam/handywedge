@@ -76,6 +76,13 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("REST");
+    item = new DefaultMenuItem("APIトークン");
+    item.setOutcome("/contents/rest/pub_token.xhtml");
+    item.setIcon("fa fa-chevron-circle-right");
+    menu.addElement(item);
+    model.addElement(menu);
+
     new Thread(new AppLogReader(1000)).start();
     new Thread(new ErrorLogReader(5000)).start();
     logger.perfEnd("init", startTime);

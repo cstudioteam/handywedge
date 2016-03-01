@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.csframe.context.FWContext;
-import com.csframe.user.auth.FWAuthException;
 import com.csframe.user.auth.FWLoginManager;
 import com.csframe.util.FWStringUtil;
 
@@ -35,7 +34,7 @@ public class LoginAction {
   @Inject
   private FWLoginManager loginMgr;
 
-  public String login() throws FWAuthException, IOException {
+  public String login() throws IOException {
 
     boolean auth = loginMgr.login(id, password);
     FacesContext fc = FacesContext.getCurrentInstance();

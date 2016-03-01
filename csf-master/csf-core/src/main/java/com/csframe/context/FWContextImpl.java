@@ -101,6 +101,16 @@ public class FWContextImpl implements FWFullContext {
   }
 
   @Override
+  public boolean isAPITokenAuth() {
+    return requestContext.isAPITokenAuth();
+  }
+
+  @Override
+  public void setAPITokenAuth(boolean apiToken) {
+    requestContext.setAPITokenAuth(apiToken);
+  }
+
+  @Override
   public FWUser getUser() {
 
     return sessionContext.getUser();

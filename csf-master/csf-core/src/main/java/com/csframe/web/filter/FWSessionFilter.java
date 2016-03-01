@@ -46,7 +46,6 @@ public class FWSessionFilter implements Filter {
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
-
     try {
       appCtx.setHostName(InetAddress.getLocalHost().getHostName());
     } catch (UnknownHostException e) {
@@ -63,34 +62,42 @@ public class FWSessionFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-
+    long filterStart = System.currentTimeMillis();
     context.setRequestId(UUID.randomUUID().toString());
     FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
-    logger.debug("FWSessionFilter start.");
-    long filterStart = System.currentTimeMillis();
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    // TODO REST用フィルターを別に作成する
-    if (httpServletRequest.getRequestURI().contains("/javax.faces.resource/") || httpServletRequest
-        .getRequestURI().startsWith(httpServletRequest.getContextPath() + "/rest/")) {
+    final String requestUrl = httpServletRequest.getRequestURI();
+    logger.debug("FWSessionFilter start. uri={}", requestUrl);
+    if (requestUrl.startsWith(appCtx.getContextPath() + "/javax.faces.resource/")) {
       try {
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter resources return end.");
         return;
       } finally {
-        FWMDC.clear();
+        terminate(httpServletRequest);
       }
     }
+    // REST APIはRESTフィルターで処理
+    if (requestUrl.startsWith(appCtx.getContextPath() + "/csf/rest/")) {
+      try {
+        chain.doFilter(httpServletRequest, httpServletResponse);
+        logger.debug("FWSessionFilter REST API request return end.");
+        return;
+      } finally {
+        logger.respLog(requestUrl, filterStart);
+        terminate(httpServletRequest);
+      }
+    }
+
     try {
-      String loginUrl = FWStringUtil.getLoginUrl();
-      String requestUrl = httpServletRequest.getRequestURI();
       FWFullUser user = sessionCtx.getUser();
-      if (!requestUrl.contains(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
+      String loginUrl = FWStringUtil.getLoginUrl();
+      if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
         logger.debug("ログインされていません。ログインページにリダイレクトします。 url={}", loginUrl);
         httpServletResponse.sendRedirect(loginUrl);
         return;
       }
-      FWMDC.put(FWMDC.USER_ID, user.getId());
 
       long start = logger.perfStart("doFilter");
       try {
@@ -107,22 +114,25 @@ public class FWSessionFilter implements Filter {
       terminateError(e);
       throw new ServletException(e);
     } finally {
-      Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
-      if (login != null) {
-        if (login) {
-          httpServletRequest.changeSessionId(); // セッションは維持してIDだけ変更(Session Fixation)
-        } else {
-          httpServletRequest.getSession().invalidate();
-        }
-      }
-      logger.respLog(httpServletRequest.getRequestURI(), filterStart);
-      FWThreadLocal.destroy();
-      FWMDC.clear();
+      logger.respLog(requestUrl, filterStart);
+      terminate(httpServletRequest);
     }
   }
 
-  private void terminateError(Exception e) {
+  private void terminate(HttpServletRequest request) {
+    Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
+    if (login != null) {
+      if (login) {
+        request.changeSessionId(); // セッションは維持してIDだけ変更(Session Fixation)
+      } else {
+        request.getSession().invalidate();
+      }
+    }
+    FWThreadLocal.destroy();
+    FWMDC.clear();
+  }
 
+  private void terminateError(Exception e) {
     Throwable cause;
     if (e instanceof FacesException) {
       cause = e.getCause();
@@ -137,8 +147,6 @@ public class FWSessionFilter implements Filter {
   }
 
   @Override
-  public void destroy() {
-
-  }
+  public void destroy() {}
 
 }

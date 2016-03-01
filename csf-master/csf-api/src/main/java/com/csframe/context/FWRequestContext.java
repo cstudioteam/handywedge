@@ -15,4 +15,8 @@ public interface FWRequestContext {
 
   void setRequestStartTime(Date requestStartTime);
 
+  boolean isAPITokenAuth();
+
+  void setAPITokenAuth(boolean apiToken);
+
 }

@@ -51,6 +51,8 @@ public interface FWFullContext extends FWContext {
    */
   void setContextPath(String contextPath);
 
+  void setAPITokenAuth(boolean apiToken);
+
   void setUser(FWFullUser user);
 
 }

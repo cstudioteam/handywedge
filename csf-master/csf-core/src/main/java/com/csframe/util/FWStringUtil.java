@@ -25,4 +25,13 @@ public class FWStringUtil {
     }
     return contextPath + loginUrl;
   }
+
+  public static String splitBearerToken(String tokenHeader) {
+    String token = null;
+    String[] bearerToken = tokenHeader.split(" ");
+    if (bearerToken.length == 2 && bearerToken[0].equals("Bearer")) {
+      token = bearerToken[1];
+    }
+    return token;
+  }
 }

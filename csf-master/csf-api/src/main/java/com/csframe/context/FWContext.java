@@ -59,5 +59,7 @@ public interface FWContext {
    */
   String getContextPath();
 
+  boolean isAPITokenAuth();
+
   FWUser getUser();
 }

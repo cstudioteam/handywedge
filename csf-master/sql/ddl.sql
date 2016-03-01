@@ -27,3 +27,4 @@ create table fw_api_token(
 	constraint pk_fw_api_token primary key(id),
 	constraint fk_fw_api_token foreign key(id) references fw_user(id)
 );
+create unique index idx_fw_api_token on fw_api_token(token);

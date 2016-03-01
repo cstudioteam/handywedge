@@ -13,5 +13,6 @@ public class FWRequestContextImpl implements FWRequestContext {
   private String requestId;
   private String contextPath;
   private Date requestStartTime;
+  private boolean APITokenAuth;
 
 }

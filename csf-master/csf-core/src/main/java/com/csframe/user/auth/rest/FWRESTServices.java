@@ -1,15 +1,10 @@
 package com.csframe.user.auth.rest;
 
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
-import org.glassfish.jersey.server.ResourceConfig;
 
-@ApplicationPath("rest")
-public class FWRESTServices extends ResourceConfig {
+@ApplicationPath("/csf/rest")
+public class FWRESTServices extends Application {
 
-  public FWRESTServices() {
-    register(MoxyJsonFeature.class);
-    packages("com.csframe.user.auth.rest");
-  }
 }

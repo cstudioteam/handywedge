@@ -12,10 +12,6 @@ import javax.sql.DataSource;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWRuntimeException;
-import com.csframe.db.FWFullConnection;
-import com.csframe.db.FWFullConnectionManager;
-import com.csframe.db.FWResultSet;
-import com.csframe.db.FWStatement;
 import com.csframe.log.FWLogger;
 
 @RequestScoped
@@ -71,15 +67,24 @@ public class FWConnectionManagerImpl implements FWFullConnectionManager {
       for (FWResultSet rs : resultSets) {
         if (!rs.isClosed()) {
           logger.warn("FWResulstSet not closed.");
-          rs.close();
+          try {
+            rs.close();
+          } catch (SQLException e) {
+            logger.warn("FWResultSet close error.", e);
+          }
         }
       }
       for (FWStatement s : statements) {
         if (!s.isClosed()) {
           logger.warn("FWStatement not closed.");
-          s.close();
+          try {
+            s.close();
+          } catch (SQLException e) {
+            logger.warn("FWStatement close error.", e);
+          }
         }
       }
+      connection.close();
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
