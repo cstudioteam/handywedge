@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.log.FWLogger;
+import com.csframe.log.FWMDC;
+import com.csframe.user.FWUser;
 import com.csframe.user.auth.FWLoginManager;
 import com.csframe.util.FWStringUtil;
 
@@ -25,6 +27,9 @@ public class FWRESTFilter implements Filter {
 
   @Inject
   private FWLoginManager loginMgr;
+  
+  @Inject
+  private FWUser user;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
@@ -47,13 +52,14 @@ public class FWRESTFilter implements Filter {
         if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
           logger.debug("APIToken Authorization false.");
           httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
-          httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+          httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           return;
         } else {
           logger.debug("APIToken Authorization true.");
         }
       }
     }
+    FWMDC.put(FWMDC.USER_ID, user.getId());
     chain.doFilter(httpServletRequest, httpServletResponse);
   }
 

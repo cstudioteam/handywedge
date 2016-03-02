@@ -13,37 +13,41 @@
   <packaging>pom</packaging>
   <dependencies>
     <!--JAX-RS実装。 APサーバで実装済の場合はコメントアウト -->
-<!--     <dependency> -->
-<!--       <groupId>org.glassfish.jersey.core</groupId> -->
-<!--       <artifactId>jersey-server</artifactId> -->
-<!--       <version>2.22.2</version> -->
-<!--     </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.glassfish.jersey.core</groupId> -->
+    <!-- <artifactId>jersey-server</artifactId> -->
+    <!-- <version>2.22.2</version> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>
       <version>2.22.2</version>
     </dependency>
     <!--JerseyのJsonプロセッサ。 APサーバで実装済の場合はコメントアウト -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.glassfish.jersey.media</groupId> -->
+    <!-- <artifactId>jersey-media-moxy</artifactId> -->
+    <!-- <version>2.22.2</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+    <!-- <artifactId>jackson-databind</artifactId> -->
+    <!-- <version>2.6.4</version> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-moxy</artifactId>
+      <artifactId>jersey-media-json-jackson</artifactId>
       <version>2.22.2</version>
     </dependency>
-
-<!--     <dependency> -->
-<!--       <groupId>org.glassfish.jersey.containers</groupId> -->
-<!--       <artifactId>jersey-container-servlet</artifactId> -->
-<!--       <version>2.22.2</version> -->
-<!--     </dependency> -->
-<!--     <dependency> -->
-<!--       <groupId>com.fasterxml.jackson.core</groupId> -->
-<!--       <artifactId>jackson-databind</artifactId> -->
-<!--       <version>2.6.4</version> -->
-<!--     </dependency> -->
-<!--     <dependency> -->
-<!--       <groupId>org.glassfish.jersey.media</groupId> -->
-<!--       <artifactId>jersey-media-json-jackson</artifactId> -->
-<!--       <version>2.22.2</version> -->
-<!--     </dependency> -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.7.2</version>
+    </dependency>
   </dependencies>
 </project>

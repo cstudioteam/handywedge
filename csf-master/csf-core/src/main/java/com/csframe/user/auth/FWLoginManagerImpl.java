@@ -18,7 +18,6 @@ import com.csframe.db.FWPreparedStatement;
 import com.csframe.db.FWResultSet;
 import com.csframe.db.FWTransactional;
 import com.csframe.log.FWLogger;
-import com.csframe.log.FWMDC;
 import com.csframe.user.FWFullUser;
 import com.csframe.util.FWPasswordUtil;
 import com.csframe.util.FWStringUtil;
@@ -284,7 +283,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
         }
         user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
         FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする。
-        FWMDC.put(FWMDC.USER_ID, user.getId());
       } else {
         throw new FWRuntimeException(FWConstantCode.FATAL, "ユーザー情報が取得できません。"); // 基本的に来ないはず
       }

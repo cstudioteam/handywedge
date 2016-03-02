@@ -98,6 +98,7 @@ public class FWSessionFilter implements Filter {
         httpServletResponse.sendRedirect(loginUrl);
         return;
       }
+      FWMDC.put(FWMDC.USER_ID, user.getId());
 
       long start = logger.perfStart("doFilter");
       try {

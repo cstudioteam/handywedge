@@ -43,6 +43,25 @@ public class DBMasterService {
     }
   }
 
+  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  public Test select(String key) throws SQLException {
+
+    logger.info("テストテーブル取得");
+    logger.debug("KEY=" + key);
+    try (FWPreparedStatement stmt =
+        cm.getConnection().prepareStatement("select * from test where key = ?")) {
+      stmt.setString(1, key);
+      FWResultSet rs = stmt.executeQuery();
+      Test t = null;
+      if (rs.next()) {
+        t = new Test();
+        t.setKey(rs.getString("key"));
+        t.setValue(rs.getString("value"));
+      }
+      return t;
+    }
+  }
+
   @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
   public void update(Test test) throws SQLException {
 

@@ -18,7 +18,7 @@ import com.csframe.util.FWBeanManager;
 import com.csframe.util.FWStringUtil;
 
 @ApplicationScoped
-@Path("/api/token")
+@Path("/token")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWAPITokenPublisher {

@@ -27,4 +27,17 @@ public interface FWConstantCode {
    */
   String DS_LOOKUP_FAIL = "00102E";
 
+
+  /* REST機能のFWコード */
+
+  /**
+   * 予期しないエラー
+   */
+  int FW_REST_ERROR = -9000;
+
+  /**
+   * サポートされていないHTTPメソッド
+   */
+  int FW_REST_UNSUPPORTED = -9001;
+
 }
