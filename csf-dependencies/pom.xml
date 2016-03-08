@@ -15,6 +15,7 @@
     <module>csf-dependencies-reference</module>
     <module>csf-dependencies-jsf</module>
     <module>csf-dependencies-rest</module>
+    <module>csf-dependencies-report</module>
   </modules>
   <properties>
     <parent.project.version>${project.version}</parent.project.version>

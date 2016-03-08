@@ -1,0 +1,43 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:jsf="http://xmlns.jcp.org/jsf"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/layout/layout.xhtml"
+>
+    <ui:define name="title">PDF出力</ui:define>
+    <ui:define name="content">
+        <p:panelGrid columns="2">
+            <p:outputLabel
+                for="name"
+                value="宛名"
+            />
+            <p:inputText
+                id="name"
+                value="#{seikyushoAction.name}"
+            />
+            <p:outputLabel
+                for="memo"
+                value="備考"
+            />
+            <p:inputTextarea
+                id="memo"
+                value="#{seikyushoAction.memo}"
+            />
+            <p:outputLabel
+                for="count"
+                value="出力件数"
+            />
+            <p:inputText
+                id="count"
+                value="#{seikyushoAction.count}"
+            />
+        </p:panelGrid>
+        <h:commandButton
+            value="生成"
+            action="#{seikyushoAction.createPdf}"
+        />
+    </ui:define>
+</ui:composition>

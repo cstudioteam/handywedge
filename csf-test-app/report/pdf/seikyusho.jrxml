@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-03-08T11:55:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="seikyusho" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="e8104afe-2711-4550-9e19-7b69276296a1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="NO" class="java.lang.String"/>
+	<parameter name="DATE" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="NAME" class="java.lang.String"/>
+	<parameter name="SUB_TOTAL" class="java.lang.Integer"/>
+	<parameter name="TAX" class="java.lang.Integer"/>
+	<parameter name="MEMO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="itemName" class="java.lang.String"/>
+	<field name="price" class="java.lang.Integer"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="totalPrice" class="java.lang.Integer"/>
+	<group name="Group1">
+		<groupFooter>
+			<band height="57">
+				<staticText>
+					<reportElement mode="Opaque" x="380" y="0" width="70" height="19" backcolor="#CCFFFF" uuid="7147240a-a522-4564-8cd6-2cf6fc4d92d4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="IPAexg" size="11"/>
+					</textElement>
+					<text><![CDATA[小計]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="380" y="38" width="70" height="19" backcolor="#CCFFFF" uuid="903110d7-5384-4775-9889-6ffeffbc902c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="IPAexg" size="11"/>
+					</textElement>
+					<text><![CDATA[合計]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="380" y="19" width="70" height="19" backcolor="#CCFFFF" uuid="03ffa7bc-1232-43a6-9755-d9dc3f50c04c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="IPAexg" size="11"/>
+					</textElement>
+					<text><![CDATA[消費税]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="450" y="0" width="105" height="19" uuid="c396bebd-638e-4cea-83af-76a629fee314"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="MS PGothic" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{SUB_TOTAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="450" y="19" width="105" height="19" uuid="d4e0fbca-f75f-472c-9b5f-d8ff771a9ade"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="IPAexg" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{TAX}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="450" y="38" width="105" height="19" uuid="97320092-50e6-47ad-b861-ce4e7e235eb6"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="IPAexg" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{SUB_TOTAL} + $P{TAX}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="104" y="329" width="346" height="145" forecolor="rgba(255, 0, 0, 0.19607843)" uuid="bbcc01cc-9215-46a7-bf27-8944cf23f9e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="IPAexg" size="48"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[S A M P L E]]></text>
+			</staticText>
+		</band>
+	</background>
+	<title>
+		<band height="163" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" uuid="a16a8c81-bd4a-4c89-926e-117341d79e4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="24"/>
+				</textElement>
+				<text><![CDATA[御　請　求　書]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="427" y="38" width="128" height="20" uuid="be039703-9d62-40a9-957c-c051637bf1eb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="12" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="387" y="38" width="40" height="20" uuid="c4f74eac-c380-44de-9e1c-145189a1604d"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="12"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="63" width="250" height="30" uuid="0c43d768-3b8a-473d-8292-6e84c21604dc"/>
+				<box padding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="425" y="105" width="130" height="20" uuid="28545e4d-052a-4f7c-92a5-969dfeef5574"/>
+				<textElement>
+					<font fontName="IPAexg" size="12"/>
+				</textElement>
+				<text><![CDATA[株式会社Cスタジオ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="63" width="40" height="20" uuid="9562d31a-1f56-4305-be06-535dcff00e41"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="12"/>
+				</textElement>
+				<text><![CDATA[請求日]]></text>
+			</staticText>
+			<textField pattern="yyyy年　M月　d日">
+				<reportElement x="427" y="63" width="128" height="20" uuid="b39cf8d5-8346-4f42-9da9-d7f8712b2f5a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="12" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="425" y="125" width="130" height="38" uuid="6408159b-e1a5-4b8f-9558-aba0fd88787c"/>
+				<textElement>
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<text><![CDATA[〒104-0045
+東京都中央区築地2-14-6
+LXS築地0402]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="63" width="49" height="30" uuid="4e91ce71-f8d5-48f2-b755-5f9858a4e3fa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="IPAexg" size="14"/>
+				</textElement>
+				<text><![CDATA[様]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="126" width="190" height="30" uuid="2051df6b-ee94-4607-89de-3e84d68f259c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SUB_TOTAL} + $P{TAX}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="126" width="70" height="30" backcolor="#CCFFFF" uuid="0eb99321-f835-4851-bc0a-99246c1f6a9b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg"/>
+				</textElement>
+				<text><![CDATA[合計（税込）]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="111" width="195" height="15" uuid="a8c419b4-9193-4ffa-b3fe-711df99d89cd"/>
+				<textElement>
+					<font fontName="IPAexg"/>
+				</textElement>
+				<text><![CDATA[下記をご請求申し上げます。]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="17" width="280" height="20" backcolor="#C4C0C0" uuid="1c01fd9f-9914-4e08-8a2c-d8f8fcf09b30"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<text><![CDATA[品目]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="17" width="100" height="20" backcolor="#C4C0C0" uuid="826ab9b5-a70c-4b83-836b-52717c53761e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<text><![CDATA[単価]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="17" width="70" height="20" backcolor="#C4C0C0" uuid="7545084f-47f9-417e-a39e-0240cbdae5c1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="450" y="17" width="105" height="20" backcolor="#C4C0C0" uuid="a2946404-3b6e-4fc6-8fdc-ea6092712c9d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<text><![CDATA[価格]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="280" height="19" uuid="334a18bd-f495-49a3-adda-290957d4328a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{itemName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="100" height="19" uuid="ddf845d5-6f5d-473d-8a02-2c3b6b526a63"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="70" height="19" uuid="079f1960-680e-4796-879d-b462d5c1bd60"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="105" height="19" uuid="ece2a986-ae49-48c9-9cac-a1e4cd99e94c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="IPAexg" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalPrice}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="94">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="555" height="70" uuid="69b4cc10-5269-47ce-ab80-78a6886d555a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="IPAexg"/>
+				</textElement>
+				<textFieldExpression><![CDATA["備考\n" + 
+$P{MEMO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

@@ -83,6 +83,13 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("PDF");
+    item = new DefaultMenuItem("請求書サンプル");
+    item.setOutcome("/contents/report/pdf/seikyusho.xhtml");
+    item.setIcon("fa fa-file-pdf-o");
+    menu.addElement(item);
+    model.addElement(menu);
+
     new Thread(new AppLogReader(1000)).start();
     new Thread(new ErrorLogReader(5000)).start();
     logger.perfEnd("init", startTime);
@@ -91,12 +98,6 @@ public class MenuView implements Serializable {
   public String setting() {
 
     System.out.println("設定");
-    return "";
-  }
-
-  public String logout() {
-
-    System.out.println("ログアウト");
     return "";
   }
 
