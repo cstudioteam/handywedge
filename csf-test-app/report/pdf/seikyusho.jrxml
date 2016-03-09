@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-03-08T11:55:47 -->
+<!-- 2016-03-09T16:46:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="seikyusho" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="e8104afe-2711-4550-9e19-7b69276296a1">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="NO" class="java.lang.String"/>
@@ -165,13 +165,6 @@
 				<textFieldExpression><![CDATA[$P{NAME}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="425" y="105" width="130" height="20" uuid="28545e4d-052a-4f7c-92a5-969dfeef5574"/>
-				<textElement>
-					<font fontName="IPAexg" size="12"/>
-				</textElement>
-				<text><![CDATA[株式会社Cスタジオ]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="387" y="63" width="40" height="20" uuid="9562d31a-1f56-4305-be06-535dcff00e41"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="IPAexg" size="12"/>
@@ -191,15 +184,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{DATE}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="425" y="125" width="130" height="38" uuid="6408159b-e1a5-4b8f-9558-aba0fd88787c"/>
-				<textElement>
-					<font fontName="IPAexg" size="11"/>
-				</textElement>
-				<text><![CDATA[〒104-0045
-東京都中央区築地2-14-6
-LXS築地0402]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="250" y="63" width="49" height="30" uuid="4e91ce71-f8d5-48f2-b755-5f9858a4e3fa"/>
 				<textElement verticalAlignment="Middle">
@@ -240,6 +224,20 @@ LXS築地0402]]></text>
 				</textElement>
 				<text><![CDATA[下記をご請求申し上げます。]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="425" y="95" width="130" height="20" uuid="9b479d31-9ac8-436e-9580-3eefc283a7ad"/>
+				<textElement>
+					<font fontName="IPAexg" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{seikyusho.company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="115" width="130" height="48" uuid="f9f5bf3c-597f-4661-97c8-46d4a105e5f2"/>
+				<textElement>
+					<font fontName="IPAexg" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{seikyusho.addr}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>

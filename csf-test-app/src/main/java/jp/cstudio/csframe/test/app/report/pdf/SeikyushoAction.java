@@ -18,12 +18,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
+import com.csframe.config.FWMessageResources;
 import com.csframe.log.FWLogger;
 import com.csframe.report.pdf.FWPDFReport;
 import com.csframe.report.pdf.FWPDFReportWriter;
+import com.csframe.user.FWUser;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.sf.jasperreports.engine.JRParameter;
 
 @ViewScoped
 @Named
@@ -35,7 +38,13 @@ public class SeikyushoAction implements Serializable {
   private transient FWLogger logger;
 
   @Inject
-  private FWPDFReportWriter pdfWriter;
+  private FWUser user;
+
+  @Inject
+  private FWMessageResources msg;
+
+  @Inject
+  private transient FWPDFReportWriter pdfWriter;
 
   @Setter
   @Getter
@@ -52,6 +61,8 @@ public class SeikyushoAction implements Serializable {
   public void createPdf() throws IOException {
 
     Map<String, Object> params = new HashMap<>();
+    params.put(JRParameter.REPORT_LOCALE, user.getLanguage());
+    params.put(JRParameter.REPORT_RESOURCE_BUNDLE, msg.getBundle());
     params.put("NO", UUID.randomUUID().toString().substring(0, 13));
     params.put("DATE", new Date());
     params.put("NAME", name);

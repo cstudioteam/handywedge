@@ -94,6 +94,8 @@ public class FWSessionFilter implements Filter {
       FWFullUser user = sessionCtx.getUser();
       String loginUrl = FWStringUtil.getLoginUrl();
       if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
+        // ログイン前にデフォルト設定としてブラウザ設定言語を使用。ログイン処理の中でユーザマスタに登録されている言語で上書き。
+        user.setLanguage(httpServletRequest.getLocale());
         logger.debug("ログインされていません。ログインページにリダイレクトします。 url={}", loginUrl);
         httpServletResponse.sendRedirect(loginUrl);
         return;

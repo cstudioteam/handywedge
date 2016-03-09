@@ -13,7 +13,7 @@ import com.csframe.context.FWContext;
 import com.csframe.log.FWLogger;
 
 @ApplicationScoped
-@Named("messageResouces")
+@Named("fwMsgResources")
 public class FWMessageResourcesImpl implements FWMessageResources {
 
   @Inject
@@ -54,5 +54,16 @@ public class FWMessageResourcesImpl implements FWMessageResources {
 
     ResourceBundle rb = ResourceBundle.getBundle(ctx.getApplicationId(), locale);
     return rb.keySet();
+  }
+
+  @Override
+  public ResourceBundle getBundle() {
+
+    return getBundle(ctx.getUser().getLanguage());
+  }
+
+  @Override
+  public ResourceBundle getBundle(Locale locale) {
+    return ResourceBundle.getBundle(ctx.getApplicationId(), locale);
   }
 }

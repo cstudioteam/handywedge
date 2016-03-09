@@ -1,10 +1,11 @@
 package com.csframe.config;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 public interface FWMessageResources {
-  
+
   String LOGIN_URL = "fw.login.url";
 
   String get(String key);
@@ -14,4 +15,8 @@ public interface FWMessageResources {
   Set<String> keySet();
 
   Set<String> keySet(Locale locale);
+
+  ResourceBundle getBundle();
+
+  ResourceBundle getBundle(Locale locale);
 }
