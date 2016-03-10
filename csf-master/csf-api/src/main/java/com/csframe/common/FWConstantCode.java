@@ -50,12 +50,12 @@ public interface FWConstantCode {
   /**
    * 暗号処理でエラー。
    */
-  String CIPHER_ENCRYPT_FAIL = "00301E";
+  String CIPHER_ENCRYPT_FAIL = "00401E";
 
   /**
    * 復号処理でエラー。
    */
-  String CIPHER_DECRYPT_FAIL = "00302E";
+  String CIPHER_DECRYPT_FAIL = "00402E";
 
   /* REST機能のFWコード */
 

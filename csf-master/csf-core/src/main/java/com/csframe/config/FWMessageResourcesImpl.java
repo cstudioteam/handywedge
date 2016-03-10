@@ -35,7 +35,7 @@ public class FWMessageResourcesImpl implements FWMessageResources {
 
     ResourceBundle rb = ResourceBundle.getBundle(ctx.getApplicationId(), locale);
     if (!rb.containsKey(key)) {
-      throw new FWMissingResourceException(FWConstantCode.PROPERTIES_KEY_MISSING);
+      throw new FWMissingResourceException(FWConstantCode.PROPERTIES_KEY_MISSING, key);
     } else {
       String value = rb.getString(key);
       logger.debug("get() return. value={}", value);

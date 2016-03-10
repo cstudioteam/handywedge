@@ -15,10 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
-import com.csframe.util.FWBeanManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Path("/")

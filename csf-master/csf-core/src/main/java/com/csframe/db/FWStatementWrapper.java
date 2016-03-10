@@ -4,11 +4,11 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
+import com.csframe.cdi.FWBeanManager;
 import com.csframe.db.FWConnection;
 import com.csframe.db.FWFullConnectionManager;
 import com.csframe.db.FWFullStatement;
 import com.csframe.db.FWResultSet;
-import com.csframe.util.FWBeanManager;
 
 public class FWStatementWrapper implements FWFullStatement {
 

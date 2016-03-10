@@ -22,10 +22,10 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
+import com.csframe.cdi.FWBeanManager;
 import com.csframe.db.FWFullConnectionManager;
 import com.csframe.db.FWFullResultSet;
 import com.csframe.db.FWStatement;
-import com.csframe.util.FWBeanManager;
 
 public class FWResultSetWrapper implements FWFullResultSet {
 

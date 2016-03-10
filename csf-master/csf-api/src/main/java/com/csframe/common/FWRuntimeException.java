@@ -22,8 +22,7 @@ public class FWRuntimeException extends RuntimeException {
   @Override
   public String getMessage() {
 
-    // TODO エラーコードからメッセージ取得する仕組みを作る
-    return super.getMessage();
+    return FWErrorMessage.getMessage(code, args);
   }
 
 }

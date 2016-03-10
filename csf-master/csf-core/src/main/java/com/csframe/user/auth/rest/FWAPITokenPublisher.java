@@ -11,10 +11,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.csframe.cdi.FWBeanManager;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.csframe.user.auth.FWLoginManager;
-import com.csframe.util.FWBeanManager;
 import com.csframe.util.FWStringUtil;
 
 @ApplicationScoped

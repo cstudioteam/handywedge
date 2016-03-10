@@ -1,5 +1,6 @@
 package com.csframe.util;
 
+import com.csframe.cdi.FWBeanManager;
 import com.csframe.config.FWMessageResources;
 import com.csframe.context.FWContext;
 

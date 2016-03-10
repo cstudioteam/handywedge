@@ -102,7 +102,7 @@ class FWPDFReportWriterImpl implements FWPDFReportWriter {
     try (InputStream stream =
         Thread.currentThread().getContextClassLoader().getResourceAsStream(templateFile);) {
       if (stream == null) {
-        throw new FWPDFReportException(FWConstantCode.PDF_TEMPLATE_FILE_MISSING);
+        throw new FWPDFReportException(FWConstantCode.PDF_TEMPLATE_FILE_MISSING, templateFile);
       }
       jasperReport = (JasperReport) JRLoader.loadObject(stream);
     }

@@ -1,4 +1,4 @@
-package com.csframe.util;
+package com.csframe.cdi;
 
 import java.lang.annotation.Annotation;
 
