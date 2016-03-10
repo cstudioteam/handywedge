@@ -6,8 +6,10 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
 >
-<ui:include src="/layout/header.xhtml" />
-<ui:insert name="extHeader" />
+<h:head>
+    <ui:include src="/layout/header.xhtml" />
+    <ui:insert name="extHeader" />
+</h:head>
 <h:body>
     <h:form id="form">
         <div style="height: 2em; margin: 2px;">

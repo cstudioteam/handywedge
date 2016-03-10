@@ -47,6 +47,15 @@ public interface FWConstantCode {
    */
   String PDF_DATA_MISSING = "00304E";
 
+  /**
+   * 暗号処理でエラー。
+   */
+  String CIPHER_ENCRYPT_FAIL = "00301E";
+
+  /**
+   * 復号処理でエラー。
+   */
+  String CIPHER_DECRYPT_FAIL = "00302E";
 
   /* REST機能のFWコード */
 

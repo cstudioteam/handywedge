@@ -90,6 +90,13 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("暗号化");
+    item = new DefaultMenuItem("文字列");
+    item.setOutcome("/contents/crypto/crypto.xhtml");
+    item.setIcon("fa fa-key");
+    menu.addElement(item);
+    model.addElement(menu);
+
     new Thread(new AppLogReader(1000)).start();
     new Thread(new ErrorLogReader(5000)).start();
     logger.perfEnd("init", startTime);
