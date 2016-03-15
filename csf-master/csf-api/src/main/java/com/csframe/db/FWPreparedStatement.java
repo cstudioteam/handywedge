@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.db;
 
 import java.io.InputStream;
@@ -8,6 +15,7 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.NClob;
 import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
 import java.sql.Ref;
 import java.sql.ResultSetMetaData;
 import java.sql.RowId;
@@ -16,6 +24,13 @@ import java.sql.SQLType;
 import java.sql.SQLXML;
 import java.util.Calendar;
 
+/**
+ * PreparedStatementのラッパーインターフェースです。<br>
+ * DBへアクセスを行うにはFWConnectionManagerからFWConnectionインスタンスを取得してアクセスします。
+ * 
+ * @see FWConnectionManager
+ * @see PreparedStatement
+ */
 public interface FWPreparedStatement extends FWStatement {
 
   FWResultSet executeQuery() throws SQLException;

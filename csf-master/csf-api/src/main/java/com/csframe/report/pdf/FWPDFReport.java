@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.report.pdf;
 
 import java.util.ArrayList;
@@ -9,6 +16,9 @@ import lombok.Setter;
 
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
+/**
+ * 帳票の情報を保持するクラスです。
+ */
 public class FWPDFReport {
 
   /**

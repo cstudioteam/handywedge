@@ -4,7 +4,7 @@ drop table fw_user;
 
 create table fw_user(
 	id varchar(128) not null,
-	name varchar(256) not null,
+	name varchar(256),
 	country varchar(64),
 	language varchar(64),
 	create_date timestamp not null,

@@ -6,18 +6,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.csframe</groupId>
   <artifactId>csf-dependencies</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
   <modules>
-    <module>csf-dependencies-logging</module>
     <module>csf-dependencies-api</module>
+    <module>csf-dependencies-logging</module>
     <module>csf-dependencies-cdi</module>
-    <module>csf-dependencies-reference</module>
     <module>csf-dependencies-jsf</module>
     <module>csf-dependencies-rest</module>
     <module>csf-dependencies-report</module>
+    <module>csf-dependencies-reference</module>
   </modules>
-  <properties>
-    <parent.project.version>${project.version}</parent.project.version>
-  </properties>
 </project>

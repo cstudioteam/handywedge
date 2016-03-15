@@ -9,8 +9,8 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.csframe.common.FWStringUtil;
 import com.csframe.crypto.FWCipher;
-import com.csframe.util.FWStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;

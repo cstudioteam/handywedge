@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.db;
 
 import java.io.InputStream;
@@ -5,6 +12,7 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.NClob;
 import java.sql.Ref;
@@ -14,6 +22,13 @@ import java.sql.SQLType;
 import java.sql.SQLXML;
 import java.util.Calendar;
 
+/**
+ * CallableStatementのラッパーインターフェースです。<br>
+ * DBへアクセスを行うにはFWConnectionManagerからFWConnectionインスタンスを取得してアクセスします。
+ * 
+ * @see FWConnectionManager
+ * @see CallableStatement
+ */
 public interface FWCallableStatement extends FWPreparedStatement {
 
   void registerOutParameter(int parameterIndex, int sqlType) throws SQLException;

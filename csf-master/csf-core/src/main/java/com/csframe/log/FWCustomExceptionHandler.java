@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.log;
 
 import java.io.IOException;
@@ -13,9 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.util.FWThreadLocal;
 
-/**
- * FW内部のみ使用します。
- */
 public class FWCustomExceptionHandler extends ExceptionHandlerWrapper {
 
   private transient FWLogger logger = FWLoggerFactory.getLogger(FWCustomExceptionHandler.class);

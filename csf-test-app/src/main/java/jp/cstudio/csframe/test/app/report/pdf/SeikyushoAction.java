@@ -61,7 +61,7 @@ public class SeikyushoAction implements Serializable {
   public void createPdf() throws IOException {
 
     Map<String, Object> params = new HashMap<>();
-    params.put(JRParameter.REPORT_LOCALE, user.getLanguage());
+    params.put(JRParameter.REPORT_LOCALE, user.getLocale());
     params.put(JRParameter.REPORT_RESOURCE_BUNDLE, msg.getBundle());
     params.put("NO", UUID.randomUUID().toString().substring(0, 13));
     params.put("DATE", new Date());

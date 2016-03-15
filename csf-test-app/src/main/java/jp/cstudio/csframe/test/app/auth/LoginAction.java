@@ -9,9 +9,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.csframe.common.FWStringUtil;
 import com.csframe.context.FWContext;
 import com.csframe.user.auth.FWLoginManager;
-import com.csframe.util.FWStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;

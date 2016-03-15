@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.util;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * フレームワーク専用クラス。 Contextで持ちまわれない情報を管理するためThreadLocalを利用する。
- */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class FWThreadLocal {
 

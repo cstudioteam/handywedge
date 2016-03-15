@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.context;
 
 import java.util.Date;
@@ -5,61 +12,69 @@ import java.util.Date;
 import com.csframe.user.FWUser;
 
 /**
- * フレームワーク持ち回り情報の業務アクセス用インターフェースです。<br>
+ * フレームワークコンテキスト情報のインターフェースです。<br>
  * 下記の情報を取得出来ます。<br>
  * <ul>
  * <li>ログイン中のユーザ情報</li>
  * <li>リクエストに関する情報</li>
- * <li>セッションに関する情報</li>
  * <li>アプリケーションに関する情報</li>
  * </ul>
- * また、同一セッション内での持ち回り情報を setAttribute、getAttributeメソッドで設定／取得出来ます。
  */
 public interface FWContext {
 
   /**
-   * リクエストIDを取得する。
+   * リクエストIDを返します。
    *
    * @return リクエストID
    */
   String getRequestId();
 
   /**
-   * リクエスト開始時刻を取得する。
+   * リクエスト開始時刻を返します。
    *
    * @return リクエスト開始時刻
    */
   Date getRequestStartTime();
 
   /**
-   * 実行中のサーバーの名称を取得する。
+   * 実行中のサーバーのホスト名を返します。
    *
    * @return 実行中のサーバーの名称
    */
   String getHostName();
 
   /**
-   * アプリケーションIDを取得する。
+   * アプリケーションIDを返します。
    *
    * @return アプリケーションID
    */
   String getApplicationId();
 
   /**
-   * 前回リクエストの最終アクセス時間を取得する。
+   * 前回リクエストの最終アクセス時間を返します。
    *
    * @return 前回リクエストの最終アクセス時間
    */
   Date getLastAccessTime();
 
   /**
-   * アプリケーションのコンテキストパスを取得する。
+   * アプリケーションのコンテキストパスを返します。
    *
    * @return コンテキストパス
    */
   String getContextPath();
 
+  /**
+   * 認証がAPIトークンによる場合はtrueを返します。
+   * 
+   * @return リクエストがAPIトークン認証の場合はtrue
+   */
   boolean isAPITokenAuth();
 
+  /**
+   * ログイン中のユーザー情報を返します。
+   * 
+   * @return ログイン中のユーザー情報
+   */
   FWUser getUser();
 }

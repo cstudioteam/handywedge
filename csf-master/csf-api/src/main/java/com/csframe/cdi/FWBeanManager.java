@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.cdi;
 
 import java.lang.annotation.Annotation;
@@ -7,6 +14,19 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+/**
+ * &#64;Injectでのインスタンスが取得できない場合に直接BeanManagerを介してCDI管理インスタンスを取得するためのクラスです。<br>
+ * 以下のようにしてインスタンスを取得します。<br>
+ * 
+ * <pre>
+ * 
+ * {@code    @Inject}
+ * {@code
+ *     FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+ * }
+ * 
+ * </pre>
+ */
 public class FWBeanManager {
 
   private static BeanManager beanManager;

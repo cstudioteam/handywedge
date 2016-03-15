@@ -7,17 +7,12 @@
   <parent>
     <groupId>com.csframe</groupId>
     <artifactId>csf-dependencies</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <artifactId>csf-dependencies-rest</artifactId>
   <packaging>pom</packaging>
   <dependencies>
     <!--JAX-RS実装。 APサーバで実装済の場合はコメントアウト -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.glassfish.jersey.core</groupId> -->
-    <!-- <artifactId>jersey-server</artifactId> -->
-    <!-- <version>2.22.2</version> -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>

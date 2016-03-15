@@ -1,7 +1,22 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.db;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 
+/**
+ * Statementのラッパーインターフェースです。<br>
+ * DBへアクセスを行うにはFWConnectionManagerからFWConnectionインスタンスを取得してアクセスします。
+ * 
+ * @see FWConnectionManager
+ * @see Statement
+ */
 public interface FWStatement extends AutoCloseable {
 
   @Override

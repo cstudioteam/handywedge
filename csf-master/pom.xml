@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.csframe</groupId>
   <artifactId>csf-master</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
   <description>csFrameのルートプロジェクト</description>
   <modules>
@@ -16,13 +16,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
-    <parent.project.version>${project.version}</parent.project.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>csf-dependencies-reference</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1.0</version>
       <scope>compile</scope>
       <type>pom</type>
     </dependency>
@@ -62,6 +61,75 @@
           <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
           <xmlOutput>true</xmlOutput>
           <!-- <skip>${skip.findbugs}</skip> -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <author>false</author>
+          <source>1.8</source>
+          <show>protected</show>
+          <encoding>UTF-8</encoding>
+          <charset>UTF-8</charset>
+          <docencoding>UTF-8</docencoding>
+          <!-- <additionalDependencies> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>javax.servlet</groupId> -->
+          <!-- <artifactId>javax.servlet-api</artifactId> -->
+          <!-- <version>3.1.0</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>javax.faces</groupId> -->
+          <!-- <artifactId>javax.faces-api</artifactId> -->
+          <!-- <version>2.2</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>org.apache.tomcat</groupId> -->
+          <!-- <artifactId>tomcat-jdbc</artifactId> -->
+          <!-- <version>${tomcat.version}</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>org.seasar.doma</groupId> -->
+          <!-- <artifactId>doma</artifactId> -->
+          <!-- <version>1.37.0</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>org.slf4j</groupId> -->
+          <!-- <artifactId>slf4j-api</artifactId> -->
+          <!-- <version>1.7.7</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>org.primefaces</groupId> -->
+          <!-- <artifactId>primefaces</artifactId> -->
+          <!-- <version>5.0</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>redis.clients</groupId> -->
+          <!-- <artifactId>jedis</artifactId> -->
+          <!-- <version>2.5.1</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>org.jboss.weld.servlet</groupId> -->
+          <!-- <artifactId>weld-servlet</artifactId> -->
+          <!-- <version>2.2.4.Final</version> -->
+          <!-- </additionalDependency> -->
+          <!-- <additionalDependency> -->
+          <!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+          <!-- <artifactId>jackson-annotations</artifactId> -->
+          <!-- <version>2.4.3</version> -->
+          <!-- </additionalDependency> -->
+          <!-- </additionalDependencies> -->
         </configuration>
       </plugin>
     </plugins>

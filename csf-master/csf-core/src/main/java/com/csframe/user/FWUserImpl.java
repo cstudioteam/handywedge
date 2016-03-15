@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.user;
 
 import java.sql.Timestamp;
@@ -16,12 +23,12 @@ public class FWUserImpl implements FWFullUser {
 
   private String id;
   private String name;
-  private Locale language;
+  private Locale locale;
   private Timestamp lastLoginTime;
 
   @PostConstruct
   public void init() {
-    language = Locale.getDefault();
+    locale = Locale.getDefault();
   }
 
 }

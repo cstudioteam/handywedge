@@ -10,7 +10,7 @@ import javax.inject.Named;
 
 import org.primefaces.event.CellEditEvent;
 
-import com.csframe.util.FWStringUtil;
+import com.csframe.common.FWStringUtil;
 
 import jp.cstudio.csframe.test.app.db.dto.Test;
 import lombok.Getter;

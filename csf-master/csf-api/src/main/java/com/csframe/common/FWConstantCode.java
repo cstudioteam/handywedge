@@ -1,5 +1,16 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.common;
 
+/**
+ * csFrameのエラーコードとREST機能のリターンコードを定義するインターフェースです。<br>
+ * エラーコードの末尾はF=Fatal、E=Exceptionを示し、Fatalはシステムで予期しないエラーとなります。<br>
+ */
 public interface FWConstantCode {
 
   /**
@@ -10,7 +21,7 @@ public interface FWConstantCode {
   /**
    * web.xmlにcsf.app_idの設定がない。
    */
-  String NO_APP_ID = "00002F";
+  String NO_APP_ID = "00002E";
 
   /**
    * 予期しないDB関連のエラー。

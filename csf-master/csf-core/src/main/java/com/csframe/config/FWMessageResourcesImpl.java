@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.config;
 
 import java.util.Locale;
@@ -25,7 +32,7 @@ public class FWMessageResourcesImpl implements FWMessageResources {
   @Override
   public String get(String key) {
 
-    return get(key, ctx.getUser().getLanguage());
+    return get(key, ctx.getUser().getLocale());
   }
 
   @Override
@@ -46,7 +53,7 @@ public class FWMessageResourcesImpl implements FWMessageResources {
   @Override
   public Set<String> keySet() {
 
-    return keySet(ctx.getUser().getLanguage());
+    return keySet(ctx.getUser().getLocale());
   }
 
   @Override
@@ -59,7 +66,7 @@ public class FWMessageResourcesImpl implements FWMessageResources {
   @Override
   public ResourceBundle getBundle() {
 
-    return getBundle(ctx.getUser().getLanguage());
+    return getBundle(ctx.getUser().getLocale());
   }
 
   @Override

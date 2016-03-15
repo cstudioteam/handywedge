@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.crypto;
 
 import java.security.InvalidAlgorithmParameterException;
@@ -39,8 +46,8 @@ public class FWCipherImpl implements FWCipher {
 
   @PostConstruct
   public void init() {
-    key = msg.get("fw.crypto.key");
-    iv = msg.get("fw.crypto.iv");
+    key = msg.get(FWMessageResources.CRYPTO_KEY);
+    iv = msg.get(FWMessageResources.CRYPTO_IV);
     logger.debug("Cipher init. key={}, iv={}", key, iv);
   }
 

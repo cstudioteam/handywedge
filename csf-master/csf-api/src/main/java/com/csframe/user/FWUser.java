@@ -1,18 +1,50 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.user;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Locale;
 
+/**
+ * ユーザー情報インターフェースです。
+ */
 public interface FWUser extends Serializable {
 
+  /**
+   * ユーザーIDを返します。
+   * 
+   * @return ユーザーID
+   */
   String getId();
 
+  /**
+   * ユーザー名を返します。
+   * 
+   * @return ユーザー名
+   */
   String getName();
 
-  Locale getLanguage();
+  /**
+   * ユーザーのロケール情報を返します。
+   * 
+   * @return ロケール情報
+   */
+  Locale getLocale();
 
-  void setLanguage(Locale language);
+  /**
+   * ユーザーのロケール情報を設定します。<br>
+   * 通常はDBに登録されているロケール情報が設定されます。<br>
+   * アプリケーションで上書きしたい場合はメソッドを実行して下さい。<br>
+   * 
+   * @param locale ロケール情報
+   */
+  void setLocale(Locale locale);
 
   Timestamp getLastLoginTime();
 

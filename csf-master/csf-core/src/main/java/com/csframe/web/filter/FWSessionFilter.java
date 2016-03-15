@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.web.filter;
 
 import java.io.IOException;
@@ -20,13 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWRuntimeException;
+import com.csframe.common.FWStringUtil;
 import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
 import com.csframe.context.FWSessionContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWFullUser;
-import com.csframe.util.FWStringUtil;
 import com.csframe.util.FWThreadLocal;
 
 @WebFilter(filterName = "csf_session_filter")
@@ -95,7 +102,7 @@ public class FWSessionFilter implements Filter {
       String loginUrl = FWStringUtil.getLoginUrl();
       if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
         // ログイン前にデフォルト設定としてブラウザ設定言語を使用。ログイン処理の中でユーザマスタに登録されている言語で上書き。
-        user.setLanguage(httpServletRequest.getLocale());
+        user.setLocale(httpServletRequest.getLocale());
         logger.debug("ログインされていません。ログインページにリダイレクトします。 url={}", loginUrl);
         httpServletResponse.sendRedirect(loginUrl);
         return;

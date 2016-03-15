@@ -1,2 +1,1 @@
-csFrame（csf）開発版です。
-※JavaEEフレームワーク
+This software is released under the MIT License, see LICENSE.

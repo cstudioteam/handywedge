@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.user.auth;
 
 import java.security.NoSuchAlgorithmException;
@@ -10,7 +17,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWPasswordUtil;
 import com.csframe.common.FWRuntimeException;
+import com.csframe.common.FWStringUtil;
 import com.csframe.context.FWApplicationContext;
 import com.csframe.db.FWConnection;
 import com.csframe.db.FWConnectionManager;
@@ -19,8 +28,6 @@ import com.csframe.db.FWResultSet;
 import com.csframe.db.FWTransactional;
 import com.csframe.log.FWLogger;
 import com.csframe.user.FWFullUser;
-import com.csframe.util.FWPasswordUtil;
-import com.csframe.util.FWStringUtil;
 import com.csframe.util.FWThreadLocal;
 
 @RequestScoped
@@ -279,7 +286,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
         String lang = rs.getString("language");
         if (!FWStringUtil.isEmpty(lang)) {
           String country = rs.getString("country");
-          user.setLanguage(new Locale.Builder().setLanguage(lang).setRegion(country).build());
+          user.setLocale(new Locale.Builder().setLanguage(lang).setRegion(country).build());
         }
         user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
         FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする。

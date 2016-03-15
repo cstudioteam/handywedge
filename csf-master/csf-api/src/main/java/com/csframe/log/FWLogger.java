@@ -1,14 +1,49 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.log;
 
+import org.slf4j.Logger;
 import org.slf4j.Marker;
 
+/**
+ * Loggerのラッパーインターフェースです。<br>
+ * いくつかcsFrame用のメソッドが追加されています。
+ *
+ * @see Logger
+ */
 public interface FWLogger {
 
   /* FW独自 API */
+  /**
+   * 処理時間を計測したい場合の開始地点で実行します。<br>
+   * 戻り値の開始時間を終了地点でperfEndメソッドの引数に渡します。
+   * 
+   * @param signature 処理時間を計測するメソッド名
+   * @return 計測開始時間
+   */
   long perfStart(String signature);
 
+  /**
+   * 処理時間を計測したい場合の終了地点で実行します。<br>
+   * 開始時点で実行したperfStartの戻り値をメソッドの引数に渡します。
+   * 
+   * @param signature 処理時間を計測するメソッド名
+   * @param startTime 計測開始時間
+   */
   void perfEnd(String signature, long startTime);
 
+  /**
+   * リクエストの処理時間を計測します。<br>
+   * アプリケーションでは使用しないで下さい。
+   *
+   * @param signature 処理時間を計測するメソッド名
+   * @param startTime 計測開始時間
+   */
   void respLog(String signature, long startTime);
 
   /* 以下、Logger API */

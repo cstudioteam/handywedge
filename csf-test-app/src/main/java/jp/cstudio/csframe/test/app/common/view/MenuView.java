@@ -116,13 +116,13 @@ public class MenuView implements Serializable {
     logger.debug("setLocale val=" + val);
     switch (val) {
       case "JP":
-        ctx.getUser().setLanguage(Locale.JAPAN);
+        ctx.getUser().setLocale(Locale.JAPAN);
         break;
       case "US":
-        ctx.getUser().setLanguage(Locale.US);
+        ctx.getUser().setLocale(Locale.US);
         break;
       default:
-        ctx.getUser().setLanguage(Locale.getDefault());
+        ctx.getUser().setLocale(Locale.getDefault());
         break;
     }
   }
@@ -138,6 +138,6 @@ public class MenuView implements Serializable {
   }
 
   public String getLang() {
-    return ctx.getUser().getLanguage().getCountry();
+    return ctx.getUser().getLocale().getCountry();
   }
 }

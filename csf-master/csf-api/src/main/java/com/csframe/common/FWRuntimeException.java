@@ -1,5 +1,15 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.common;
 
+/**
+ * 全てのcsFrameの非チェック例外クラスのスーパークラスです。
+ */
 public class FWRuntimeException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;

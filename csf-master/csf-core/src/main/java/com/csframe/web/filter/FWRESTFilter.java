@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.web.filter;
 
 import java.io.IOException;
@@ -13,11 +20,11 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.csframe.common.FWStringUtil;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWUser;
 import com.csframe.user.auth.FWLoginManager;
-import com.csframe.util.FWStringUtil;
 
 @WebFilter(filterName = "csf_rest_filter")
 public class FWRESTFilter implements Filter {
@@ -27,7 +34,7 @@ public class FWRESTFilter implements Filter {
 
   @Inject
   private FWLoginManager loginMgr;
-  
+
   @Inject
   private FWUser user;
 

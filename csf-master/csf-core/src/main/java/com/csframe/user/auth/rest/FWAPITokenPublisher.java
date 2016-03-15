@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.csframe.user.auth.rest;
 
 import javax.annotation.PostConstruct;
@@ -12,10 +19,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.csframe.cdi.FWBeanManager;
+import com.csframe.common.FWStringUtil;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.csframe.user.auth.FWLoginManager;
-import com.csframe.util.FWStringUtil;
 
 @ApplicationScoped
 @Path("/token")
