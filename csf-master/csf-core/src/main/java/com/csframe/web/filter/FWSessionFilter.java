@@ -74,6 +74,18 @@ public class FWSessionFilter implements Filter {
     FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
+    // @セキュリティ webサーバーやapサーバーで設定がありそうだがフィルターで念の為に設定
+    httpServletResponse.setHeader("X-XSS-Protection", "1; mode=block"); // ブラウザのXSSフィルターを強制的に有効
+    httpServletResponse.setHeader("X-Content-Type-Options", "nosniff"); // ブラウザによるcontent-typeの推測無効
+    httpServletResponse.setHeader("X-Frame-Options", "SAMEORIGIN"); // 他ドメインへのコンテンツ埋め込みを拒否
+    if ("TRACE".equals(httpServletRequest.getMethod().toUpperCase())) { // traceメソッドを禁止
+      httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+      logger.warn("TRACE request. ip={}, user-agent={}", httpServletRequest.getRemoteAddr(),
+          httpServletRequest.getHeader("User-Agent"));
+      return;
+    }
+
     final String requestUrl = httpServletRequest.getRequestURI();
     logger.debug("FWSessionFilter start. uri={}", requestUrl);
     if (requestUrl.startsWith(appCtx.getContextPath() + "/javax.faces.resource/")) {
@@ -133,7 +145,7 @@ public class FWSessionFilter implements Filter {
     Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
     if (login != null) {
       if (login) {
-        request.changeSessionId(); // セッションは維持してIDだけ変更(Session Fixation)
+        request.changeSessionId(); // @セキュリティ セッションは維持してIDだけ変更(Session Fixation)
       } else {
         request.getSession().invalidate();
       }

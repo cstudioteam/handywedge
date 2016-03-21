@@ -49,7 +49,7 @@ public class FWInternalUtil {
       logger.info("初期キャッシュAPIトークン数={}", tokens.size());
       logger.perfEnd("cacheAPIToken", start);
     } catch (SQLException e) {
-      throw new FWRuntimeException(FWConstantCode.DB_FATAL);
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     } finally {
       try {
         if (rs != null) {
