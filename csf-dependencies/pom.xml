@@ -16,5 +16,6 @@
     <module>csf-dependencies-rest</module>
     <module>csf-dependencies-report</module>
     <module>csf-dependencies-reference</module>
+    <module>csf-dependencies-mail</module>
   </modules>
 </project>

@@ -36,6 +36,7 @@ public interface FWConstantCode {
   /**
    * プロパティファイルに指定されたkeyが存在しない。
    */
+  @Deprecated
   String PROPERTIES_KEY_MISSING = "00201E";
 
   /**
@@ -67,6 +68,26 @@ public interface FWConstantCode {
    * 復号処理でエラー。
    */
   String CIPHER_DECRYPT_FAIL = "00402E";
+
+  /**
+   * SMTPサーバーのホスト名設定がない。
+   */
+  String MAIL_HOST_MISSING = "00501E";
+
+  /**
+   * メール宛先アドレスのパラメータがない。
+   */
+  String MAIL_ADDR_MISSING = "00502E";
+
+  /**
+   * メール添付ファイルがサイズオーバー。
+   */
+  String MAIL_FILE_SIZE_OVER = "00503E";
+
+  /**
+   * メール送信処理でエラー。
+   */
+  String MAIL_SEND_FAIL = "00504E";
 
   /* REST機能のFWコード */
 

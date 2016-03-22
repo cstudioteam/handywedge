@@ -1,0 +1,164 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:jsf="http://xmlns.jcp.org/jsf"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/layout/layout.xhtml"
+>
+  <ui:define name="title">メール送信</ui:define>
+  <ui:define name="extHeader">
+  </ui:define>
+  <ui:define name="content">
+    <span>※アドレスはカンマ区切りで複数指定</span>
+    <h:form id="mailForm">
+      <p:panelGrid id="panel">
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="to"
+              value="TO"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="to"
+              size="70"
+              value="#{mailAction.toAddress}"
+              required="true"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="cc"
+              value="CC"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="cc"
+              size="70"
+              value="#{mailAction.ccAddress}"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="bcc"
+              value="BCC"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="bcc"
+              size="70"
+              value="#{mailAction.bccAddress}"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="from"
+              value="from"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="from"
+              size="70"
+              value="#{mailAction.fromAddress}"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="subject"
+              value="件名"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="subject"
+              size="70"
+              value="#{mailAction.subject}"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="body"
+              value="本文"
+            />
+          </p:column>
+          <p:column>
+            <p:inputTextarea
+              id="body"
+              value="#{mailAction.body}"
+              cols="80"
+              rows="3"
+            />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column colspan="2">
+            <p:selectOneRadio
+              id="encoding"
+              value="#{mailAction.mailEncoding}"
+            >
+              <f:selectItems value="#{mailAction.encodings}" />
+            </p:selectOneRadio>
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column>
+            <p:outputLabel
+              for="file"
+              value="添付ファイル数"
+            />
+          </p:column>
+          <p:column>
+            <p:inputText
+              id="file"
+              value="#{mailAction.fileCount}"
+            />
+            <h:outputText value="※上限5" />
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column colspan="2">
+            <p:selectOneRadio
+              id="format"
+              value="#{mailAction.format}"
+            >
+              <f:selectItems value="#{mailAction.formats}" />
+            </p:selectOneRadio>
+          </p:column>
+        </p:row>
+        <p:row>
+          <p:column colspan="2">
+            <p:selectOneRadio
+              id="priority"
+              value="#{mailAction.priority}"
+            >
+              <f:selectItems value="#{mailAction.priorities}" />
+            </p:selectOneRadio>
+          </p:column>
+        </p:row>
+      </p:panelGrid>
+      <p:commandButton
+        id="send"
+        value="送信"
+        action="#{mailAction.send}"
+        update="msgs,panel"
+      />
+      <p:messages id="msgs" />
+    </h:form>
+  </ui:define>
+</ui:composition>

@@ -1,66 +1,65 @@
 <ui:composition
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:jsf="http://xmlns.jcp.org/jsf"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    template="/layout/layout.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:jsf="http://xmlns.jcp.org/jsf"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/layout/layout.xhtml"
 >
-    <ui:define name="title">暗号化</ui:define>
-    <ui:define name="extHeader">
-        <style type="text/css">
+  <ui:define name="title">暗号化</ui:define>
+  <ui:define name="extHeader">
+    <style type="text/css">
 .ui-panelgrid>*>tr, .ui-panelgrid .ui-panelgrid-cell {
 	border: none;
 }
-}
 </style>
-    </ui:define>
-    <ui:define name="content">
-        <h3>文字列の暗号化・復号</h3>
-        <div>文字列を暗号化した上、Base64形式で表示します。また逆に復号も行います。</div>
-        <p:panelGrid columns="2">
-            <p:outputLabel
-                for="src"
-                value="入力データ"
-            />
-            <p:inputText
-                id="src"
-                value="#{cryptAction.src}"
-            />
-            <p:outputLabel
-                for="gen"
-                value="鍵を個別に生成"
-            />
-            <p:selectBooleanCheckbox
-                id="gen"
-                value="#{cryptAction.genKey}"
-            />
-            <p:outputLabel
-                for="key"
-                value="復号鍵"
-            />
-            <p:inputText
-                id="key"
-                value="#{cryptAction.inputKey}"
-            />
-        </p:panelGrid>
-        <h:commandButton
-            value="暗号"
-            action="#{cryptAction.encrypt}"
-            update="data"
-        />
-        <h:commandButton
-            value="復号"
-            action="#{cryptAction.decrypt}"
-            update="data"
-        />
-        <p:separator />
-        <div jsf:id="data">
-            <h5>暗号もしくは復号したデータ</h5>
-            <h:outputText value="#{cryptAction.data}" />
-            <h5>生成した鍵</h5>
-            <h:outputText value="#{cryptAction.outputKey}" />
-        </div>
-    </ui:define>
+  </ui:define>
+  <ui:define name="content">
+    <h3>文字列の暗号化・復号</h3>
+    <div>文字列を暗号化した上、Base64形式で表示します。また逆に復号も行います。</div>
+    <p:panelGrid columns="2">
+      <p:outputLabel
+        for="src"
+        value="入力データ"
+      />
+      <p:inputText
+        id="src"
+        value="#{cryptAction.src}"
+      />
+      <p:outputLabel
+        for="gen"
+        value="鍵を個別に生成"
+      />
+      <p:selectBooleanCheckbox
+        id="gen"
+        value="#{cryptAction.genKey}"
+      />
+      <p:outputLabel
+        for="key"
+        value="復号鍵"
+      />
+      <p:inputText
+        id="key"
+        value="#{cryptAction.inputKey}"
+      />
+    </p:panelGrid>
+    <h:commandButton
+      value="暗号"
+      action="#{cryptAction.encrypt}"
+      update="data"
+    />
+    <h:commandButton
+      value="復号"
+      action="#{cryptAction.decrypt}"
+      update="data"
+    />
+    <p:separator />
+    <div jsf:id="data">
+      <h5>暗号もしくは復号したデータ</h5>
+      <h:outputText value="#{cryptAction.data}" />
+      <h5>生成した鍵</h5>
+      <h:outputText value="#{cryptAction.outputKey}" />
+    </div>
+  </ui:define>
 </ui:composition>

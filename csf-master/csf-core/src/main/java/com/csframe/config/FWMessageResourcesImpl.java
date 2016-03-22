@@ -15,7 +15,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.csframe.common.FWConstantCode;
 import com.csframe.context.FWContext;
 import com.csframe.log.FWLogger;
 
@@ -42,7 +41,8 @@ public class FWMessageResourcesImpl implements FWMessageResources {
 
     ResourceBundle rb = ResourceBundle.getBundle(ctx.getApplicationId(), locale);
     if (!rb.containsKey(key)) {
-      throw new FWMissingResourceException(FWConstantCode.PROPERTIES_KEY_MISSING, key);
+      logger.debug("get() return. value=null");
+      return null;
     } else {
       String value = rb.getString(key);
       logger.debug("get() return. value={}", value);

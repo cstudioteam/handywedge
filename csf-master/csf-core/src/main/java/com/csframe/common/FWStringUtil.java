@@ -43,4 +43,20 @@ public class FWStringUtil {
     }
     return token;
   }
+
+  /**
+   * 引数の文字列がnullもしくは空文字の場合、置換文字に置換する。
+   *
+   * @param src 対象文字列
+   * @param replace 置換文字列
+   * @return 対象文字列そのまま、もしくは置換文字列
+   */
+  public static String replaceNullString(String src, String replace) {
+
+    if (isEmpty(src)) {
+      return replace;
+    } else {
+      return src;
+    }
+  }
 }

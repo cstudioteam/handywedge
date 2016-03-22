@@ -46,6 +46,7 @@ public class MenuView implements Serializable {
     long startTime = logger.perfStart("init");
     model = new DefaultMenuModel();
 
+    // ログは実験menu
     DefaultSubMenu menu = new DefaultSubMenu("ログ");
     DefaultMenuItem item = new DefaultMenuItem("アプリケーションログ");
     item.setIcon("fa fa-file-text");
@@ -97,6 +98,14 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("メール");
+    item = new DefaultMenuItem("メール送信");
+    item.setOutcome("/contents/mail/mail.xhtml");
+    item.setIcon("fa fa-envelope-o");
+    menu.addElement(item);
+    model.addElement(menu);
+
+    // 実験menu
     new Thread(new AppLogReader(1000)).start();
     new Thread(new ErrorLogReader(5000)).start();
     logger.perfEnd("init", startTime);
