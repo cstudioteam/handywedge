@@ -7,9 +7,12 @@
  */
 package com.csframe.rest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * クライアントに応答するためのJSONをマーシャルするためのクラスです。<br>
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class FWRESTResponse {
 
   private int return_cd;

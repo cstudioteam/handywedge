@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.common.FWStringUtil;
+import com.csframe.context.FWApplicationContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWUser;
@@ -38,36 +39,46 @@ public class FWRESTFilter implements Filter {
   @Inject
   private FWUser user;
 
+  @Inject
+  private FWApplicationContext appCtx;
+
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    logger.debug("FWRESTFilter start.");
-
+    long startTime = logger.perfStart("doFilter");
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    final String requestUrl = httpServletRequest.getRequestURI();
+    try {
+      final String requestUrl = httpServletRequest.getRequestURI();
 
-    if (requestUrl.equals("/csf/rest/api/token/pub")) {
-      logger.debug("API Token publish request.");
-    } else {
-      String tokenHeader = httpServletRequest.getHeader("Authorization");
-      if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
-        String token = FWStringUtil.splitBearerToken(tokenHeader);
-        if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
-          logger.debug("APIToken Authorization false.");
-          httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
+      if (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub")) {
+        logger.info("API Token publish request.");
+      } else {
+        String tokenHeader = httpServletRequest.getHeader("Authorization");
+        if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
+          String token = FWStringUtil.splitBearerToken(tokenHeader);
+          if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
+            logger.warn("APIToken Authorization false. token={}", token);
+            httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
+            httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+          } else {
+            logger.info("APIToken Authorization true. token={}", token);
+          }
+        } else {
+          logger.warn("APIToken Header nothing.");
           httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           return;
-        } else {
-          logger.debug("APIToken Authorization true.");
         }
       }
+      FWMDC.put(FWMDC.USER_ID, user.getId());
+      chain.doFilter(httpServletRequest, httpServletResponse);
+    } finally {
+      logger.perfEnd("doFilter", startTime);
     }
-    FWMDC.put(FWMDC.USER_ID, user.getId());
-    chain.doFilter(httpServletRequest, httpServletResponse);
   }
 
   @Override

@@ -11,7 +11,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -109,8 +113,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
     logger.debug("publishAPIToken start.");
     String token = null;
+    logger.debug("generate token start.");
     try {
-      SecureRandom sr = SecureRandom.getInstanceStrong();
+      // 下記で選択されるNativePRNGBlockingでは、Linux環境だとものすごい遅い（30秒以上かかる）
+      // SecureRandom sr = SecureRandom.getInstanceStrong();
+      SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
       logger.debug("token Algorithme={}", sr.getAlgorithm());
       byte[] b = new byte[16];
       sr.nextBytes(b);
@@ -123,6 +130,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       logger.error("abort.", e);
       throw new FWRuntimeException(FWConstantCode.FATAL, e);
     }
+    logger.debug("generate token end.");
 
     FWPreparedStatement ps = null;
     FWResultSet rs = null;
@@ -171,38 +179,12 @@ public class FWLoginManagerImpl implements FWLoginManager {
     return token;
   }
 
-  @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
   public String getAPIToken(String id) {
     logger.debug("getAPIToken start.");
-    FWPreparedStatement ps = null;
-    FWResultSet rs = null;
-    FWConnection con = cm.getConnection();
-    String token = null;
-    try {
-      ps = con.prepareStatement("select token from fw_api_token where id = ?");
-      ps.setString(1, id);
-      rs = ps.executeQuery();
-      if (rs.next()) {
-        token = rs.getString("token");
-      }
-      return token;
-    } catch (SQLException e) {
-      throw new FWRuntimeException(FWConstantCode.DB_FATAL);
-    } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-      } catch (Exception e) {
-      }
-      try {
-        if (ps != null) {
-          ps.close();
-        }
-      } catch (Exception e) {
-      }
-    }
+    String token = appCtx.getTokenMap().get(id);
+    logger.debug("getAPIToken end. id={}, token={}", id, token);
+    return token;
   }
 
   @FWTransactional(dataSourceName = "jdbc/fw")
@@ -234,38 +216,26 @@ public class FWLoginManagerImpl implements FWLoginManager {
   @Override
   public boolean authAPIToken(String token) {
     logger.debug("authAPIToken start.");
-    FWPreparedStatement ps = null;
-    FWResultSet rs = null;
-    FWConnection con = cm.getConnection();
+
+    Map<String, String> tokenMap = appCtx.getTokenMap();
+    Set<Entry<String, String>> entrySet = tokenMap.entrySet();
+    Iterator<Entry<String, String>> it = entrySet.iterator();
+
     String id = null;
-    try {
-      ps = con.prepareStatement("select id from fw_api_token where token = ?");
-      ps.setString(1, token);
-      rs = ps.executeQuery();
-      if (rs.next()) {
-        id = rs.getString("id");
-      } else {
-        logger.debug("invalid_token.");
-        return false;
-      }
-    } catch (SQLException e) {
-      throw new FWRuntimeException(FWConstantCode.DB_FATAL);
-    } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-      } catch (Exception e) {
-      }
-      try {
-        if (ps != null) {
-          ps.close();
-        }
-      } catch (Exception e) {
+    while (it.hasNext()) {
+      Entry<String, String> e = it.next();
+      if (e.getValue().equals(token)) {
+        id = e.getKey();
+        break;
       }
     }
 
-    setUser(id, con);
+    if (FWStringUtil.isEmpty(id)) {
+      logger.debug("invalid_token.");
+      return false;
+    }
+
+    setUser(id, cm.getConnection());
 
     logger.debug("authAPIToken end.");
     return true;
@@ -331,6 +301,5 @@ public class FWLoginManagerImpl implements FWLoginManager {
       } catch (Exception e) {
       }
     }
-
   }
 }

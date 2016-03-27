@@ -16,9 +16,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import com.csframe.cdi.FWBeanManager;
+import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWException;
+import com.csframe.common.FWRuntimeException;
 import com.csframe.common.FWStringUtil;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
@@ -45,18 +47,35 @@ public class FWAPITokenPublisher {
     logger.debug("publish start. {}", request);
 
     if (FWStringUtil.isEmpty(request.getId()) || FWStringUtil.isEmpty(request.getPassword())) {
-      logger.debug("publish end. bad request.");
-      return Response.status(Status.BAD_REQUEST).build();
+      logger.info("publish end. bad request.");
+      FWAPITokenResponse res = new FWAPITokenResponse();
+      res.setReturn_cd(FWConstantCode.FW_TOKENPUB_INVALID);
+      res.setReturn_msg(
+          new FWException(String.valueOf(FWConstantCode.FW_TOKENPUB_INVALID)).getMessage());
+      return Response.ok(res).build();
     }
-
-    // TODO 認証エラーの例外処理を実装する
-    if (loginMrg.login(request.getId(), request.getPassword())) {
-      String token = loginMrg.publishAPIToken(request.getId());
-      logger.debug("publish end. token={}", token);
-      return Response.ok("{'token':'" + token + "'}").build();
-    } else {
-      logger.debug("publish end. fail login.");
-      return Response.status(Status.UNAUTHORIZED).build();
+    try {
+      if (loginMrg.login(request.getId(), request.getPassword())) {
+        String token = loginMrg.publishAPIToken(request.getId());
+        FWAPITokenResponse res = new FWAPITokenResponse();
+        res.setReturn_cd(0);
+        res.setToken(token);
+        logger.info("publish end. {}", res);
+        return Response.ok(res).build();
+      } else {
+        logger.info("publish end. fail login.");
+        FWAPITokenResponse res = new FWAPITokenResponse();
+        res.setReturn_cd(FWConstantCode.FW_TOKENPUB_UNAUTHORIZED);
+        res.setReturn_msg(
+            new FWException(String.valueOf(FWConstantCode.FW_TOKENPUB_UNAUTHORIZED)).getMessage());
+        return Response.ok(res).build();
+      }
+    } catch (FWRuntimeException e) {
+      logger.error("APIトークン発行処理でエラーが発生しました。", e);
+      FWAPITokenResponse res = new FWAPITokenResponse();
+      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+      res.setReturn_msg(e.getMessage());
+      return Response.ok(res).build();
     }
   }
 
@@ -66,17 +85,34 @@ public class FWAPITokenPublisher {
     logger.debug("delete start. {}", request);
 
     if (FWStringUtil.isEmpty(request.getId()) || FWStringUtil.isEmpty(request.getPassword())) {
-      logger.debug("delete end. bad request.");
-      return Response.status(Status.BAD_REQUEST).build();
+      logger.info("delete end. bad request.");
+      FWAPITokenResponse res = new FWAPITokenResponse();
+      res.setReturn_cd(FWConstantCode.FW_TOKENPUB_INVALID);
+      res.setReturn_msg(
+          new FWException(String.valueOf(FWConstantCode.FW_TOKENPUB_INVALID)).getMessage());
+      return Response.ok(res).build();
     }
-
-    if (loginMrg.login(request.getId(), request.getPassword())) {
-      loginMrg.removeAPIToken(request.getId());
-      logger.debug("delete end.");
-      return Response.ok().build();
-    } else {
-      logger.debug("delete end. fail login.");
-      return Response.status(Status.UNAUTHORIZED).build();
+    try {
+      if (loginMrg.login(request.getId(), request.getPassword())) {
+        loginMrg.removeAPIToken(request.getId());
+        logger.info("delete end.");
+        FWAPITokenResponse res = new FWAPITokenResponse();
+        res.setReturn_cd(0);
+        return Response.ok(res).build();
+      } else {
+        logger.info("delete end. fail login.");
+        FWAPITokenResponse res = new FWAPITokenResponse();
+        res.setReturn_cd(FWConstantCode.FW_TOKENPUB_UNAUTHORIZED);
+        res.setReturn_msg(
+            new FWException(String.valueOf(FWConstantCode.FW_TOKENPUB_UNAUTHORIZED)).getMessage());
+        return Response.ok(res).build();
+      }
+    } catch (FWRuntimeException e) {
+      logger.error("APIトークン削除処理でエラーが発生しました。", e);
+      FWAPITokenResponse res = new FWAPITokenResponse();
+      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+      res.setReturn_msg(e.getMessage());
+      return Response.ok(res).build();
     }
   }
 }

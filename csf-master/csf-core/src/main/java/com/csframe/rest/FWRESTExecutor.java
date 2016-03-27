@@ -24,6 +24,8 @@ import javax.ws.rs.core.Response;
 
 import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWStringUtil;
+import com.csframe.config.FWMessageResources;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,13 +38,17 @@ public class FWRESTExecutor {
 
   private FWLogger logger = FWLoggerFactory.getLogger(FWRESTExecutor.class);
 
+
   @POST
   @Path("/{logicClass}")
   public Response doPost(@PathParam("logicClass") String logicClass, InputStream in) {
 
     logger.info("REST doPost start. class=" + logicClass);
     try {
-      Class<?> logicClazz = Class.forName(logicClass);
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createError()).build();
+      }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doPost", FWRESTRequest.class);
       FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
@@ -70,7 +76,10 @@ public class FWRESTExecutor {
 
     logger.info("REST doGet start. class=" + logicClass);
     try {
-      Class<?> logicClazz = Class.forName(logicClass);
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createError()).build();
+      }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
 
       FWRESTResponse res = logic.doGet(param);
@@ -92,7 +101,10 @@ public class FWRESTExecutor {
 
     logger.info("REST doPut start. class=" + logicClass);
     try {
-      Class<?> logicClazz = Class.forName(logicClass);
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createError()).build();
+      }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doPut", FWRESTRequest.class);
       FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
@@ -119,7 +131,10 @@ public class FWRESTExecutor {
 
     logger.info("REST doDelete start. class=" + logicClass);
     try {
-      Class<?> logicClazz = Class.forName(logicClass);
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createError()).build();
+      }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doDelete", FWRESTRequest.class);
       FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
@@ -138,5 +153,30 @@ public class FWRESTExecutor {
       res.setReturn_msg(e.getMessage());
       return Response.ok(res).build();
     }
+  }
+
+  private Class<?> getLogicClazz(String path) throws ClassNotFoundException {
+
+    Class<?> logicClazz = null;
+    try {
+      logicClazz = Class.forName(path);
+    } catch (ClassNotFoundException e) {
+    }
+
+    if (logicClazz == null) {
+      FWMessageResources config = FWBeanManager.getBean(FWMessageResources.class);
+      String logicClazzName = config.get("fw.rest." + path);
+      if (!FWStringUtil.isEmpty(logicClazzName)) {
+        logicClazz = Class.forName(logicClazzName);// ここでNotFoundは予期しないエラーにしておく
+      }
+    }
+    return logicClazz;
+  }
+
+  private FWRESTResponse createError() {
+    FWRESTResponse res = new FWRESTErrorResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_ROOTING_ERROR);
+    res.setReturn_msg("ルーティングエラーです。リクエストされたパスが見つかりません。");
+    return res;
   }
 }

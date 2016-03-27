@@ -7,10 +7,18 @@
  */
 package com.csframe.user.auth.rest;
 
+import com.csframe.rest.FWRESTRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-public class FWAPITokenRequest {
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = false)
+public class FWAPITokenRequest extends FWRESTRequest {
 
   private String id;
   private String password;

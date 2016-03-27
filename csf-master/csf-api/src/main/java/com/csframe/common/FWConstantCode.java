@@ -101,4 +101,21 @@ public interface FWConstantCode {
    */
   int FW_REST_UNSUPPORTED = -9001;
 
+  /**
+   * リクエストされたパス・クラス名が存在しない。
+   */
+  int FW_REST_ROOTING_ERROR = -9002;
+
+  /**
+   * ユーザーID・パスワード認証に失敗しトークン発行ができない。
+   */
+  int FW_TOKENPUB_UNAUTHORIZED = -9003;
+
+  /**
+   * パラメータが不足している。
+   */
+  int FW_TOKENPUB_INVALID = -9004;
+
+
+
 }
