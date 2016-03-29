@@ -10,7 +10,7 @@ package com.csframe.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * 何も返さないJSONクラスです。
+ * 何も属性を持たないJSONリクエストクラスです。
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FWRESTEmptyRequest extends FWRESTRequest {

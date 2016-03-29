@@ -26,6 +26,7 @@ import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWUser;
 import com.csframe.user.auth.FWLoginManager;
+import com.csframe.util.FWThreadLocal;
 
 @WebFilter(filterName = "csf_rest_filter")
 public class FWRESTFilter implements Filter {
@@ -61,7 +62,7 @@ public class FWRESTFilter implements Filter {
         if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
           String token = FWStringUtil.splitBearerToken(tokenHeader);
           if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
-            logger.warn("APIToken Authorization false. token={}", token);
+            logger.warn("APIToken Authorization false. Authorization={}", tokenHeader);
             httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -78,6 +79,7 @@ public class FWRESTFilter implements Filter {
       chain.doFilter(httpServletRequest, httpServletResponse);
     } finally {
       logger.perfEnd("doFilter", startTime);
+      FWThreadLocal.put(FWThreadLocal.LOGIN, false); // RESTは常にセッション破棄する
     }
   }
 

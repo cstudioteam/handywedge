@@ -6,8 +6,8 @@
     type="javax.sql.DataSource"
     driverClassName="net.sf.log4jdbc.DriverSpy"
     url="jdbc:log4jdbc:postgresql://localhost:5432/csf_test_app"
-    username="csf"
-    password="csf"
+    username="csf-app"
+    password="csf-app"
     initialSize="2"
     maxWaitMillis="10000" />
   <Resource

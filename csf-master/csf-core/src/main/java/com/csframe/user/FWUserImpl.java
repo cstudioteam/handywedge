@@ -14,7 +14,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 @Data
 @SessionScoped
 public class FWUserImpl implements FWFullUser {
@@ -23,6 +25,7 @@ public class FWUserImpl implements FWFullUser {
 
   private String id;
   private String name;
+  private String role;
   private Locale locale;
   private Timestamp lastLoginTime;
 

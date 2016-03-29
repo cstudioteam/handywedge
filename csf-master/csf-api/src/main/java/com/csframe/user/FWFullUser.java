@@ -35,4 +35,11 @@ public interface FWFullUser extends FWUser {
    * @param date 最終ログイン時間
    */
   void setLastLoginTime(Timestamp date);
+
+  /**
+   * ロールを設定します。<br>
+   * 
+   * @param role ロール
+   */
+  void setRole(String role);
 }

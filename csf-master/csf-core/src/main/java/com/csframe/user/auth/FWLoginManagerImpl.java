@@ -253,6 +253,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       if (rs.next()) {
         user.setId(id);
         user.setName(rs.getString("name"));
+        user.setRole(rs.getString("role"));
         String lang = rs.getString("language");
         if (!FWStringUtil.isEmpty(lang)) {
           String country = rs.getString("country");

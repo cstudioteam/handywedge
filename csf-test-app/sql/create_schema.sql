@@ -1,0 +1,4 @@
+GRANT ALL ON DATABASE "csf_test_app" TO "csf";
+GRANT ALL ON DATABASE "csf_test_app" TO "csf-app";
+CREATE SCHEMA AUTHORIZATION "csf";
+CREATE SCHEMA AUTHORIZATION "csf-app";

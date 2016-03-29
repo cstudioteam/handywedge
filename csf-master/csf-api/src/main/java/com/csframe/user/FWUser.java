@@ -46,6 +46,19 @@ public interface FWUser extends Serializable {
    */
   void setLocale(Locale locale);
 
+  /**
+   * 最終ログイン時間を返します。
+   * 
+   * @return 最終ログイン時間
+   */
   Timestamp getLastLoginTime();
+
+  /**
+   * ユーザーに設定されているロールを返します。<br>
+   * ロールの設定がない場合はnullとなります。
+   * 
+   * @return ロール
+   */
+  String getRole();
 
 }
