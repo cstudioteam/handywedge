@@ -61,18 +61,8 @@ public class FWContextImpl implements FWFullContext {
   }
 
   @Override
-  public void setContextPath(String contextPath) {
-    applicationContext.setContextPath(contextPath);
-  }
-
-  @Override
   public String getHostName() {
     return applicationContext.getHostName();
-  }
-
-  @Override
-  public void setHostName(String hostName) {
-    applicationContext.setHostName(hostName);
   }
 
   @Override
@@ -83,11 +73,6 @@ public class FWContextImpl implements FWFullContext {
   @Override
   public void setRequestStartTime(Date requestStartTime) {
     requestContext.setRequestStartTime(requestStartTime);
-  }
-
-  @Override
-  public void setApplicationId(String applicationId) {
-    applicationContext.setApplicationId(applicationId);
   }
 
   @Override

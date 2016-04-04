@@ -20,7 +20,16 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class FWUserManagerRequest extends FWRESTRequest {
 
+  /*
+   * パスワード変更
+   */
   private String current_password;
   private String new_password;
+
+  /*
+   * ユーザー登録
+   */
+  private String id;
+  private String password;
 
 }

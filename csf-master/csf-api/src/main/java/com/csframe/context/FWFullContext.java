@@ -37,32 +37,11 @@ public interface FWFullContext extends FWContext {
   void setRequestStartTime(Date requestStartTime);
 
   /**
-   * 実行中のサーバーのホスト名を設定します。
-   *
-   * @param hostName 実行中のサーバーのホスト名
-   */
-  void setHostName(String hostName);
-
-  /**
-   * アプリケーションIDを設定します。
-   *
-   * @param applicationId アプリケーションID
-   */
-  void setApplicationId(String applicationId);
-
-  /**
    * 最終アクセス時間を設定します。
    *
    * @param lastAccessTime 最終アクセス時間
    */
   void setLastAccessTime(Date lastAccessTime);
-
-  /**
-   * アプリケーションのコンテキストパスを設定します。
-   *
-   * @param contextPath コンテキストパス
-   */
-  void setContextPath(String contextPath);
 
   /**
    * リクエストがAPIトークン認証されている場合はtrueを設定します。

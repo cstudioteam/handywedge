@@ -10,6 +10,7 @@ package com.csframe.user.auth.rest;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,8 +40,24 @@ public class FWUserManager {
     logger.info("args={}", request);
     FWRESTEmptyResponse res = new FWRESTEmptyResponse();
     res.setReturn_cd(0);
+    logger.info("res={}", res);
     Response r = Response.ok(res).build();
     logger.perfEnd("changePassword", startTime);
+
+    return r;
+  }
+
+  @POST
+  @Path("/")
+  public Response register(FWUserManagerRequest request) {
+
+    long startTime = logger.perfStart("register");
+    logger.info("args={}", request);
+    FWRESTEmptyResponse res = new FWRESTEmptyResponse();
+    res.setReturn_cd(0);
+    logger.info("res={}", res);
+    Response r = Response.ok(res).build();
+    logger.perfEnd("register", startTime);
 
     return r;
   }

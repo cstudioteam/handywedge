@@ -27,20 +27,20 @@ create table fw_user_passwd(
 );
 
 create table fw_action(
-    id varchar(16) not null,
+    action_code varchar(16) not null,
     pre_status varchar(256) not null,
     post_status varchar(256) not null,
     create_date timestamp not null,
     update_date timestamp not null,
-    constraint pk_fw_action primary key(id)
+    constraint pk_fw_action primary key(action_code)
 );
 
 create table fw_role_action(
     role varchar(256) not null,
-    action_id varchar(16) not null,
+    action_code varchar(16) not null,
     create_date timestamp not null,
     update_date timestamp not null,
-    constraint fk_fw_role_action foreign key(action_id) references fw_action(id)
+    constraint fk_fw_role_action foreign key(action_code) references fw_action(action_code)
 );
 
 create table fw_api_token(

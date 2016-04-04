@@ -30,7 +30,6 @@ import com.csframe.common.FWRuntimeException;
 import com.csframe.common.FWStringUtil;
 import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
-import com.csframe.context.FWSessionContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
 import com.csframe.user.FWFullUser;
@@ -41,10 +40,7 @@ public class FWSessionFilter implements Filter {
 
   @Inject
   private FWApplicationContext appCtx;
-
-  @Inject
-  private FWSessionContext sessionCtx;
-
+  
   @Inject
   private FWFullContext context;
 
@@ -88,7 +84,7 @@ public class FWSessionFilter implements Filter {
 
     final String requestUrl = httpServletRequest.getRequestURI();
     logger.debug("FWSessionFilter start. uri={}", requestUrl);
-    if (requestUrl.startsWith(appCtx.getContextPath() + "/javax.faces.resource/")) {
+    if (requestUrl.startsWith(context.getContextPath() + "/javax.faces.resource/")) {
       try {
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter resources return end.");
@@ -98,7 +94,7 @@ public class FWSessionFilter implements Filter {
       }
     }
     // REST APIはRESTフィルターで処理
-    if (requestUrl.startsWith(appCtx.getContextPath() + "/csf/rest/")) {
+    if (requestUrl.startsWith(context.getContextPath() + "/csf/rest/")) {
       try {
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter REST API request return end.");
@@ -110,7 +106,7 @@ public class FWSessionFilter implements Filter {
     }
 
     try {
-      FWFullUser user = sessionCtx.getUser();
+      FWFullUser user = (FWFullUser) context.getUser();
       String loginUrl = FWStringUtil.getLoginUrl();
       if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
         // ログイン前にデフォルト設定としてブラウザ設定言語を使用。ログイン処理の中でユーザマスタに登録されている言語で上書き。

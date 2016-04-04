@@ -55,8 +55,14 @@ public class FWRESTFilter implements Filter {
     try {
       final String requestUrl = httpServletRequest.getRequestURI();
 
-      if (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub")) {
+      if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
+          && (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub")
+              || requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub/"))) {
         logger.info("API Token publish request.");
+      } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
+          && (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/user")
+              || requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/user/"))) {
+        logger.info("User register request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");
         if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
