@@ -7,7 +7,16 @@
  */
 package com.csframe.role;
 
+import java.util.List;
+
 public interface FWRoleManager {
-  
+
+  List<String> getActions(String currentStatus);
+
+  List<String> getActions(String currentStatus, String role);
+
+  String checkAction(String preStatus, String postStatus);
+
+  String checkAction(String preStatus, String postStatus, String role);
 
 }

@@ -68,7 +68,11 @@ public class FWTransactionalInterceptor {
         ctx.getMethod().getDeclaringClass().getSimpleName() + "#" + ctx.getMethod().getName();
     Object returnVal = null;
     long startTime = 0L;
+    boolean commitError = false;
     try {
+      if (txMgr.isTopLayer()) {
+        logger.info("transaction start.");
+      }
       txMgr.incrementLayer();
       startTime = logger.perfStart(signature);
       returnVal = ctx.proceed();
@@ -78,7 +82,7 @@ public class FWTransactionalInterceptor {
         try {
           try {
             connection.commit();
-            logger.debug("transaction commit.");
+            logger.info("transaction commit.");
           } finally {
             SQLWarning sw = connection.getWarnings();
             while (sw != null) {
@@ -89,42 +93,50 @@ public class FWTransactionalInterceptor {
         } catch (SQLException e) {
           logger.error("SQLException.", e);
           FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true);
+          commitError = true;
           throw e;
         }
       }
     } catch (Throwable t) {
-      txMgr.decrementLayer();
-      logger.perfEnd(signature, startTime);
+      if (!commitError) {// コミットでのエラーはここでは何も処理せずにスローする
+        logger.perfEnd(signature, startTime);
+        txMgr.decrementLayer();
 
-      Boolean errorFlg = FWThreadLocal.get(FWThreadLocal.INTERCEPTOR_ERROR);
-      // 最上位レイヤでロールバック判定処理
-      if (txMgr.isTopLayer() && errorFlg == null) {
-        FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true); // フィルタで二重出力させないようにする
+        // 最上位レイヤでロールバック判定処理
+        if (txMgr.isTopLayer()) {
+          FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true); // フィルタで二重出力させないようにする
 
-        // TODO 業務例外みたいなものを作る？
-        logger.error("Exception.", t);
+          // TODO 業務例外みたいなものを作る？
+          logger.error("Exception.", t);
 
-        // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
-        boolean rollback = true;
-        Class<? extends Exception>[] dontRollbackOn = tx.dontRollbackOn();
-        for (Class<? extends Exception> c : dontRollbackOn) {
-          if (isSubClass(c, t)) {
-            rollback = false;
-            break;
+          // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
+          boolean rollback = true;
+          Class<? extends Exception>[] dontRollbackOn = tx.dontRollbackOn();
+          for (Class<? extends Exception> c : dontRollbackOn) {
+            if (isSubClass(c, t)) {
+              rollback = false;
+              break;
+            }
           }
-        }
 
-        if (rollback) {
-          connection.rollback();
-          logger.debug("transaction rollback.");
-        } else {
-          connection.commit();
-          logger.debug("transaction commit.");
+          try {
+            if (rollback) {
+              connection.rollback();
+              logger.info("transaction rollback.");
+            } else {
+              connection.commit();
+              logger.info("transaction commit.");
+            }
+          } catch (SQLException e) {
+            // コミットロールバックの例外はログだけ出力して元の例外は上にスローする
+            logger.error("SQLException.", e);
+          }
         }
       }
       throw t;
     } finally {
       if (txMgr.isTopLayer()) {
+        logger.info("transaction end.");
         connectionManager.close(); // closeはマネージャに委譲
       }
     }

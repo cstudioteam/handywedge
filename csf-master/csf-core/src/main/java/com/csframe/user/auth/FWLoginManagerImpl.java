@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.csframe.common.FWConstantCode;
@@ -34,7 +34,7 @@ import com.csframe.log.FWLogger;
 import com.csframe.user.FWFullUser;
 import com.csframe.util.FWThreadLocal;
 
-@RequestScoped
+@ApplicationScoped
 public class FWLoginManagerImpl implements FWLoginManager {
 
   @Inject
@@ -66,7 +66,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
     String dbPass = null;
     FWConnection con = cm.getConnection();
     try {
-      ps = con.prepareStatement("select * from fw_user_passwd where id = ?");
+      ps = con.prepareStatement("SELECT * FROM fw_user_passwd WHERE id = ?");
       ps.setString(1, id);
       rs = ps.executeQuery();
       if (rs.next()) {
@@ -111,7 +111,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
   @Override
   public String publishAPIToken(String id) {
 
-    logger.debug("publishAPIToken start.");
+    long startTime = logger.perfStart("publishAPIToken");
     String token = null;
     logger.debug("generate token start.");
     try {
@@ -127,7 +127,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
       }
       token = buf.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.error("abort.", e);
       throw new FWRuntimeException(FWConstantCode.FATAL, e);
     }
     logger.debug("generate token end.");
@@ -136,7 +135,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
     FWResultSet rs = null;
     FWConnection con = cm.getConnection();
     try {
-      ps = con.prepareStatement("select id from fw_api_token where id = ?");
+      ps = con.prepareStatement("SELECT id FROM fw_api_token WHERE id = ?");
       ps.setString(1, id);
       rs = ps.executeQuery();
       boolean update = rs.next();
@@ -145,14 +144,14 @@ public class FWLoginManagerImpl implements FWLoginManager {
       if (update) {
         logger.debug("token update.");
         ps = con
-            .prepareStatement("update fw_api_token set token = ?, create_date = ? where id = ?");
+            .prepareStatement("UPDATE fw_api_token SET token = ?, create_date = ? WHERE id = ?");
         ps.setString(1, token);
         ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
         ps.setString(3, id);
         ps.executeUpdate();
       } else {
         logger.debug("token insert.");
-        ps = con.prepareStatement("insert into fw_api_token values(?, ?, ?)");
+        ps = con.prepareStatement("INSERT INTO fw_api_token VALUES(?, ?, ?)");
         ps.setString(1, id);
         ps.setString(2, token);
         ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
@@ -175,15 +174,17 @@ public class FWLoginManagerImpl implements FWLoginManager {
       } catch (Exception e) {
       }
     }
-    logger.debug("publishAPIToken end.");
+    logger.debug("publishAPIToken end. token={}", token);
+    logger.perfEnd("publishAPIToken", startTime);
     return token;
   }
 
   @Override
   public String getAPIToken(String id) {
-    logger.debug("getAPIToken start.");
+    long startTime = logger.perfStart("getAPIToken");
     String token = appCtx.getTokenMap().get(id);
     logger.debug("getAPIToken end. id={}, token={}", id, token);
+    logger.perfEnd("getAPIToken", startTime);
     return token;
   }
 
@@ -191,11 +192,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
   @Override
   public void removeAPIToken(String id) {
 
-    logger.debug("removeAPIToken start.");
+    long startTime = logger.perfStart("removeAPIToken");
     FWPreparedStatement ps = null;
     FWConnection con = cm.getConnection();
     try {
-      ps = con.prepareStatement("delete from fw_api_token where id = ?");
+      ps = con.prepareStatement("DELETE FROM fw_api_token WHERE id = ?");
       ps.setString(1, id);
       ps.executeUpdate();
       appCtx.getTokenMap().remove(id);
@@ -209,13 +210,13 @@ public class FWLoginManagerImpl implements FWLoginManager {
       } catch (Exception e) {
       }
     }
-    logger.debug("removeAPIToken end.");
+    logger.perfEnd("removeAPIToken", startTime);
   }
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
   public boolean authAPIToken(String token) {
-    logger.debug("authAPIToken start.");
+    long startTime = logger.perfStart("authAPIToken");
 
     Map<String, String> tokenMap = appCtx.getTokenMap();
     Set<Entry<String, String>> entrySet = tokenMap.entrySet();
@@ -231,13 +232,15 @@ public class FWLoginManagerImpl implements FWLoginManager {
     }
 
     if (FWStringUtil.isEmpty(id)) {
-      logger.debug("invalid_token.");
+      logger.info("invalid_token.");
+      logger.perfEnd("authAPIToken", startTime);
       return false;
     }
 
     setUser(id, cm.getConnection());
 
-    logger.debug("authAPIToken end.");
+    logger.debug("authAPIToken ok.");
+    logger.perfEnd("authAPIToken", startTime);
     return true;
   }
 
@@ -247,7 +250,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
     FWPreparedStatement ps = null;
     FWResultSet rs = null;
     try {
-      ps = con.prepareStatement("select * from fw_user where id = ?");
+      ps = con.prepareStatement("SELECT * FROM fw_user WHERE id = ?");
       ps.setString(1, id);
       rs = ps.executeQuery();
       if (rs.next()) {
@@ -283,7 +286,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
     // 最終ログイン時間更新
     try {
-      ps = con.prepareStatement("update fw_user set last_login_date = ? where id = ?");
+      ps = con.prepareStatement("UPDATE fw_user SET last_login_date = ? WHERE id = ?");
       ps.setTimestamp(1, user.getLastLoginTime());
       ps.setString(2, user.getId());
       int i = ps.executeUpdate();
