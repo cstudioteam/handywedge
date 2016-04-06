@@ -109,13 +109,31 @@ public interface FWConstantCode {
   /**
    * ユーザーID・パスワード認証に失敗しトークン発行ができない。
    */
-  int FW_TOKENPUB_UNAUTHORIZED = -9003;
+  int FW_REST_TOKENPUB_UNAUTHORIZED = -9003;
 
   /**
    * パラメータが不足している。
    */
-  int FW_TOKENPUB_INVALID = -9004;
+  int FW_REST_TOKENPUB_INVALID = -9004;
 
+  /**
+   * ユーザーIDの文字数が長すぎる。
+   */
+  int FW_REST_USER_REG_ID_INVALID = -9005;
 
+  /**
+   * ユーザーIDがすでに存在している。（重複）
+   */
+  int FW_REST_USER_REG_ID_EXISTS = -9006;
+
+  /**
+   * パラメータが不足している。
+   */
+  int FW_REST_USER_CHANGE_PASSWD_INVALID = -9007;
+
+  /**
+   * パスワード認証に失敗。
+   */
+  int FW_REST_USER_CHANGE_PASSWD_UNAUTHORIZED = -9008;
 
 }

@@ -14,24 +14,25 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 
 import lombok.Data;
-import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
-@ToString
 @Data
+@EqualsAndHashCode(callSuper = false)
 @SessionScoped
-public class FWUserImpl implements FWFullUser {
+public class FWUserImpl extends FWUserData implements FWFullUser {
 
   private static final long serialVersionUID = 1L;
 
-  private String id;
-  private String name;
-  private String role;
-  private Locale locale;
   private Timestamp lastLoginTime;
 
   @PostConstruct
   public void init() {
-    locale = Locale.getDefault();
+    super.setLocale(Locale.getDefault());
+  }
+
+  @Override
+  public String toString() {
+    return "FWUserImpl [lastLoginTime=" + lastLoginTime + ", toString()=" + super.toString() + "]";
   }
 
 }

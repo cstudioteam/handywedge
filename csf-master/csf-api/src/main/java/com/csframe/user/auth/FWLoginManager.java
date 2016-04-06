@@ -24,6 +24,15 @@ public interface FWLoginManager {
   boolean login(String id, String password);
 
   /**
+   * ログイン操作はせず、ユーザーIDとパスワードが正しいか確認のみ行います。
+   * 
+   * @param id ユーザーID
+   * @param password パスワード
+   * @return ユーザーIDとパスワードが正しい場合はtrue
+   */
+  boolean checkPassword(String id, String password);
+
+  /**
    * セッションからユーザー情報を削除します。
    */
   void logout();

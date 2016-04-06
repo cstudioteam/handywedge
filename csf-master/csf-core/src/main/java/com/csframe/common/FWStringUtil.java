@@ -7,16 +7,53 @@
  */
 package com.csframe.common;
 
+import java.nio.charset.StandardCharsets;
+
 import com.csframe.cdi.FWBeanManager;
 import com.csframe.config.FWMessageResources;
 import com.csframe.context.FWContext;
 
 // TODO 合成文字「"か" + '\u3099'」とかは考慮しない
+// 文字コードはUTF-8で統一
 public class FWStringUtil {
 
   public static boolean isEmpty(String src) {
 
     return src == null || src.trim().length() == 0;
+  }
+
+  /**
+   * バイト数のチェック。
+   * 
+   * @param src チェック対象文字列
+   * @param maxLength 最大バイト数
+   * @return 最大バイト数より大きければtrue
+   */
+  public static boolean isByteMoreThan(String src, int maxLength) {
+    if (src != null) {
+      int length = src.getBytes(StandardCharsets.UTF_8).length;
+      if (maxLength < length) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 文字数のチェック。
+   * 
+   * @param src チェック対象文字列
+   * @param maxLength 最大文字数
+   * @return 最大文字数より大きければtrue
+   */
+  public static boolean isLengthMoreThan(String src, int maxLength) {
+    if (src != null) {
+      int length = src.length();
+      if (maxLength < length) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static String getLoginUrl() {

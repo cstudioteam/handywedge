@@ -10,6 +10,7 @@ package com.csframe.rest;
 import javax.enterprise.context.RequestScoped;
 
 import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWException;
 import com.csframe.user.auth.FWLoginManager;
 
 // TODO jackson依存のコードになっているのをどうするか
@@ -89,9 +90,10 @@ public abstract class FWRESTController {
   }
 
   private FWRESTResponse createError() {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_UNSUPPORTED));
     FWRESTResponse res = new FWRESTErrorResponse();
     res.setReturn_cd(FWConstantCode.FW_REST_UNSUPPORTED);
-    res.setReturn_msg("未実装のメソッドが呼ばれました。");
+    res.setReturn_msg(e.getMessage());
     return res;
   }
 }

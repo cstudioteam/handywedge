@@ -53,50 +53,78 @@ public class FWLoginManagerImpl implements FWLoginManager {
   @Override
   public boolean login(String id, String password) {
 
-    logger.debug("login start.");
+    long startTime = logger.perfStart("login");
 
-    // TODO 既にログイン済みの場合はそのまま利用？
     if (!FWStringUtil.isEmpty(user.getId())) {
-      logger.debug("login end.(exist session)");
+      logger.debug("login ok.(exist session)");
+      logger.perfEnd("login", startTime);
       return true;
     }
 
-    FWPreparedStatement ps = null;
-    FWResultSet rs = null;
     String dbPass = null;
     FWConnection con = cm.getConnection();
     try {
-      ps = con.prepareStatement("SELECT * FROM fw_user_passwd WHERE id = ?");
-      ps.setString(1, id);
-      rs = ps.executeQuery();
-      if (rs.next()) {
-        dbPass = rs.getString("passwd");
-      } else {
-        return false;
-      }
+      dbPass = getPassword(id, con);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
-    } finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-      } catch (Exception e) {
-      }
-      try {
-        if (ps != null) {
-          ps.close();
-        }
-      } catch (Exception e) {
-      }
+    }
+    if (dbPass == null) {
+      logger.debug("user id not found.");
+      logger.perfEnd("login", startTime);
+      return false;
     }
 
     if (FWPasswordUtil.checkPassword(password, dbPass)) {
       setUser(id, con);
-      logger.debug("login end.");
+      logger.debug("login ok.");
+      logger.perfEnd("login", startTime);
       return true;
     } else {
       logger.debug("login failed. no match password.");
+      logger.perfEnd("login", startTime);
+      return false;
+    }
+  }
+
+  private String getPassword(String id, FWConnection con) throws SQLException {
+    try (FWPreparedStatement ps =
+        con.prepareStatement("SELECT * FROM fw_user_passwd WHERE id = ?");) {
+      ps.setString(1, id);
+      try (FWResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getString("passwd");
+        } else {
+          return null;
+        }
+      }
+    }
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  @Override
+  public boolean checkPassword(String id, String password) {
+
+    long startTime = logger.perfStart("checkPassword");
+    String dbPass = null;
+    FWConnection con = cm.getConnection();
+    try {
+      dbPass = getPassword(id, con);
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
+    if (dbPass == null) {
+      logger.debug("user id not found.");
+      logger.perfEnd("checkPassword", startTime);
+      return false;
+    }
+
+    if (FWPasswordUtil.checkPassword(password, dbPass)) {
+      logger.debug("check ok.");
+      logger.perfEnd("login", startTime);
+      return true;
+    } else {
+      logger.debug("check failed. no match password.");
+      logger.perfEnd("login", startTime);
       return false;
     }
   }

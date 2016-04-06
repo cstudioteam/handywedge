@@ -31,8 +31,11 @@ public class FWRuntimeException extends RuntimeException {
 
   @Override
   public String getMessage() {
-
     return FWErrorMessage.getMessage(code, args);
+  }
+
+  public String getErrorCode() {
+    return code;
   }
 
 }

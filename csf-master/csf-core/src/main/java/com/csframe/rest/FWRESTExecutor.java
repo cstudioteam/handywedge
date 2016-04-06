@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 
 import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
+import com.csframe.common.FWException;
 import com.csframe.common.FWStringUtil;
 import com.csframe.config.FWMessageResources;
 import com.csframe.log.FWLogger;
@@ -43,7 +44,7 @@ public class FWRESTExecutor {
   @Path("/{logicClass}")
   public Response doPost(@PathParam("logicClass") String logicClass, InputStream in) {
 
-    logger.info("REST doPost start. class=" + logicClass);
+    logger.info("REST doPost start. class={}", logicClass);
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
@@ -56,6 +57,7 @@ public class FWRESTExecutor {
 
       ObjectMapper om = new ObjectMapper();
       FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      logger.debug(req.toString());
       FWRESTResponse res = logic.doPost(req);
       logger.debug(res.toString());
       logger.info("REST doPost end.");
@@ -74,7 +76,7 @@ public class FWRESTExecutor {
   public Response doGet(@PathParam("logicClass") String logicClass,
       @PathParam("param") String param) {
 
-    logger.info("REST doGet start. class=" + logicClass);
+    logger.info("REST doGet start. class={}", logicClass);
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
@@ -82,6 +84,7 @@ public class FWRESTExecutor {
       }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
 
+      logger.debug("get parameter={}", param);
       FWRESTResponse res = logic.doGet(param);
       logger.debug(res.toString());
       logger.info("REST doGet end.");
@@ -112,6 +115,7 @@ public class FWRESTExecutor {
 
       ObjectMapper om = new ObjectMapper();
       FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      logger.debug(req.toString());
       FWRESTResponse res = logic.doPut(req);
       logger.debug(res.toString());
       logger.info("REST doPut end.");
@@ -142,6 +146,7 @@ public class FWRESTExecutor {
 
       ObjectMapper om = new ObjectMapper();
       FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      logger.debug(req.toString());
       FWRESTResponse res = logic.doDelete(req);
       logger.debug(res.toString());
       logger.info("REST doDelete end.");
@@ -168,15 +173,17 @@ public class FWRESTExecutor {
       String logicClazzName = config.get("fw.rest." + path);
       if (!FWStringUtil.isEmpty(logicClazzName)) {
         logicClazz = Class.forName(logicClazzName);// ここでNotFoundは予期しないエラーにしておく
+        logger.info("actual logicClass={}", logicClazzName);
       }
     }
     return logicClazz;
   }
 
   private FWRESTResponse createError() {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ROOTING_ERROR));
     FWRESTResponse res = new FWRESTErrorResponse();
     res.setReturn_cd(FWConstantCode.FW_REST_ROOTING_ERROR);
-    res.setReturn_msg("ルーティングエラーです。リクエストされたパスが見つかりません。");
+    res.setReturn_msg(e.getMessage());
     return res;
   }
 }
