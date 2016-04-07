@@ -120,11 +120,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
     if (FWPasswordUtil.checkPassword(password, dbPass)) {
       logger.debug("check ok.");
-      logger.perfEnd("login", startTime);
+      logger.perfEnd("checkPassword", startTime);
       return true;
     } else {
       logger.debug("check failed. no match password.");
-      logger.perfEnd("login", startTime);
+      logger.perfEnd("checkPassword", startTime);
       return false;
     }
   }

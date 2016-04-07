@@ -57,11 +57,12 @@ public class FWUserManageController {
     logger.info("changePassword start. args={}", request);
     FWRESTEmptyResponse res = new FWRESTEmptyResponse();
     try {
-      if (FWStringUtil.isEmpty(request.getCurrent_password())
+      if (request == null || FWStringUtil.isEmpty(request.getCurrent_password())
           || FWStringUtil.isEmpty(request.getNew_password())) {
-        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
+        FWException e =
+            new FWException(String.valueOf(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_INVALID));
         logger.warn(e.getMessage());
-        res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
+        res.setReturn_cd(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_INVALID);
         res.setReturn_msg(e.getMessage());
       } else if (!loginMgr.checkPassword(ctx.getUser().getId(), request.getCurrent_password())) {
         FWException e =
@@ -70,7 +71,7 @@ public class FWUserManageController {
         res.setReturn_cd(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_UNAUTHORIZED);
         res.setReturn_msg(e.getMessage());
       } else {
-        boolean result = userMgr.changePassword(request.getId(), request.getNew_password());
+        boolean result = userMgr.changePassword(ctx.getUser().getId(), request.getNew_password());
         if (result) {
           res.setReturn_cd(0);
         } else {
