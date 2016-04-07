@@ -47,7 +47,8 @@ public class FWAPITokenPublisher {
 
     FWAPITokenResponse res = new FWAPITokenResponse();
     try {
-      if (FWStringUtil.isEmpty(request.getId()) || FWStringUtil.isEmpty(request.getPassword())) {
+      if (request == null || FWStringUtil.isEmpty(request.getId())
+          || FWStringUtil.isEmpty(request.getPassword())) {
         FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
@@ -80,7 +81,8 @@ public class FWAPITokenPublisher {
     logger.info("delete start. args={}", request);
     FWAPITokenResponse res = new FWAPITokenResponse();
     try {
-      if (FWStringUtil.isEmpty(request.getId()) || FWStringUtil.isEmpty(request.getPassword())) {
+      if (request == null || FWStringUtil.isEmpty(request.getId())
+          || FWStringUtil.isEmpty(request.getPassword())) {
         FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
