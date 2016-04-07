@@ -5,7 +5,7 @@
  *
  * http://opensource.org/licenses/mit-license.php
  */
-package com.csframe.user.auth.rest;
+package com.csframe.rest.api.token;
 
 import com.csframe.rest.FWRESTRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,17 +18,8 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class FWUserManagerRequest extends FWRESTRequest {
+public class FWAPITokenRequest extends FWRESTRequest {
 
-  /*
-   * パスワード変更
-   */
-  private String current_password;
-  private String new_password;
-
-  /*
-   * ユーザー登録
-   */
   private String id;
   private String password;
 

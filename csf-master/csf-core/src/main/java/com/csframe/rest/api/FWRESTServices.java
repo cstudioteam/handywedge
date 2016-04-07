@@ -5,7 +5,7 @@
  *
  * http://opensource.org/licenses/mit-license.php
  */
-package com.csframe.user.auth.rest;
+package com.csframe.rest.api;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

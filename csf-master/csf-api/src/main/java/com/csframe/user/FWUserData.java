@@ -7,7 +7,10 @@
  */
 package com.csframe.user;
 
+import java.io.Serializable;
 import java.util.Locale;
+
+import javax.enterprise.context.SessionScoped;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +22,10 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class FWUserData {
+@SessionScoped
+public class FWUserData implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private String id;
   private String name;

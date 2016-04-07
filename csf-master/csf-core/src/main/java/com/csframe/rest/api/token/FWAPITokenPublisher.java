@@ -5,7 +5,7 @@
  *
  * http://opensource.org/licenses/mit-license.php
  */
-package com.csframe.user.auth.rest;
+package com.csframe.rest.api.token;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

@@ -38,7 +38,7 @@ public class FWUserService {
     FWConnection con = cm.getConnection();
     // ID登録
     try (FWPreparedStatement selectPs =
-        con.prepareStatement("SELECT COUNT(id) FROM fw_user WHERE id = ?");
+        con.prepareStatement("SELECT id FROM fw_user WHERE id = ?");
         FWPreparedStatement insertPs =
             con.prepareStatement("INSERT INTO fw_user (id) VALUES(?)");) {
       selectPs.setString(1, id);

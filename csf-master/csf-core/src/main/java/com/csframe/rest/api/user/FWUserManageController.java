@@ -5,7 +5,7 @@
  *
  * http://opensource.org/licenses/mit-license.php
  */
-package com.csframe.user.auth.rest;
+package com.csframe.rest.api.user;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -95,14 +95,16 @@ public class FWUserManageController {
 
     FWRESTEmptyResponse res = new FWRESTEmptyResponse();
     try {
-      if (FWStringUtil.isEmpty(request.getId()) || FWStringUtil.isEmpty(request.getPassword())) {
+      if (request == null || FWStringUtil.isEmpty(request.getId())
+          || FWStringUtil.isEmpty(request.getPassword())) {
         FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
         res.setReturn_msg(e.getMessage());
       } else if (FWStringUtil.isLengthMoreThan(request.getId(),
           FWDatabaseMetaInfo.getUserIdLength())) {
-        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_USER_REG_ID_INVALID));
+        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_USER_REG_ID_INVALID),
+            FWDatabaseMetaInfo.getUserIdLength());
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_USER_REG_ID_INVALID);
         res.setReturn_msg(e.getMessage());
