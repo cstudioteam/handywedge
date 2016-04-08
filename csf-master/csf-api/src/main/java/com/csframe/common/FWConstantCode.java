@@ -104,7 +104,7 @@ public interface FWConstantCode {
   /**
    * リクエストされたパス・クラス名が存在しない。
    */
-  int FW_REST_ROOTING_ERROR = -9002;
+  int FW_REST_ROUTING_ERROR = -9002;
 
   /**
    * ユーザーID・パスワード認証に失敗しトークン発行ができない。
@@ -135,5 +135,10 @@ public interface FWConstantCode {
    * パスワード認証に失敗。
    */
   int FW_REST_USER_CHANGE_PASSWD_UNAUTHORIZED = -9008;
+
+  /**
+   * リクエストをユーザークラスに変換に失敗。
+   */
+  int FW_REST_UNMARSHAL_ERROR = -9009;
 
 }

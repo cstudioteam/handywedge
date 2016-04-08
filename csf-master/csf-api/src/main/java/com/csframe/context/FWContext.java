@@ -19,6 +19,9 @@ import com.csframe.user.FWUser;
  * <li>リクエストに関する情報</li>
  * <li>アプリケーションに関する情報</li>
  * </ul>
+ * 但しREST APIの実装内ではセッションスコープにアクセス出来ないため、FWRESTContextから情報を取得して下さい。
+ * 
+ * @see FWRESTContext
  */
 public interface FWContext {
 
@@ -65,16 +68,23 @@ public interface FWContext {
   String getContextPath();
 
   /**
-   * 認証がAPIトークンによる場合はtrueを返します。
-   * 
-   * @return リクエストがAPIトークン認証の場合はtrue
-   */
-  boolean isAPITokenAuth();
-
-  /**
    * ログイン中のユーザー情報を返します。
    * 
    * @return ログイン中のユーザー情報
    */
   FWUser getUser();
+
+  /**
+   * リクエストがREST APIの場合はtrueを返します。
+   * 
+   * @return リクエストがREST APIの場合はtrue
+   */
+  boolean isRest();
+
+  /**
+   * リクエストで認証されたAPIトークンを返します。
+   * 
+   * @return APIトークン
+   */
+  String getToken();
 }

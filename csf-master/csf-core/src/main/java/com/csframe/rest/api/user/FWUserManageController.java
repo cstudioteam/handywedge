@@ -21,11 +21,12 @@ import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWException;
 import com.csframe.common.FWStringUtil;
-import com.csframe.context.FWContext;
+import com.csframe.context.FWRESTContext;
 import com.csframe.db.FWDatabaseMetaInfo;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.csframe.rest.FWRESTEmptyResponse;
+import com.csframe.rest.FWRESTResponse;
 import com.csframe.user.FWUserManager;
 import com.csframe.user.auth.FWLoginManager;
 
@@ -41,13 +42,13 @@ public class FWUserManageController {
 
   private FWLoginManager loginMgr;
 
-  private FWContext ctx;
+  private FWRESTContext ctx;
 
   @PostConstruct
   public void init() {
     userMgr = FWBeanManager.getBean(FWUserManager.class);
     loginMgr = FWBeanManager.getBean(FWLoginManager.class);
-    ctx = FWBeanManager.getBean(FWContext.class);
+    ctx = FWBeanManager.getBean(FWRESTContext.class);
   }
 
   @PUT
@@ -55,7 +56,7 @@ public class FWUserManageController {
   public Response changePassword(FWUserManagerRequest request) {
 
     logger.info("changePassword start. args={}", request);
-    FWRESTEmptyResponse res = new FWRESTEmptyResponse();
+    FWRESTResponse res = new FWRESTEmptyResponse();
     try {
       if (request == null || FWStringUtil.isEmpty(request.getCurrent_password())
           || FWStringUtil.isEmpty(request.getNew_password())) {
@@ -64,26 +65,24 @@ public class FWUserManageController {
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_INVALID);
         res.setReturn_msg(e.getMessage());
-      } else if (!loginMgr.checkPassword(ctx.getUser().getId(), request.getCurrent_password())) {
+      } else if (!loginMgr.checkPassword(ctx.getUserId(), request.getCurrent_password())) {
         FWException e =
             new FWException(String.valueOf(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_UNAUTHORIZED));
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_USER_CHANGE_PASSWD_UNAUTHORIZED);
         res.setReturn_msg(e.getMessage());
       } else {
-        boolean result = userMgr.changePassword(ctx.getUser().getId(), request.getNew_password());
+        boolean result = userMgr.changePassword(ctx.getUserId(), request.getNew_password());
         if (result) {
           res.setReturn_cd(0);
         } else {
-          res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-          res.setReturn_msg("予期しないエラーが発生しました。");
+          res = createError("予期しないエラーが発生しました。");
           logger.error(res.toString());
         }
       }
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
+      res = createError(e.getMessage());
     }
     logger.info("changePassword end. res={}", res);
     return Response.ok(res).build();
@@ -94,7 +93,7 @@ public class FWUserManageController {
   public Response register(FWUserManagerRequest request) {
     logger.info("register start. args={}", request);
 
-    FWRESTEmptyResponse res = new FWRESTEmptyResponse();
+    FWRESTResponse res = new FWRESTEmptyResponse();
     try {
       if (request == null || FWStringUtil.isEmpty(request.getId())
           || FWStringUtil.isEmpty(request.getPassword())) {
@@ -123,10 +122,17 @@ public class FWUserManageController {
       }
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
+      res = createError(e.getMessage());
     }
     logger.info("register end. res={}", res);
     return Response.ok(res).build();
+  }
+
+  private FWRESTResponse createError(String args) {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR), args);
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+    res.setReturn_msg(e.getMessage());
+    return res;
   }
 }

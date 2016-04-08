@@ -67,7 +67,7 @@ public interface FWLoginManager {
 
   /**
    * APIトークンで認証を行います。<br>
-   * 認証された場合はtrueを返し、同時にセッションのユーザー情報に値を設定します。<br>
+   * 認証された場合はtrueを返します。<br>
    * 
    * @param token APIトークン
    * @return 認証された場合はtrue

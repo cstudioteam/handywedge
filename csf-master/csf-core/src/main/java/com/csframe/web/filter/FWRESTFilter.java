@@ -21,10 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.common.FWStringUtil;
-import com.csframe.context.FWApplicationContext;
+import com.csframe.context.FWFullRESTContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
-import com.csframe.user.FWUser;
 import com.csframe.user.auth.FWLoginManager;
 import com.csframe.util.FWThreadLocal;
 
@@ -38,10 +37,7 @@ public class FWRESTFilter implements Filter {
   private FWLoginManager loginMgr;
 
   @Inject
-  private FWUser user;
-
-  @Inject
-  private FWApplicationContext appCtx;
+  private FWFullRESTContext restCtx;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
@@ -52,16 +48,17 @@ public class FWRESTFilter implements Filter {
     long startTime = logger.perfStart("doFilter");
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+    httpServletRequest.getSession(true);// REST内ではセッションへのアクセスがなくinvalidateが出来ないので念のため作って最後に廃棄
     try {
       final String requestUrl = httpServletRequest.getRequestURI();
 
       if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
-          && (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub")
-              || requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/token/pub/"))) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/token/pub")
+              || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/token/pub/"))) {
         logger.info("API Token publish request.");
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
-          && (requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/user")
-              || requestUrl.equals(appCtx.getContextPath() + "/csf/rest/api/user/"))) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user")
+              || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/"))) {
         logger.info("User register request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");
@@ -81,7 +78,7 @@ public class FWRESTFilter implements Filter {
           return;
         }
       }
-      FWMDC.put(FWMDC.USER_ID, user.getId());
+      FWMDC.put(FWMDC.USER_ID, restCtx.getUserId());
       chain.doFilter(httpServletRequest, httpServletResponse);
     } finally {
       logger.perfEnd("doFilter", startTime);

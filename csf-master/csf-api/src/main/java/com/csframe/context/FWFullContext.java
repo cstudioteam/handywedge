@@ -44,13 +44,6 @@ public interface FWFullContext extends FWContext {
   void setLastAccessTime(Date lastAccessTime);
 
   /**
-   * リクエストがAPIトークン認証されている場合はtrueを設定します。
-   * 
-   * @param apiToken トークン認証の場合はtrue
-   */
-  void setAPITokenAuth(boolean apiToken);
-
-  /**
    * ログイン中のユーザー情報を設定します。
    * 
    * @param user ユーザー情報
@@ -63,5 +56,19 @@ public interface FWFullContext extends FWContext {
    * @return キャッシュされているトークンMap
    */
   Map<String, String> getTokenMap();
+
+  /**
+   * リクエストがREST APIであるか設定します。
+   * 
+   * @param rest リクエストがREST APIである場合はtrue
+   */
+  void setRest(boolean rest);
+
+  /**
+   * 認証されたAPIトークンを設定します。
+   * 
+   * @param token APIトークン
+   */
+  void setToken(String token);
 
 }

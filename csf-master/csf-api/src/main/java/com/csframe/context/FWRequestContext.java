@@ -48,17 +48,31 @@ public interface FWRequestContext {
   void setRequestStartTime(Date requestStartTime);
 
   /**
-   * 認証がAPIトークンによる場合はtrueを返します。
+   * リクエストがREST APIの場合はtrueを返します。
    * 
-   * @return リクエストがAPIトークン認証の場合はtrue
+   * @return リクエストがREST APIの場合はtrue
    */
-  boolean isAPITokenAuth();
+  boolean isRest();
 
   /**
-   * リクエストがAPIトークン認証されている場合はtrueを設定します。
+   * リクエストで認証されたAPIトークンを返します。
    * 
-   * @param apiToken トークン認証の場合はtrue
+   * @return APIトークン
    */
-  void setAPITokenAuth(boolean apiToken);
+  String getToken();
+
+  /**
+   * リクエストがREST APIであるか設定します。
+   * 
+   * @param rest リクエストがREST APIである場合はtrue
+   */
+  void setRest(boolean rest);
+
+  /**
+   * 認証されたAPIトークンを設定します。
+   * 
+   * @param token APIトークン
+   */
+  void setToken(String token);
 
 }

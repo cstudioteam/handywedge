@@ -40,7 +40,7 @@ public class FWSessionFilter implements Filter {
 
   @Inject
   private FWApplicationContext appCtx;
-  
+
   @Inject
   private FWFullContext context;
 
@@ -96,6 +96,7 @@ public class FWSessionFilter implements Filter {
     // REST APIはRESTフィルターで処理
     if (requestUrl.startsWith(context.getContextPath() + "/csf/rest/")) {
       try {
+        context.setRest(true);
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter REST API request return end.");
         return;

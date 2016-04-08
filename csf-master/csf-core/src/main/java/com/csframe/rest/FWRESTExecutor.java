@@ -10,7 +10,7 @@ package com.csframe.rest;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,13 +32,12 @@ import com.csframe.log.FWLoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Path("/")
-@ApplicationScoped
+@RequestScoped
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWRESTExecutor {
 
   private FWLogger logger = FWLoggerFactory.getLogger(FWRESTExecutor.class);
-
 
   @POST
   @Path("/{logicClass}")
@@ -48,7 +47,7 @@ public class FWRESTExecutor {
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
-        return Response.ok(createError()).build();
+        return Response.ok(createRoutingError()).build();
       }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doPost", FWRESTRequest.class);
@@ -56,7 +55,13 @@ public class FWRESTExecutor {
       Class<?> requestClazz = annotation.value();
 
       ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      FWRESTRequest req = null;
+      try {
+        req = (FWRESTRequest) om.readValue(in, requestClazz);
+      } catch (Exception e) {
+        logger.error("リクエスト変換でエラーが発生しました。", e);
+        return Response.ok(createUnmarshalError(e.getMessage())).build();
+      }
       logger.debug(req.toString());
       FWRESTResponse res = logic.doPost(req);
       logger.debug(res.toString());
@@ -64,11 +69,15 @@ public class FWRESTExecutor {
       return Response.ok(res).build();
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      FWRESTErrorResponse res = new FWRESTErrorResponse();
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
-      return Response.ok(res).build();
+      return Response.ok(createError(e.getMessage())).build();
     }
+  }
+
+  @GET
+  @Path("/{logicClass}")
+  public Response doGet(@PathParam("logicClass") String logicClass) {
+
+    return doGet(logicClass, null);
   }
 
   @GET
@@ -80,7 +89,7 @@ public class FWRESTExecutor {
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
-        return Response.ok(createError()).build();
+        return Response.ok(createRoutingError()).build();
       }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
 
@@ -91,10 +100,7 @@ public class FWRESTExecutor {
       return Response.ok(res).build();
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      FWRESTErrorResponse res = new FWRESTErrorResponse();
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
-      return Response.ok(res).build();
+      return Response.ok(createError(e.getMessage())).build();
     }
   }
 
@@ -106,7 +112,7 @@ public class FWRESTExecutor {
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
-        return Response.ok(createError()).build();
+        return Response.ok(createRoutingError()).build();
       }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doPut", FWRESTRequest.class);
@@ -114,7 +120,13 @@ public class FWRESTExecutor {
       Class<?> requestClazz = annotation.value();
 
       ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      FWRESTRequest req = null;
+      try {
+        req = (FWRESTRequest) om.readValue(in, requestClazz);
+      } catch (Exception e) {
+        logger.error("リクエスト変換でエラーが発生しました。", e);
+        return Response.ok(createUnmarshalError(e.getMessage())).build();
+      }
       logger.debug(req.toString());
       FWRESTResponse res = logic.doPut(req);
       logger.debug(res.toString());
@@ -122,10 +134,7 @@ public class FWRESTExecutor {
       return Response.ok(res).build();
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      FWRESTErrorResponse res = new FWRESTErrorResponse();
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
-      return Response.ok(res).build();
+      return Response.ok(createError(e.getMessage())).build();
     }
   }
 
@@ -137,7 +146,7 @@ public class FWRESTExecutor {
     try {
       Class<?> logicClazz = getLogicClazz(logicClass);
       if (logicClazz == null) {
-        return Response.ok(createError()).build();
+        return Response.ok(createRoutingError()).build();
       }
       FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
       Method method = logicClazz.getMethod("doDelete", FWRESTRequest.class);
@@ -145,7 +154,13 @@ public class FWRESTExecutor {
       Class<?> requestClazz = annotation.value();
 
       ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = (FWRESTRequest) om.readValue(in, requestClazz);
+      FWRESTRequest req = null;
+      try {
+        req = (FWRESTRequest) om.readValue(in, requestClazz);
+      } catch (Exception e) {
+        logger.error("リクエスト変換でエラーが発生しました。", e);
+        return Response.ok(createUnmarshalError(e.getMessage())).build();
+      }
       logger.debug(req.toString());
       FWRESTResponse res = logic.doDelete(req);
       logger.debug(res.toString());
@@ -153,10 +168,7 @@ public class FWRESTExecutor {
       return Response.ok(res).build();
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      FWRESTErrorResponse res = new FWRESTErrorResponse();
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
-      return Response.ok(res).build();
+      return Response.ok(createError(e.getMessage())).build();
     }
   }
 
@@ -179,10 +191,26 @@ public class FWRESTExecutor {
     return logicClazz;
   }
 
-  private FWRESTResponse createError() {
-    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ROOTING_ERROR));
-    FWRESTResponse res = new FWRESTErrorResponse();
-    res.setReturn_cd(FWConstantCode.FW_REST_ROOTING_ERROR);
+  private FWRESTResponse createError(String args) {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR), args);
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+    res.setReturn_msg(e.getMessage());
+    return res;
+  }
+
+  private FWRESTResponse createRoutingError() {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ROUTING_ERROR));
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_ROUTING_ERROR);
+    res.setReturn_msg(e.getMessage());
+    return res;
+  }
+
+  private FWRESTResponse createUnmarshalError(String args) {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_UNMARSHAL_ERROR), args);
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_UNMARSHAL_ERROR);
     res.setReturn_msg(e.getMessage());
     return res;
   }

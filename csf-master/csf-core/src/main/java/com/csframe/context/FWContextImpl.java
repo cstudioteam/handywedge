@@ -81,16 +81,6 @@ public class FWContextImpl implements FWFullContext {
   }
 
   @Override
-  public boolean isAPITokenAuth() {
-    return requestContext.isAPITokenAuth();
-  }
-
-  @Override
-  public void setAPITokenAuth(boolean apiToken) {
-    requestContext.setAPITokenAuth(apiToken);
-  }
-
-  @Override
   public FWUser getUser() {
     return sessionContext.getUser();
   }
@@ -100,4 +90,23 @@ public class FWContextImpl implements FWFullContext {
     return applicationContext.getTokenMap();
   }
 
+  @Override
+  public boolean isRest() {
+    return requestContext.isRest();
+  }
+
+  @Override
+  public String getToken() {
+    return requestContext.getToken();
+  }
+
+  @Override
+  public void setRest(boolean rest) {
+    requestContext.setRest(rest);
+  }
+
+  @Override
+  public void setToken(String token) {
+    requestContext.setToken(token);
+  }
 }

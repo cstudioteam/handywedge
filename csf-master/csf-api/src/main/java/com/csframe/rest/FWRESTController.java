@@ -91,7 +91,7 @@ public abstract class FWRESTController {
 
   private FWRESTResponse createError() {
     FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_UNSUPPORTED));
-    FWRESTResponse res = new FWRESTErrorResponse();
+    FWRESTResponse res = new FWRESTEmptyResponse();
     res.setReturn_cd(FWConstantCode.FW_REST_UNSUPPORTED);
     res.setReturn_msg(e.getMessage());
     return res;

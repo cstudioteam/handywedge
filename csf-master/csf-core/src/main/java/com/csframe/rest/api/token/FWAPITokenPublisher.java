@@ -8,7 +8,7 @@
 package com.csframe.rest.api.token;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -25,7 +25,7 @@ import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.csframe.user.auth.FWLoginManager;
 
-@ApplicationScoped
+@RequestScoped
 @Path("/token")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
@@ -54,7 +54,7 @@ public class FWAPITokenPublisher {
         res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
         res.setReturn_msg(e.getMessage());
       } else {
-        if (loginMrg.login(request.getId(), request.getPassword())) {
+        if (loginMrg.checkPassword(request.getId(), request.getPassword())) {
           String token = loginMrg.publishAPIToken(request.getId());
           res.setReturn_cd(0);
           res.setToken(token);
@@ -68,8 +68,7 @@ public class FWAPITokenPublisher {
       }
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
+      res = createError(e.getMessage());
     }
     logger.info("publish end. res={}", res);
     return Response.ok(res).build();
@@ -88,7 +87,7 @@ public class FWAPITokenPublisher {
         res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
         res.setReturn_msg(e.getMessage());
       } else {
-        if (loginMrg.login(request.getId(), request.getPassword())) {
+        if (loginMrg.checkPassword(request.getId(), request.getPassword())) {
           loginMrg.removeAPIToken(request.getId());
           res.setReturn_cd(0);
         } else {
@@ -101,10 +100,17 @@ public class FWAPITokenPublisher {
       }
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
-      res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
-      res.setReturn_msg(e.getMessage());
+      res = createError(e.getMessage());
     }
     logger.info("delete end. res={}", res);
     return Response.ok(res).build();
+  }
+
+  private FWAPITokenResponse createError(String args) {
+    FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR), args);
+    FWAPITokenResponse res = new FWAPITokenResponse();
+    res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+    res.setReturn_msg(e.getMessage());
+    return res;
   }
 }
