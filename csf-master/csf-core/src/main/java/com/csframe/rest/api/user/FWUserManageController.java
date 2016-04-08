@@ -8,7 +8,7 @@
 package com.csframe.rest.api.user;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -30,7 +30,7 @@ import com.csframe.rest.FWRESTResponse;
 import com.csframe.user.FWUserManager;
 import com.csframe.user.auth.FWLoginManager;
 
-@ApplicationScoped
+@RequestScoped
 @Path("/user")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
