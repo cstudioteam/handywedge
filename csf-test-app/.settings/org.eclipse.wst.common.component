@@ -18,14 +18,14 @@
       deploy-path="/WEB-INF/classes"
       source-path="/src/main/resources" />
     <dependent-module
-      archiveName="csf-core-0.2.0.jar"
+      archiveName="csf-core-0.3.0-SNAPSHOT.jar"
       deploy-path="/WEB-INF/lib"
       handle="module:/resource/csf-core/csf-core"
     >
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module
-      archiveName="csf-api-0.2.0.jar"
+      archiveName="csf-api-0.3.0-SNAPSHOT.jar"
       deploy-path="/WEB-INF/lib"
       handle="module:/resource/csf-api/csf-api"
     >
