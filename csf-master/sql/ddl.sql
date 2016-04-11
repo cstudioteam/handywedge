@@ -34,6 +34,7 @@ create table fw_action(
     update_date timestamp not null DEFAULT now(),
     constraint pk_fw_action primary key(action_code)
 );
+create unique index idx_fw_action on fw_action(pre_status,post_status);
 
 create table fw_role_action(
     role varchar(256) not null,
@@ -42,6 +43,7 @@ create table fw_role_action(
     update_date timestamp not null DEFAULT now(),
     constraint fk_fw_role_action foreign key(action_code) references fw_action(action_code)
 );
+create unique index idx_fw_role_action on fw_role_action(role,action_code);
 
 create table fw_api_token(
 	id varchar(128) not null, 

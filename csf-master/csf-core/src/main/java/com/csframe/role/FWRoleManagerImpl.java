@@ -19,7 +19,6 @@ import com.csframe.common.FWRuntimeException;
 import com.csframe.context.FWContext;
 import com.csframe.log.FWLogger;
 
-// !!実装中
 @ApplicationScoped
 public class FWRoleManagerImpl implements FWRoleManager {
 
@@ -55,17 +54,23 @@ public class FWRoleManagerImpl implements FWRoleManager {
   }
 
   @Override
-  public String checkAction(String preStatus, String postStatus) {
+  public String checkAction(String preStatus, String postStatus) throws FWRoleException {
     return checkAction(preStatus, postStatus, ctx.getUser().getRole());
   }
 
   @Override
-  public String checkAction(String preStatus, String postStatus, String role) {
+  public String checkAction(String preStatus, String postStatus, String role)
+      throws FWRoleException {
     long startTime = logger.perfStart("checkAction");
     try {
       String actionCode = null;
       if (role != null) {
         actionCode = service.getActionCode(preStatus, postStatus, role);
+      }
+      if (actionCode == null) {
+        logger.info("unauthorized. role={}, preStatus={}, postStatus={}", role, preStatus,
+            postStatus);
+        throw new FWRoleException(FWConstantCode.ROLE_UNAUTHORIZED);
       }
       logger.perfEnd("checkAction", startTime);
       return actionCode;

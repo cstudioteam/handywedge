@@ -89,6 +89,11 @@ public interface FWConstantCode {
    */
   String MAIL_SEND_FAIL = "00504E";
 
+  /**
+   * ロールに対してアクションする権限がない。
+   */
+  String ROLE_UNAUTHORIZED = "00601E";
+
   /* REST機能のFWコード */
 
   /**

@@ -15,8 +15,8 @@ public interface FWRoleManager {
 
   List<String> getActions(String currentStatus, String role);
 
-  String checkAction(String preStatus, String postStatus);
+  String checkAction(String preStatus, String postStatus) throws FWRoleException;
 
-  String checkAction(String preStatus, String postStatus, String role);
+  String checkAction(String preStatus, String postStatus, String role) throws FWRoleException;
 
 }
