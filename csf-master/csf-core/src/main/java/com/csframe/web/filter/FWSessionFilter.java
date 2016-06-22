@@ -32,6 +32,7 @@ import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
+import com.csframe.role.FWRoleManager;
 import com.csframe.user.FWFullUser;
 import com.csframe.util.FWThreadLocal;
 
@@ -46,6 +47,9 @@ public class FWSessionFilter implements Filter {
 
   @Inject
   private FWLogger logger;
+
+  @Inject
+  private FWRoleManager roleMgr;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -83,6 +87,7 @@ public class FWSessionFilter implements Filter {
     }
 
     final String requestUrl = httpServletRequest.getRequestURI();
+    context.setRequestUrl(requestUrl);
     logger.debug("FWSessionFilter start. uri={}", requestUrl);
     if (requestUrl.startsWith(context.getContextPath() + "/javax.faces.resource/")) {
       try {
@@ -120,6 +125,12 @@ public class FWSessionFilter implements Filter {
 
       long start = logger.perfStart("doFilter");
       try {
+        if (!requestUrl.equals(loginUrl) && !roleMgr.isAccessAllow()) {
+          logger.warn("許可されていないURLへアクセスがありました。user_id={}, role={}, url={}",
+              context.getUser().getId(), context.getUser().getRole(), context.getRequestUrl());
+          httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "このURLへのアクセスは許可されていません。");
+          return;
+        }
         try {
           chain.doFilter(httpServletRequest, httpServletResponse);
         } finally {

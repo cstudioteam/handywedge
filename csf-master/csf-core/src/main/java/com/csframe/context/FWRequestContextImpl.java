@@ -22,5 +22,6 @@ public class FWRequestContextImpl implements FWRequestContext {
   private Date requestStartTime;
   private boolean rest;
   private String token;
+  private String requestUrl;
 
 }

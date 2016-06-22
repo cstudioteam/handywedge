@@ -10,13 +10,15 @@ package com.csframe.role;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWRuntimeException;
-import com.csframe.context.FWContext;
+import com.csframe.common.FWStringUtil;
+import com.csframe.context.FWFullContext;
 import com.csframe.log.FWLogger;
 
 @ApplicationScoped
@@ -26,7 +28,7 @@ public class FWRoleManagerImpl implements FWRoleManager {
   private FWLogger logger;
 
   @Inject
-  private FWContext ctx;
+  private FWFullContext ctx;
 
   @Inject
   private FWRoleService service;
@@ -77,5 +79,37 @@ public class FWRoleManagerImpl implements FWRoleManager {
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
+  }
+
+  @Override
+  public boolean isAccessAllow() {
+    long startTime = logger.perfStart("isAccessAllow");
+
+    List<FWRoleAcl> acl = ctx.getRoleAcl();
+    if (acl.isEmpty()) { // ロール設定が無い場合はロールACL機能は未使用とみなす
+      return true;
+    }
+    if (FWStringUtil.isEmpty(ctx.getUser().getRole())) { // ロールACLの設定はあるがユーザーにロール設定がされていない場合はfalseとする
+      return false;
+    }
+    // ロール別にグルーピングしてログインユーザのロールのURLを抽出
+    List<FWRoleAcl> grouping =
+        acl.stream().collect(Collectors.groupingBy(FWRoleAcl::getRole))
+            .get(ctx.getUser().getRole());
+    if (grouping == null) {
+      return false;
+    }
+    boolean result = false;
+    for (FWRoleAcl roleAcl : grouping) {
+      result = roleAcl.getPattern().matcher(ctx.getRequestUrl()).matches();
+      if (result) {
+        logger.debug("URLパターンマッチ role={}, pattern={}, url={}", roleAcl.getRole(),
+            roleAcl.getUrlPattern(), ctx.getRequestUrl());
+        break;
+      }
+    }
+
+    logger.perfEnd("isAccessAllow", startTime);
+    return result;
   }
 }

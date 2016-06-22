@@ -87,4 +87,11 @@ public interface FWContext {
    * @return APIトークン
    */
   String getToken();
+
+  /**
+   * リクエストURLを返します。（クエリーストリングは無し）
+   * 
+   * @return リクエストURL
+   */
+  String getRequestUrl();
 }

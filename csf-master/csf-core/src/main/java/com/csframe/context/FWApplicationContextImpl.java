@@ -7,11 +7,15 @@
  */
 package com.csframe.context;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+
+import com.csframe.role.FWRoleAcl;
 
 import lombok.Data;
 
@@ -23,5 +27,6 @@ public class FWApplicationContextImpl implements FWApplicationContext {
   private String applicationId;
   private String contextPath;
   private Map<String, String> tokenMap = Collections.synchronizedMap(new HashMap<String, String>());
+  private List<FWRoleAcl> roleAcl = Collections.synchronizedList(new ArrayList<FWRoleAcl>());
 
 }

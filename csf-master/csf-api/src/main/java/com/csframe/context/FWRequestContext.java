@@ -75,4 +75,18 @@ public interface FWRequestContext {
    */
   void setToken(String token);
 
+  /**
+   * リクエストURLを返します。（クエリーストリングは無し）
+   * 
+   * @return リクエストURL
+   */
+  String getRequestUrl();
+
+  /**
+   * リクエストURLを設定します。
+   * 
+   * @param url リクエストURL
+   */
+  void setRequestUrl(String url);
+
 }

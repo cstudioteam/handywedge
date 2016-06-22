@@ -52,3 +52,11 @@ create table fw_api_token(
 	constraint fk_fw_api_token foreign key(id) references fw_user(id)
 );
 create unique index idx_fw_api_token on fw_api_token(token);
+
+create table fw_role_acl(
+    role varchar(256) not null,
+    url_pattern varchar(256) not null,
+    create_date timestamp not null DEFAULT now(),
+    update_date timestamp not null DEFAULT now()
+);
+create unique index idx_fw_role_acl on fw_role_acl(role,url);

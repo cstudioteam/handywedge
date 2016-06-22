@@ -8,8 +8,10 @@
 package com.csframe.context;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.csframe.role.FWRoleAcl;
 import com.csframe.user.FWFullUser;
 
 /**
@@ -70,5 +72,19 @@ public interface FWFullContext extends FWContext {
    * @param token APIトークン
    */
   void setToken(String token);
+
+  /**
+   * キャッシュされているロール別ACLの設定を取得します。
+   * 
+   * @return キャッシュされているACL設定
+   */
+  List<FWRoleAcl> getRoleAcl();
+
+  /**
+   * リクエストURLを設定します。
+   * 
+   * @param url リクエストURL
+   */
+  void setRequestUrl(String url);
 
 }

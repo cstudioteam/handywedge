@@ -28,6 +28,7 @@ public class FWServletContextListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     logger.info("アプリケーションのデプロイ処理を行います。");
     util.cacheAPIToken();
+    util.cacheRoleAcl();
   }
 
   @Override

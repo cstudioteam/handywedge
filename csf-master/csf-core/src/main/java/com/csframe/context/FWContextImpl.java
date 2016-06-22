@@ -8,12 +8,14 @@
 package com.csframe.context;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.csframe.role.FWRoleAcl;
 import com.csframe.user.FWFullUser;
 import com.csframe.user.FWUser;
 
@@ -108,5 +110,20 @@ public class FWContextImpl implements FWFullContext {
   @Override
   public void setToken(String token) {
     requestContext.setToken(token);
+  }
+
+  @Override
+  public List<FWRoleAcl> getRoleAcl() {
+    return applicationContext.getRoleAcl();
+  }
+
+  @Override
+  public String getRequestUrl() {
+    return requestContext.getRequestUrl();
+  }
+
+  @Override
+  public void setRequestUrl(String url) {
+    requestContext.setRequestUrl(url);
   }
 }

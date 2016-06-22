@@ -7,7 +7,10 @@
  */
 package com.csframe.context;
 
+import java.util.List;
 import java.util.Map;
+
+import com.csframe.role.FWRoleAcl;
 
 /**
  * フレームワーク内部で使用するインターフェースです。<br>
@@ -33,4 +36,5 @@ public interface FWApplicationContext {
 
   Map<String, String> getTokenMap();
 
+  List<FWRoleAcl> getRoleAcl();
 }

@@ -19,4 +19,6 @@ public interface FWRoleManager {
 
   String checkAction(String preStatus, String postStatus, String role) throws FWRoleException;
 
+  boolean isAccessAllow();
+
 }
