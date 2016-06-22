@@ -32,14 +32,23 @@ public class FWUserManagerImpl implements FWUserManager {
   }
 
   @Override
-  public void update(FWUserData user) {
-    throw new UnsupportedOperationException("未実装です。");
-
+  public boolean update(FWUserData user) {
+    try {
+      int result = service.update(user);
+      return result == 1;
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
   }
 
   @Override
-  public void delete(String id) {
-    throw new UnsupportedOperationException("未実装です。");
+  public boolean delete(String id) {
+    try {
+      int result = service.delete(id);
+      return result == 1;
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
   }
 
   @Override

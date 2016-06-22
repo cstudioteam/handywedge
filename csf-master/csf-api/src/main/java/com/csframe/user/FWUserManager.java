@@ -38,13 +38,15 @@ public interface FWUserManager {
    * パスワード以外のユーザー情報を更新します。
    * 
    * @param user ユーザー情報
+   * @return 更新出来た場合はtrue
    */
-  void update(FWUserData user);
+  boolean update(FWUserData user);
 
   /**
    * ユーザー情報を物理削除します。削除したデータはフレームワークでは復元できません。
    * 
    * @param id ユーザーID
+   * @return 削除出来た場合はtrue
    */
-  void delete(String id);
+  boolean delete(String id);
 }

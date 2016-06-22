@@ -68,6 +68,56 @@ public class FWUserService {
   }
 
   @FWTransactional(dataSourceName = "jdbc/fw")
+  public int update(FWUserData user) throws SQLException {
+    long startTime = logger.perfStart("update");
+
+    int result = 0;
+    FWConnection con = cm.getConnection();
+    try (FWPreparedStatement ps =
+        con.prepareStatement(
+            "UPDATE fw_user SET name = ?, role = ?, country = ?, language = ?, update_date = ? WHERE id = ?")) {
+      int idx = 0;
+      ps.setString(++idx, user.getName());
+      ps.setString(++idx, user.getRole());
+      ps.setString(++idx, user.getLocale().getCountry());
+      ps.setString(++idx, user.getLocale().getLanguage());
+      // TODO DB時間の採用とかも検討したい。Localeも検討したい。
+      ps.setTimestamp(++idx, new Timestamp(System.currentTimeMillis()));
+      ps.setString(++idx, user.getId());
+      result = ps.executeUpdate();
+      logger.debug("update result={}", result);
+    }
+    logger.perfEnd("update", startTime);
+    return result;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  public int delete(String id) throws SQLException {
+    long startTime = logger.perfStart("delete");
+
+    int result = 0;
+    FWConnection con = cm.getConnection();
+    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token  WHERE id = ?")) {
+      ps.setString(1, id);
+      result = ps.executeUpdate();
+      logger.debug("delete fw_api_token result={}", result);
+    }
+    try (
+        FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_user_passwd  WHERE id = ?")) {
+      ps.setString(1, id);
+      result = ps.executeUpdate();
+      logger.debug("delete fw_user_passwd result={}", result);
+    }
+    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_user WHERE id = ?")) {
+      ps.setString(1, id);
+      result = ps.executeUpdate();
+      logger.debug("delete fw_user result={}", result);
+    }
+    logger.perfEnd("delete", startTime);
+    return result;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
   public int changePassword(String id, String passwd) throws SQLException {
     long startTime = logger.perfStart("changePassword");
     FWConnection con = cm.getConnection();
