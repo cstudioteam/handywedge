@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,6 +22,7 @@ import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWException;
 import com.csframe.common.FWStringUtil;
+import com.csframe.context.FWRESTContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWLoggerFactory;
 import com.csframe.user.auth.FWLoginManager;
@@ -35,9 +37,12 @@ public class FWAPITokenPublisher {
 
   private FWLogger logger = FWLoggerFactory.getLogger(FWAPITokenPublisher.class);
 
+  private FWRESTContext restCtx;
+
   @PostConstruct
   public void init() {
     loginMrg = FWBeanManager.getBean(FWLoginManager.class);
+    restCtx = FWBeanManager.getBean(FWRESTContext.class);
   }
 
   @POST
@@ -103,6 +108,17 @@ public class FWAPITokenPublisher {
       res = createError(e.getMessage());
     }
     logger.info("delete end. res={}", res);
+    return Response.ok(res).build();
+  }
+
+  /* トークンの有効性はフィルターでチェックされるのでコード0を返すだけ */
+  @GET
+  @Path("/validate")
+  public Response validate() {
+    logger.info("validate start. token={}", restCtx.getToken());
+    FWAPITokenResponse res = new FWAPITokenResponse();
+    res.setReturn_cd(0);
+    logger.info("validate end.");
     return Response.ok(res).build();
   }
 

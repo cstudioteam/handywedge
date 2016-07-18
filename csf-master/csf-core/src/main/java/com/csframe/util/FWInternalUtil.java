@@ -66,7 +66,8 @@ public class FWInternalUtil {
       logger.info("role acl設定数={}", acl.size());
       logger.perfEnd("cacheRoleAcl", start);
     } catch (SQLException e) {
-      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+      FWRuntimeException re = new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+      logger.warn("ロールACLテーブルのアクセスでエラーが発生しました。ロールACL機能は無効化されます。", re);
     }
   }
 }

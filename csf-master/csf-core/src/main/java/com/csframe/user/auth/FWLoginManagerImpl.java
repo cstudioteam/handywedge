@@ -244,7 +244,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
     }
 
     if (FWStringUtil.isEmpty(id)) {
-      logger.info("invalid_token.");
+      logger.info("invalid_token. token={}", token);
       logger.perfEnd("authAPIToken", startTime);
       return false;
     }
