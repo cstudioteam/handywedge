@@ -60,3 +60,11 @@ create table fw_role_acl(
     update_date timestamp not null DEFAULT now()
 );
 create unique index idx_fw_role_acl on fw_role_acl(role,url);
+
+create table fw_notice(
+    id integer not null,
+    notice varchar(4000),
+    create_date timestamp not null DEFAULT now(),
+    update_date timestamp not null DEFAULT now()
+);
+create unique index idx_fw_notice on fw_notice(id);
