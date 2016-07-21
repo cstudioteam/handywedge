@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,6 +63,16 @@ public class FWRESTFilter implements Filter {
         logger.info("User register request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");
+        logger.info("TOKEN:[{}]", tokenHeader);
+        if (FWStringUtil.isEmpty(tokenHeader)) {
+          Cookie cookies[] = httpServletRequest.getCookies();// HTTPヘッダにトークンがない場合はCookieから取得を試みる
+          for (Cookie ck : cookies) {
+            logger.debug("COOKIE:[{}][{}]", ck.getName(), ck.getValue());
+            if (ck.getName().equalsIgnoreCase("Authorization")) {
+              tokenHeader = "Bearer " + ck.getValue();
+            }
+          }
+        }
         if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
           String token = FWStringUtil.splitBearerToken(tokenHeader);
           if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
