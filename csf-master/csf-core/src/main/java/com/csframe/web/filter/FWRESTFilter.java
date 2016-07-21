@@ -66,10 +66,12 @@ public class FWRESTFilter implements Filter {
         logger.info("TOKEN:[{}]", tokenHeader);
         if (FWStringUtil.isEmpty(tokenHeader)) {
           Cookie cookies[] = httpServletRequest.getCookies();// HTTPヘッダにトークンがない場合はCookieから取得を試みる
-          for (Cookie ck : cookies) {
-            logger.debug("COOKIE:[{}][{}]", ck.getName(), ck.getValue());
-            if (ck.getName().equalsIgnoreCase("Authorization")) {
-              tokenHeader = "Bearer " + ck.getValue();
+          if (cookies != null) {
+            for (Cookie ck : cookies) {
+              logger.debug("COOKIE:[{}][{}]", ck.getName(), ck.getValue());
+              if (ck.getName().equalsIgnoreCase("Authorization")) {
+                tokenHeader = "Bearer " + ck.getValue();
+              }
             }
           }
         }
