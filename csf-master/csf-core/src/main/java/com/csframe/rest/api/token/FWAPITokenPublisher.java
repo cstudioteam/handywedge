@@ -81,32 +81,17 @@ public class FWAPITokenPublisher {
 
   @DELETE
   @Path("/delete")
-  public Response delete(FWAPITokenRequest request) {
-    logger.info("delete start. args={}", request);
+  public Response delete() {
+    logger.info("delete start.");
     FWAPITokenResponse res = new FWAPITokenResponse();
     try {
-      if (request == null || FWStringUtil.isEmpty(request.getId())
-          || FWStringUtil.isEmpty(request.getPassword())) {
-        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
-        logger.warn(e.getMessage());
-        res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
-        res.setReturn_msg(e.getMessage());
-      } else {
-        if (loginMrg.checkPassword(request.getId(), request.getPassword())) {
-          loginMrg.removeAPIToken(request.getId());
-          res.setReturn_cd(0);
-        } else {
-          FWException e =
-              new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_UNAUTHORIZED));
-          logger.warn(e.getMessage());
-          res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_UNAUTHORIZED);
-          res.setReturn_msg(e.getMessage());
-        }
-      }
+      loginMrg.removeAPIToken(restCtx.getUserId());
+      res.setReturn_cd(0);
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
       res = createError(e.getMessage());
     }
+
     logger.info("delete end. res={}", res);
     return Response.ok(res).build();
   }

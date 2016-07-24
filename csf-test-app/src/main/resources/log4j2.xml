@@ -102,6 +102,7 @@
     <Logger
       name="jdbc.resultset"
       level="warn"
+      additivity="false"
     >
       <AppenderRef ref="${app_id}_jdbc" />
     </Logger>
