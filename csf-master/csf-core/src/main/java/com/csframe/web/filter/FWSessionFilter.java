@@ -22,12 +22,15 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWRuntimeException;
+import com.csframe.common.FWSessionTimeoutException;
 import com.csframe.common.FWStringUtil;
+import com.csframe.config.FWMessageResources;
 import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
 import com.csframe.log.FWLogger;
@@ -50,6 +53,9 @@ public class FWSessionFilter implements Filter {
 
   @Inject
   private FWRoleManager roleMgr;
+
+  @Inject
+  private FWMessageResources messageResources;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -115,6 +121,17 @@ public class FWSessionFilter implements Filter {
       FWFullUser user = (FWFullUser) context.getUser();
       String loginUrl = FWStringUtil.getLoginUrl();
       if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies != null) {
+          String cookieName = messageResources.get(FWMessageResources.SESSION_COOKIE_NAME);
+          cookieName = FWStringUtil.replaceNullString(cookieName, "JSESSIONID");
+          for (Cookie c : cookies) {
+            if (cookieName.equalsIgnoreCase(c.getName())) {
+              throw new FWSessionTimeoutException(FWConstantCode.SESSION_TIMEOUT);
+            }
+          }
+        }
+
         // ログイン前にデフォルト設定としてブラウザ設定言語を使用。ログイン処理の中でユーザマスタに登録されている言語で上書き。
         user.setLocale(httpServletRequest.getLocale());
         logger.debug("ログインされていません。ログインページにリダイレクトします。 url={}", loginUrl);
@@ -139,6 +156,9 @@ public class FWSessionFilter implements Filter {
       } finally {
         context.setLastAccessTime(new Date());
       }
+    } catch (FWSessionTimeoutException e) {
+      logger.warn("FWSessionFilter FWSessionTimeoutException.");
+      throw e;
     } catch (Exception e) {
       // TODO JSFの場合にレスポンスがコミット済の場合があるかもしれないので考慮が必要かも
       terminateError(e);

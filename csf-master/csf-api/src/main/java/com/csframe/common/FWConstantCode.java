@@ -24,6 +24,11 @@ public interface FWConstantCode {
   String NO_APP_ID = "00002E";
 
   /**
+   * セッションタイムアウト。
+   */
+  String SESSION_TIMEOUT = "00003E";
+
+  /**
    * 予期しないDB関連のエラー。
    */
   String DB_FATAL = "00101F";

@@ -22,6 +22,7 @@ public interface FWMessageResources {
   String LOGIN_URL = "fw.login.url";
   String CRYPTO_KEY = "fw.crypto.key";
   String CRYPTO_IV = "fw.crypto.iv";
+  String SESSION_COOKIE_NAME = "fw.session.cookie.name";
 
   /**
    * プロパティファイルに設定された値を取得します。<br>
