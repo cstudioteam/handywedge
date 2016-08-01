@@ -28,6 +28,7 @@ create table fw_user_passwd(
 
 create table fw_action(
     action_code varchar(16) not null,
+    action varchar(256),
     pre_status varchar(256) not null,
     post_status varchar(256) not null,
     create_date timestamp not null DEFAULT now(),

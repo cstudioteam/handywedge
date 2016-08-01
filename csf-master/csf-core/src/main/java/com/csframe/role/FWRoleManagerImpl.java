@@ -56,16 +56,16 @@ public class FWRoleManagerImpl implements FWRoleManager {
   }
 
   @Override
-  public String checkAction(String preStatus, String postStatus) throws FWRoleException {
+  public FWAction checkAction(String preStatus, String postStatus) throws FWRoleException {
     return checkAction(preStatus, postStatus, ctx.getUser().getRole());
   }
 
   @Override
-  public String checkAction(String preStatus, String postStatus, String role)
+  public FWAction checkAction(String preStatus, String postStatus, String role)
       throws FWRoleException {
     long startTime = logger.perfStart("checkAction");
     try {
-      String actionCode = null;
+      FWAction actionCode = null;
       if (role != null) {
         actionCode = service.getActionCode(preStatus, postStatus, role);
       }

@@ -47,13 +47,13 @@ public class FWRoleService {
   }
 
   @FWTransactional(dataSourceName = "jdbc/fw")
-  public String getActionCode(String preStatus, String postStatus, String role)
+  public FWAction getActionCode(String preStatus, String postStatus, String role)
       throws SQLException {
 
     FWConnection con = cm.getConnection();
-    String result = null;
+    FWAction result = null;
     try (FWPreparedStatement ps = con.prepareStatement(
-        "SELECT a.action_code FROM fw_action AS a"
+        "SELECT a.action_code, a.action FROM fw_action AS a"
             + " INNER JOIN fw_role_action AS r_a ON a.action_code = r_a.action_code"
             + " WHERE pre_status = ? AND post_status = ? AND role = ?")) {
 
@@ -62,7 +62,9 @@ public class FWRoleService {
       ps.setString(3, role);
       try (FWResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          result = rs.getString(1);
+          result = new FWAction(rs.getString("action_code"), rs.getString("action"), preStatus,
+              postStatus);
+
         }
         return result;
       }
