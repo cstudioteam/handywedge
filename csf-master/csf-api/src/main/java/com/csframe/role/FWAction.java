@@ -17,8 +17,8 @@ import lombok.Data;
 public class FWAction implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  private String action_code;
+  private String actionCode;
   private String action;
-  private String pre_status;
-  private String post_status;
+  private String preStatus;
+  private String postStatus;
 }
