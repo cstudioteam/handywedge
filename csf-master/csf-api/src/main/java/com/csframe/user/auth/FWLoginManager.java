@@ -40,30 +40,22 @@ public interface FWLoginManager {
   /**
    * 引数のユーザーIDにAPIトークンを発行します。<br>
    * このメソッドでは認証処理は行われないので、必ずloginメソッドで認証を行ってから実行して下さい。<br>
-   * 既にAPIトークンが発行されているユーザーの場合は再発行します。<br>
+   * multiple=falseの場合、既にAPIトークンが発行されているユーザーは再発行します。<br>
    * この場合、以前のAPIトークンは使用できなくなります。
    * 
    * @param id ユーザーID
+   * @param multiple 多重発行する場合はtrue
    * @return 発行したAPIトークン
    */
-  String publishAPIToken(String id);
+  String publishAPIToken(String id, boolean multiple);
 
   /**
-   * 引数のユーザーIDに発行されているAPIトークンを返します。<br>
-   * このメソッドでは認証処理は行われないので、必要であればloginメソッドで認証を行ってから実行して下さい。
-   * 
-   * @param id ユーザーID
-   * @return APIトークン、発行されていない場合はnull
-   */
-  String getAPIToken(String id);
-
-  /**
-   * 引数のユーザーIDに発行されているAPIトークンを削除します。<br>
+   * 引数のトークンを削除します。<br>
    * トークンが発行されていない場合は特に何もしません。
    * 
-   * @param id ユーザーID
+   * @param token トークン
    */
-  void removeAPIToken(String id);
+  void removeAPIToken(String token);
 
   /**
    * APIトークンで認証を行います。<br>

@@ -60,7 +60,9 @@ public class FWAPITokenPublisher {
         res.setReturn_msg(e.getMessage());
       } else {
         if (loginMrg.checkPassword(request.getId(), request.getPassword())) {
-          String token = loginMrg.publishAPIToken(request.getId());
+          Integer multiple = request.getMultiple();
+          boolean multi = (multiple != null && multiple > 0);
+          String token = loginMrg.publishAPIToken(request.getId(), multi);
           res.setReturn_cd(0);
           res.setToken(token);
         } else {
@@ -85,7 +87,7 @@ public class FWAPITokenPublisher {
     logger.info("delete start.");
     FWAPITokenResponse res = new FWAPITokenResponse();
     try {
-      loginMrg.removeAPIToken(restCtx.getUserId());
+      loginMrg.removeAPIToken(restCtx.getToken());
       res.setReturn_cd(0);
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);

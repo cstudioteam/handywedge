@@ -43,7 +43,7 @@ public class FWInternalUtil {
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery("SELECT id, token FROM fw_api_token");) {
       while (rs.next()) {
-        tokens.put(rs.getString("id"), rs.getString("token"));
+        tokens.put(rs.getString("token"), rs.getString("id"));
       }
       logger.info("初期キャッシュAPIトークン数={}", tokens.size());
       logger.perfEnd("cacheAPIToken", start);

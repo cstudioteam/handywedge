@@ -22,5 +22,6 @@ public class FWAPITokenRequest extends FWRESTRequest {
 
   private String id;
   private String password;
+  private Integer multiple;
 
 }

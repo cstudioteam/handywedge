@@ -140,7 +140,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
-  public String publishAPIToken(String id) {
+  public String publishAPIToken(String id, boolean multiple) {
 
     long startTime = logger.perfStart("publishAPIToken");
     String token = null;
@@ -163,34 +163,40 @@ public class FWLoginManagerImpl implements FWLoginManager {
     logger.debug("generate token end.");
 
     FWConnection con = cm.getConnection();
-    try (
-        FWPreparedStatement ps =
-            con.prepareStatement("SELECT id FROM fw_api_token WHERE id = ? FOR UPDATE")) {
-      ps.setString(1, id);
-      try (FWResultSet rs = ps.executeQuery()) {
-        boolean update = rs.next();
-        if (update) {
-          logger.debug("token update.");
-          try (FWPreparedStatement ps2 = con
-              .prepareStatement(
-                  "UPDATE fw_api_token SET token = ?, create_date = ? WHERE id = ?")) {
-            ps2.setString(1, token);
-            ps2.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-            ps2.setString(3, id);
-            ps2.executeUpdate();
-          }
-        } else {
-          logger.debug("token insert.");
-          try (FWPreparedStatement ps2 =
-              con.prepareStatement("INSERT INTO fw_api_token VALUES(?, ?, ?)")) {
-            ps2.setString(1, id);
-            ps2.setString(2, token);
-            ps2.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            ps2.executeUpdate();
-          }
+    boolean update = false;
+    if (!multiple) {
+      try (
+          FWPreparedStatement ps =
+              con.prepareStatement("SELECT id FROM fw_api_token WHERE id = ? FOR UPDATE")) {
+        ps.setString(1, id);
+        try (FWResultSet rs = ps.executeQuery()) {
+          update = rs.next();
+        }
+      } catch (SQLException e) {
+        throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+      }
+    }
+    try {
+      if (update) {
+        logger.debug("token update.");
+        try (FWPreparedStatement ps2 = con
+            .prepareStatement(
+                "UPDATE fw_api_token SET token = ?, create_date = ? WHERE id = ?")) {
+          ps2.setString(1, token);
+          ps2.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+          ps2.setString(3, id);
+          ps2.executeUpdate();
+        }
+      } else {
+        logger.debug("token insert.");
+        try (FWPreparedStatement ps2 =
+            con.prepareStatement("INSERT INTO fw_api_token (id, token) VALUES(?, ?)")) {
+          ps2.setString(1, id);
+          ps2.setString(2, token);
+          ps2.executeUpdate();
         }
       }
-      appCtx.getTokenMap().put(id, token);
+      appCtx.getTokenMap().put(token, id);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
@@ -200,25 +206,16 @@ public class FWLoginManagerImpl implements FWLoginManager {
     return token;
   }
 
-  @Override
-  public String getAPIToken(String id) {
-    long startTime = logger.perfStart("getAPIToken");
-    String token = appCtx.getTokenMap().get(id);
-    logger.debug("getAPIToken end. id={}, token={}", id, token);
-    logger.perfEnd("getAPIToken", startTime);
-    return token;
-  }
-
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
-  public void removeAPIToken(String id) {
+  public void removeAPIToken(String token) {
 
     long startTime = logger.perfStart("removeAPIToken");
     FWConnection con = cm.getConnection();
-    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE id = ?")) {
-      ps.setString(1, id);
+    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE token = ?")) {
+      ps.setString(1, token);
       ps.executeUpdate();
-      appCtx.getTokenMap().remove(id);
+      appCtx.getTokenMap().remove(token);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
@@ -237,8 +234,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
     String id = null;
     while (it.hasNext()) {
       Entry<String, String> e = it.next();
-      if (e.getValue().equals(token)) {
-        id = e.getKey();
+      if (e.getKey().equals(token)) {
+        id = e.getValue();
         break;
       }
     }
