@@ -163,38 +163,22 @@ public class FWLoginManagerImpl implements FWLoginManager {
     logger.debug("generate token end.");
 
     FWConnection con = cm.getConnection();
-    boolean update = false;
-    if (!multiple) {
-      try (
-          FWPreparedStatement ps =
-              con.prepareStatement("SELECT id FROM fw_api_token WHERE id = ? FOR UPDATE")) {
-        ps.setString(1, id);
-        try (FWResultSet rs = ps.executeQuery()) {
-          update = rs.next();
-        }
-      } catch (SQLException e) {
-        throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
-      }
-    }
     try {
-      if (update) {
-        logger.debug("token update.");
-        try (FWPreparedStatement ps2 = con
+      if (!multiple) {
+        logger.debug("token delete.");
+        try (FWPreparedStatement ps = con
             .prepareStatement(
-                "UPDATE fw_api_token SET token = ?, create_date = ? WHERE id = ?")) {
-          ps2.setString(1, token);
-          ps2.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-          ps2.setString(3, id);
-          ps2.executeUpdate();
+                "DELETE FROM fw_api_token WHERE id = ?")) {
+          ps.setString(1, id);
+          ps.executeUpdate();
         }
-      } else {
-        logger.debug("token insert.");
-        try (FWPreparedStatement ps2 =
-            con.prepareStatement("INSERT INTO fw_api_token (id, token) VALUES(?, ?)")) {
-          ps2.setString(1, id);
-          ps2.setString(2, token);
-          ps2.executeUpdate();
-        }
+      }
+      logger.debug("token insert.");
+      try (FWPreparedStatement ps =
+          con.prepareStatement("INSERT INTO fw_api_token (id, token) VALUES(?, ?)")) {
+        ps.setString(1, id);
+        ps.setString(2, token);
+        ps.executeUpdate();
       }
       appCtx.getTokenMap().put(token, id);
     } catch (SQLException e) {
@@ -212,7 +196,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
     long startTime = logger.perfStart("removeAPIToken");
     FWConnection con = cm.getConnection();
-    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE token = ?")) {
+    try (
+        FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE token = ?")) {
       ps.setString(1, token);
       ps.executeUpdate();
       appCtx.getTokenMap().remove(token);
