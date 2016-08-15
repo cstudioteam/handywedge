@@ -11,7 +11,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -172,6 +174,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
           ps.setString(1, id);
           ps.executeUpdate();
         }
+        List<String> userId = new ArrayList<>();
+        userId.add(id);
+        appCtx.getTokenMap().values().removeAll(userId);
       }
       logger.debug("token insert.");
       try (FWPreparedStatement ps =
