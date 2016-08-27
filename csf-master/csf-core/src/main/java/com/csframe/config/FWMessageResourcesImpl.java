@@ -37,15 +37,12 @@ public class FWMessageResourcesImpl implements FWMessageResources {
   @Override
   public String get(String key, Locale locale) {
 
-    logger.debug("get(). key={}, locale={}", key, locale);
-
     ResourceBundle rb = ResourceBundle.getBundle(ctx.getApplicationId(), locale);
     if (!rb.containsKey(key)) {
-      logger.debug("get() return. value=null");
+      logger.debug("get() return. key={}, locale={}, value=null", key, locale);
       return null;
     } else {
       String value = rb.getString(key);
-      logger.debug("get() return. value={}", value);
       return value;
     }
   }
