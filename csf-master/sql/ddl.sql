@@ -1,71 +1,143 @@
-drop table fw_role_action;
-drop table fw_action;
-drop table fw_user_passwd;
-drop table fw_api_token;
-drop table fw_user;
 
--- 削除フラグか削除済テーブルを作る？（削除APIを追加するなら）
-create table fw_user(
-    id varchar(128) not null,
-    name varchar(256),
-    role varchar(256),
-    country varchar(64),
-    language varchar(64),
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now(),
-    last_login_date timestamp,
-    constraint pk_fw_user primary key(id)
-);
+/* Drop Tables */
 
-create table fw_user_passwd(
-    id varchar(128) not null,
-    passwd varchar(64) not null,
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now(),
-    constraint pk_fw_user_passwd primary key(id),
-    constraint fk_fw_user_passwd foreign key(id) references fw_user(id)
-);
+DROP TABLE IF EXISTS fw_role_action;
+DROP TABLE IF EXISTS fw_action;
+DROP TABLE IF EXISTS fw_api_token;
+DROP TABLE IF EXISTS fw_notice;
+DROP TABLE IF EXISTS fw_user_passwd;
+DROP TABLE IF EXISTS fw_user;
 
-create table fw_action(
-    action_code varchar(16) not null,
+
+
+
+/* Create Tables */
+
+-- アクション : ワークフローのステータス遷移を定義するテーブルです。
+CREATE TABLE fw_action
+(
+    -- アクションコード
+    action_code varchar(16) NOT NULL,
+    -- アクション名
     action varchar(256),
-    pre_status varchar(256) not null,
-    post_status varchar(256) not null,
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now(),
-    constraint pk_fw_action primary key(action_code)
-);
+    -- アクション前ステータス
+    pre_status varchar(256) NOT NULL,
+    -- アクション後ステータス
+    post_status varchar(256) NOT NULL,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_action PRIMARY KEY (action_code)
+) WITHOUT OIDS;
 
-create table fw_role_action(
-    role varchar(256) not null,
-    action_code varchar(16) not null,
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now(),
-    constraint fk_fw_role_action foreign key(action_code) references fw_action(action_code)
-);
-create unique index idx_fw_role_action on fw_role_action(role,action_code);
 
--- v0.3.0より定義変更。idのPKを削除。以前に使用している場合はデータを退避して定義し直しが必要。
-create table fw_api_token(
-    id varchar(128) not null, 
-    token varchar(32) not null,
-    create_date timestamp not null DEFAULT now(),
-    constraint fk_fw_api_token foreign key(id) references fw_user(id)
-);
-create unique index idx_fw_api_token on fw_api_token(token);
+-- APIトークン
+CREATE TABLE fw_api_token
+(
+    -- ユーザーID
+    id varchar(128) NOT NULL,
+    -- トークン
+    token varchar(32) NOT NULL,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_api_token PRIMARY KEY (token)
+) WITHOUT OIDS;
 
-create table fw_role_acl(
-    role varchar(256) not null,
-    url_pattern varchar(256) not null,
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now()
-);
-create unique index idx_fw_role_acl on fw_role_acl(role,url);
 
-create table fw_notice(
-    id integer not null,
+-- 通知
+CREATE TABLE fw_notice
+(
+    -- 通知ID
+    id int NOT NULL,
+    -- 通知内容
     notice varchar(4000),
-    create_date timestamp not null DEFAULT now(),
-    update_date timestamp not null DEFAULT now()
-);
-create unique index idx_fw_notice on fw_notice(id);
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_notice PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ロール別アクション : ロール別のアクション制御を定義するテーブルです。
+CREATE TABLE fw_role_action
+(
+    -- ロール
+    role varchar(256) NOT NULL,
+    -- アクションコード
+    action_code varchar(16) NOT NULL,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_role_action PRIMARY KEY (role, action_code)
+) WITHOUT OIDS;
+
+
+-- ユーザー
+CREATE TABLE fw_user
+(
+    -- ユーザーID
+    id varchar(128) NOT NULL,
+    -- 名前
+    name varchar(256),
+    -- ロール
+    role varchar(256),
+    -- 国 : jpなどのLocale国コード
+    country varchar(64),
+    -- 言語 : jaなどのLocale言語情報
+    language varchar(64),
+    -- 最終ログイン日時
+    last_login_date timestamp,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_user PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ユーザーパスワード
+CREATE TABLE fw_user_passwd
+(
+    -- ユーザーID
+    id varchar(128) NOT NULL,
+    -- パスワード : blowfishでハッシュ化されたもの
+    passwd varchar(64) NOT NULL,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_user_passwd PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+
+/* Create Foreign Keys */
+
+ALTER TABLE fw_role_action
+    ADD CONSTRAINT fk_fw_role_action FOREIGN KEY (action_code)
+    REFERENCES fw_action (action_code)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+;
+
+
+ALTER TABLE fw_api_token
+    ADD FOREIGN KEY (id)
+    REFERENCES fw_user (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+;
+
+
+ALTER TABLE fw_user_passwd
+    ADD CONSTRAINT fk_fw_user_passwd FOREIGN KEY (id)
+    REFERENCES fw_user (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+;
+
+
+
