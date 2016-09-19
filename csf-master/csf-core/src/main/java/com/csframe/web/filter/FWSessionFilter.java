@@ -120,7 +120,11 @@ public class FWSessionFilter implements Filter {
     try {
       FWFullUser user = (FWFullUser) context.getUser();
       String loginUrl = FWStringUtil.getLoginUrl();
-      if (!requestUrl.equals(loginUrl) && FWStringUtil.isEmpty(user.getId())) {
+      String registerUrl = FWStringUtil.getRegisterUrl();
+      String preRegisterUrl = FWStringUtil.getPreRegisterUrl();
+      if (!(requestUrl.equals(loginUrl) || requestUrl.equals(registerUrl)
+          || requestUrl.equals(preRegisterUrl))
+          && FWStringUtil.isEmpty(user.getId())) {
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
           String cookieName = messageResources.get(FWMessageResources.SESSION_COOKIE_NAME);
@@ -142,7 +146,9 @@ public class FWSessionFilter implements Filter {
 
       long start = logger.perfStart("doFilter");
       try {
-        if (!requestUrl.equals(loginUrl) && !roleMgr.isAccessAllow()) {
+        if (!(requestUrl.equals(loginUrl) || requestUrl.equals(registerUrl)
+            || requestUrl.equals(preRegisterUrl))
+            && !roleMgr.isAccessAllow()) {
           logger.warn("許可されていないURLへアクセスがありました。user_id={}, role={}, url={}",
               context.getUser().getId(), context.getUser().getRole(), context.getRequestUrl());
           httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "このURLへのアクセスは許可されていません。");

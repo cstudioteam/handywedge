@@ -15,7 +15,8 @@ public interface FWLoginManager {
   /**
    * 引数のユーザーIDとパスワードが正しいか認証します。<br>
    * 認証された場合はtrueを返し、同時にセッションのユーザー情報に値を設定します。<br>
-   * 認証済のセッションでこのメソッドが呼ばれた場合は特に何もしません。
+   * 認証済のセッションでこのメソッドが呼ばれた場合は特に何もしません。<br>
+   * 仮登録ユーザーの場合はパスワードが正しい場合でもfalseとなります。
    * 
    * @param id ユーザーID
    * @param password パスワード
@@ -24,7 +25,16 @@ public interface FWLoginManager {
   boolean login(String id, String password);
 
   /**
-   * ログイン操作はせず、ユーザーIDとパスワードが正しいか確認のみ行います。
+   * 認証なしでログイン処理のみ行います。<br>
+   * このメソッドを実行する場合は事前に認証処理を実施して下さい。<br>
+   * 
+   * @param id ユーザーID
+   */
+  void login(String id);
+
+  /**
+   * ログイン操作はせず、ユーザーIDとパスワードが正しいか確認のみ行います。<br>
+   * 仮登録ユーザーの場合はパスワードが正しい場合でもfalseとなります。<br>
    * 
    * @param id ユーザーID
    * @param password パスワード
@@ -65,4 +75,5 @@ public interface FWLoginManager {
    * @return 認証された場合はtrue
    */
   boolean authAPIToken(String token);
+
 }

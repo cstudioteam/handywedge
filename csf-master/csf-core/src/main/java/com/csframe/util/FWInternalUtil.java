@@ -7,6 +7,8 @@
  */
 package com.csframe.util;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,10 +66,45 @@ public class FWInternalUtil {
         acl.add(new FWRoleAcl(rs.getString("role"), rs.getString("url_pattern")));
       }
       logger.info("role acl設定数={}", acl.size());
-      logger.perfEnd("cacheRoleAcl", start);
     } catch (SQLException e) {
-      FWRuntimeException re = new FWRuntimeException(FWConstantCode.DB_FATAL, e);
-      logger.warn("ロールACLテーブルのアクセスでエラーが発生しました。ロールACL機能は無効化されます。", re);
+      logger.debug(e.toString());
+      logger.warn("ロールACLテーブルのアクセスでエラーが発生しました。ロールACL機能は無効化されます。");
+    }
+    logger.perfEnd("cacheRoleAcl", start);
+  }
+
+  /*
+   * v.0.4.0からの新機能
+   */
+  public void checkUserManagement() {
+    long start = logger.perfStart("checkUserManagement");
+    try (Connection con = FWInternalConnectionManager.getConnection();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT count(*) FROM fw_user_management");) {
+      rs.next();
+      appCtx.setUserManagementEnable(true);
+    } catch (SQLException e) {
+      logger.debug(e.toString());
+      logger.warn("ユーザー管理テーブルが存在しません。ユーザー管理機能は無効化されます。");
+      appCtx.setUserManagementEnable(false);
+    }
+    logger.perfEnd("checkUserManagement", start);
+  }
+
+  public static String generateToken() {
+    try {
+      // 下記で選択されるNativePRNGBlockingでは、Linux環境だとものすごい遅い（30秒以上かかる）
+      // SecureRandom sr = SecureRandom.getInstanceStrong();
+      SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
+      byte[] b = new byte[16];
+      sr.nextBytes(b);
+      StringBuilder buf = new StringBuilder();
+      for (int i = 0; i < b.length; i++) {
+        buf.append(String.format("%02x", b[i]));
+      }
+      return buf.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new FWRuntimeException(FWConstantCode.FATAL, e);
     }
   }
 }

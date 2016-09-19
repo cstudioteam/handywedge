@@ -20,6 +20,8 @@ import java.util.Set;
 public interface FWMessageResources {
 
   String LOGIN_URL = "fw.login.url";
+  String REGISTER_URL = "fw.register.url";
+  String PRE_REGISTER_URL = "fw.pre_register.url";
   String CRYPTO_KEY = "fw.crypto.key";
   String CRYPTO_IV = "fw.crypto.iv";
   String SESSION_COOKIE_NAME = "fw.session.cookie.name";

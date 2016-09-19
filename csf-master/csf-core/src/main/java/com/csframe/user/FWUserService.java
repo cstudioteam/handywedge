@@ -9,17 +9,23 @@ package com.csframe.user;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.csframe.common.FWPasswordUtil;
+import com.csframe.common.FWStringUtil;
+import com.csframe.config.FWMessageResources;
+import com.csframe.context.FWFullContext;
 import com.csframe.db.FWConnection;
 import com.csframe.db.FWConnectionManager;
 import com.csframe.db.FWPreparedStatement;
 import com.csframe.db.FWResultSet;
 import com.csframe.db.FWTransactional;
 import com.csframe.log.FWLogger;
+import com.csframe.user.auth.FWLoginManager;
+import com.csframe.util.FWInternalUtil;
 
 @ApplicationScoped
 public class FWUserService {
@@ -30,12 +36,64 @@ public class FWUserService {
   @Inject
   private FWLogger logger;
 
+  @Inject
+  private FWFullContext ctx;
+
+  @Inject
+  private FWMessageResources fwMsg;
+
+  @Inject
+  private FWLoginManager loginMgr;
+
+  private final String PRE_USER_REGISTER_TOKEN_EXPIRE = "fw.pre.user.register.token.expire";
+  private final String DEFAULT_EXPIRE = "4320"; // デフォルト72時間
+
   @FWTransactional(dataSourceName = "jdbc/fw")
   public int insert(String id, String passwd) throws SQLException {
+    return insert(id, passwd, null);
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  public int insert(String id, String passwd, Integer preRegister) throws SQLException {
     long startTime = logger.perfStart("insert");
 
     int result = 0;
     FWConnection con = cm.getConnection();
+
+    // ユーザー管理が有効な場合、まずは管理テーブルをチェックして必要に応じでdelete
+    if (ctx.isUserManagementEnable()) {
+      String sql = "SELECT * FROM fw_user_management WHERE id = ?";
+      try (FWPreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, id);
+        try (FWResultSet rs = ps.executeQuery()) {
+          if (rs.next()) {
+            boolean pre = rs.getBoolean("pre_register");
+            if (!pre) {
+              logger.warn("user_id exists. id={}", id);
+              return 0;
+            } else { // 仮登録状態でregisterが呼ばれた場合は削除してから処理する
+              logger.debug("仮登録データを削除します。id={}", id);
+              String deleteSql = "DELETE FROM fw_user_management WHERE id = ?";
+              String deleteSql2 = "DELETE FROM fw_user_passwd WHERE id = ?";
+              String deleteSql3 = "DELETE FROM fw_user WHERE id = ?";
+              try (FWPreparedStatement delPs = con.prepareStatement(deleteSql)) {
+                delPs.setString(1, id);
+                delPs.executeUpdate();
+              }
+              try (FWPreparedStatement delPs = con.prepareStatement(deleteSql2)) {
+                delPs.setString(1, id);
+                delPs.executeUpdate();
+              }
+              try (FWPreparedStatement delPs = con.prepareStatement(deleteSql3)) {
+                delPs.setString(1, id);
+                delPs.executeUpdate();
+              }
+            }
+          }
+        }
+      }
+    }
+
     // ID登録
     try (FWPreparedStatement selectPs =
         con.prepareStatement("SELECT id FROM fw_user WHERE id = ?");
@@ -52,7 +110,7 @@ public class FWUserService {
       // パフォーマンスを考慮して排他処理とかは行わない（刹那の一意制約違反はスロー）
       insertPs.setString(1, id);
       result = insertPs.executeUpdate();
-      logger.debug("id insert result={}", result);
+      logger.debug("id insert. result={}", result);
     }
 
     // パスワード登録
@@ -61,8 +119,22 @@ public class FWUserService {
       ps.setString(1, id);
       ps.setString(2, FWPasswordUtil.createPasswordHash(passwd));
       int passwdResult = ps.executeUpdate();
-      logger.debug("passwd insert result={}", passwdResult);
+      logger.debug("passwd insert. result={}", passwdResult);
     }
+
+    // 仮登録オプションが有効な場合
+    if (preRegister != null && preRegister > 0) {
+      String sql = "INSERT INTO fw_user_management (id, pre_token) VALUES(?, ?)";
+      String token = FWInternalUtil.generateToken();
+      try (FWPreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, id);
+        ps.setString(2, token);
+        ps.executeUpdate();
+      }
+      ctx.setPreToken(token);
+      logger.debug("preToken insert. token={}", token);
+    }
+
     logger.perfEnd("insert", startTime);
     return result;
   }
@@ -85,7 +157,7 @@ public class FWUserService {
       ps.setTimestamp(++idx, new Timestamp(System.currentTimeMillis()));
       ps.setString(++idx, user.getId());
       result = ps.executeUpdate();
-      logger.debug("update result={}", result);
+      logger.debug("update. result={}", result);
     }
     logger.perfEnd("update", startTime);
     return result;
@@ -100,18 +172,29 @@ public class FWUserService {
     try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token  WHERE id = ?")) {
       ps.setString(1, id);
       result = ps.executeUpdate();
-      logger.debug("delete fw_api_token result={}", result);
+      logger.debug("delete fw_api_token. result={}", result);
     }
     try (
         FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_user_passwd  WHERE id = ?")) {
       ps.setString(1, id);
       result = ps.executeUpdate();
-      logger.debug("delete fw_user_passwd result={}", result);
+      logger.debug("delete fw_user_passwd. result={}", result);
     }
+
+    if (ctx.isUserManagementEnable()) {
+      try (
+          FWPreparedStatement ps =
+              con.prepareStatement("DELETE FROM fw_user_management  WHERE id = ?")) {
+        ps.setString(1, id);
+        result = ps.executeUpdate();
+        logger.debug("delete fw_user_management. result={}", result);
+      }
+    }
+
     try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_user WHERE id = ?")) {
       ps.setString(1, id);
       result = ps.executeUpdate();
-      logger.debug("delete fw_user result={}", result);
+      logger.debug("delete fw_user. result={}", result);
     }
     logger.perfEnd("delete", startTime);
     return result;
@@ -135,7 +218,7 @@ public class FWUserService {
           updatePs.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
           updatePs.setString(3, id);
           passwdResult = updatePs.executeUpdate();
-          logger.debug("passwd update result={}", passwdResult);
+          logger.debug("passwd update. result={}", passwdResult);
         } else {
           logger.warn("user_id not exists. id={}", id);
         }
@@ -143,5 +226,82 @@ public class FWUserService {
     }
     logger.perfEnd("changePassword", startTime);
     return passwdResult;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  public FWUserManagerPreRegisterStatus validPreToken(String preToken) throws SQLException {
+    long startTime = logger.perfStart("validPreToken");
+    FWUserManagerPreRegisterStatus result;
+    String sql = "SELECT * FROM fw_user_management WHERE pre_token = ?";
+    FWConnection con = cm.getConnection();
+    try (FWPreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, preToken);
+      try (FWResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          boolean pre = rs.getBoolean("pre_register");
+          if (!pre) {
+            result = FWUserManagerPreRegisterStatus.REGISTER;
+          } else {
+            if (checkExpire(rs.getTimestamp("create_date"))) {
+              result = FWUserManagerPreRegisterStatus.PRE_REGISTER;
+            } else {
+              result = FWUserManagerPreRegisterStatus.EXPIRE;
+            }
+          }
+        } else {
+          result = FWUserManagerPreRegisterStatus.NONE;
+        }
+      }
+    }
+    logger.debug("status={}", result);
+    logger.perfEnd("validPreToken", startTime);
+    return result;
+  }
+
+  private boolean checkExpire(Timestamp createDate) {
+    boolean result = false;
+    int expire =
+        Integer.parseInt(
+            FWStringUtil.replaceNullString(fwMsg.get(PRE_USER_REGISTER_TOKEN_EXPIRE),
+                DEFAULT_EXPIRE));
+    long tl = createDate.getTime();
+    tl += (expire * 60 * 1000); // ミリ秒変換
+    Date d = new Date(tl);
+    Date now = new Date();
+    if (now.compareTo(d) > 0) { // 有効期限切れ
+      result = false;
+    } else {
+      result = true;
+    }
+    return result;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  public int actualRegister(String preToken) throws SQLException {
+    int result = 0;
+    long startTime = logger.perfStart("actualRegister");
+    String sql =
+        "UPDATE fw_user_management SET pre_register = ?, update_date = ? WHERE pre_token = ?";
+    FWConnection con = cm.getConnection();
+    try (FWPreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setBoolean(1, false);
+      ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+      ps.setString(3, preToken);
+      result = ps.executeUpdate();
+    }
+    if (result == 1) {
+      String selectSql = "SELECT id FROM fw_user_management WHERE pre_token = ?";
+      try (FWPreparedStatement ps = con.prepareStatement(selectSql)) {
+        ps.setString(1, preToken);
+        try (FWResultSet rs = ps.executeQuery()) {
+          rs.next();
+          String id = rs.getString("id");
+          loginMgr.login(id);
+        }
+      }
+    }
+
+    logger.perfEnd("actualRegister", startTime);
+    return result;
   }
 }

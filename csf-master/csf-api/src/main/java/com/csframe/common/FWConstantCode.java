@@ -151,4 +151,19 @@ public interface FWConstantCode {
    */
   int FW_REST_UNMARSHAL_ERROR = -9009;
 
+  /**
+   * 存在しない仮登録トークン。
+   */
+  int FW_REST_USER_ACTUAL_REG_TOKEN_INVALID = -9010;
+
+  /**
+   * 有効期限の切れた仮登録トークン。
+   */
+  int FW_REST_USER_ACTUAL_REG_TOKEN_EXPIRE = -9011;
+
+  /**
+   * 本登録済の仮登録トークン。
+   */
+  int FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED = -9012;
+
 }

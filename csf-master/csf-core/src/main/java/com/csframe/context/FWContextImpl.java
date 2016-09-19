@@ -126,4 +126,24 @@ public class FWContextImpl implements FWFullContext {
   public void setRequestUrl(String url) {
     requestContext.setRequestUrl(url);
   }
+
+  @Override
+  public boolean isUserManagementEnable() {
+    return applicationContext.isUserManagementEnable();
+  }
+
+  @Override
+  public void setUserManagementEnable(boolean userManagementEnable) {
+    applicationContext.setUserManagementEnable(userManagementEnable);
+  }
+
+  @Override
+  public String getPreToken() {
+    return requestContext.getPreToken();
+  }
+
+  @Override
+  public void setPreToken(String preToken) {
+    requestContext.setPreToken(preToken);
+  }
 }

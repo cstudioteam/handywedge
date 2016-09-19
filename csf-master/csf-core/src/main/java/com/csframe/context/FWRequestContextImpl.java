@@ -23,5 +23,6 @@ public class FWRequestContextImpl implements FWRequestContext {
   private boolean rest;
   private String token;
   private String requestUrl;
+  private String preToken;
 
 }

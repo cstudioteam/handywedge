@@ -24,6 +24,29 @@ public interface FWUserManager {
   boolean register(String id, String password);
 
   /**
+   * ユーザーIDを登録します。パスワードはプレーン文字列を渡し、インターフェース実装でハッシュ化されます。<br>
+   * preRegisterが1以上の場合は仮登録となります。<br>
+   * 
+   * @param id ユーザーID
+   * @param password パスワード（プレーン）
+   * @param preRegister 1以上は仮登録
+   * @return 追加できた場合はtrue
+   * 
+   * @since 0.4.0
+   */
+  boolean register(String id, String password, Integer preRegister);
+
+  /**
+   * ユーザーIDを本登録します。
+   * 
+   * @param preToken 仮登録トークン
+   * @return 追加できた場合はtrue
+   * 
+   * @since 0.4.0
+   */
+  boolean actualRegister(String preToken);
+
+  /**
    * パスワードの変更をします。<br>
    * パスワードチェックは行わないので必要であればこのメソッドを実行前にパスワードチェックを行って下さい。
    * 

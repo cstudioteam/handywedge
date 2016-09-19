@@ -7,8 +7,6 @@
  */
 package com.csframe.user.auth;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -37,6 +35,7 @@ import com.csframe.log.FWLogger;
 import com.csframe.user.FWFullUser;
 import com.csframe.user.FWUser;
 import com.csframe.user.FWUserImpl;
+import com.csframe.util.FWInternalUtil;
 import com.csframe.util.FWThreadLocal;
 
 @ApplicationScoped
@@ -69,18 +68,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
       return true;
     }
 
-    FWConnection con = cm.getConnection();
     if (checkPassword(id, password)) {
       // セッションオブジェクトにユーザー情報をセット
-      FWUser innerUser = getUser(id, con);
-      user.setId(innerUser.getId());
-      user.setName(innerUser.getName());
-      if (innerUser.getLocale() != null) {
-        user.setLocale(innerUser.getLocale());
-      }
-      user.setRole(innerUser.getRole());
-      updateLoginTime(id, con);
-      FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
+      login(id);
       logger.info("login ok.");
       logger.perfEnd("login", startTime);
       return true;
@@ -89,6 +79,20 @@ public class FWLoginManagerImpl implements FWLoginManager {
       logger.perfEnd("login", startTime);
       return false;
     }
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  @Override
+  public void login(String id) {
+    FWUser innerUser = getUser(id);
+    user.setId(innerUser.getId());
+    user.setName(innerUser.getName());
+    if (innerUser.getLocale() != null) {
+      user.setLocale(innerUser.getLocale());
+    }
+    user.setRole(innerUser.getRole());
+    updateLoginTime(id);
+    FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
   }
 
   private String getPassword(String id, FWConnection con) throws SQLException {
@@ -112,7 +116,21 @@ public class FWLoginManagerImpl implements FWLoginManager {
     long startTime = logger.perfStart("checkPassword");
     String dbPass = null;
     FWConnection con = cm.getConnection();
+
     try {
+      if (appCtx.isUserManagementEnable()) { // 仮登録チェック
+        String sql = "SELECT * FROM fw_user_management WHERE id = ? AND pre_register = ?"; // boolの扱いがDBMSで異なりそうなのでJDBC経由で設定する
+        try (FWPreparedStatement ps = con.prepareStatement(sql)) {
+          ps.setString(1, id);
+          ps.setBoolean(2, true);
+          try (FWResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+              logger.warn("仮登録ユーザーでのログインです。id={}", id);
+              return false;
+            }
+          }
+        }
+      }
       dbPass = getPassword(id, con);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
@@ -145,23 +163,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
   public String publishAPIToken(String id, boolean multiple) {
 
     long startTime = logger.perfStart("publishAPIToken");
-    String token = null;
     logger.debug("generate token start.");
-    try {
-      // 下記で選択されるNativePRNGBlockingでは、Linux環境だとものすごい遅い（30秒以上かかる）
-      // SecureRandom sr = SecureRandom.getInstanceStrong();
-      SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
-      logger.debug("token Algorithme={}", sr.getAlgorithm());
-      byte[] b = new byte[16];
-      sr.nextBytes(b);
-      StringBuilder buf = new StringBuilder();
-      for (int i = 0; i < b.length; i++) {
-        buf.append(String.format("%02x", b[i]));
-      }
-      token = buf.toString();
-    } catch (NoSuchAlgorithmException e) {
-      throw new FWRuntimeException(FWConstantCode.FATAL, e);
-    }
+    String token = FWInternalUtil.generateToken();
     logger.debug("generate token end.");
 
     FWConnection con = cm.getConnection();
@@ -190,7 +193,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
     logger.debug("publishAPIToken end. token={}", token);
-    updateLoginTime(id, con);
+    updateLoginTime(id);
     logger.perfEnd("publishAPIToken", startTime);
     return token;
   }
@@ -235,8 +238,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
       logger.perfEnd("authAPIToken", startTime);
       return false;
     }
-    updateLoginTime(id, cm.getConnection());
-    FWUser innerUser = getUser(id, cm.getConnection());
+    updateLoginTime(id);
+    FWUser innerUser = getUser(id);
     restCtx.setUserId(innerUser.getId());
     restCtx.setUserName(innerUser.getName());
     restCtx.setUserRole(innerUser.getRole());
@@ -249,9 +252,10 @@ public class FWLoginManagerImpl implements FWLoginManager {
     return true;
   }
 
-  private void updateLoginTime(String id, FWConnection con) {
+  private void updateLoginTime(String id) {
     // 最終ログイン時間更新
     Timestamp t = new Timestamp(System.currentTimeMillis());
+    FWConnection con = cm.getConnection();
     try (FWPreparedStatement ps =
         con.prepareStatement(
             "UPDATE fw_user SET last_login_date = ?, update_date = ? WHERE id = ?");) {
@@ -270,8 +274,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
     }
   }
 
-  private FWUser getUser(String id, FWConnection con) {
+  private FWUser getUser(String id) {
     FWFullUser innerUser = null;
+    FWConnection con = cm.getConnection();
     try (FWPreparedStatement ps = con.prepareStatement("SELECT * FROM fw_user WHERE id = ?")) {
       ps.setString(1, id);
       try (FWResultSet rs = ps.executeQuery()) {

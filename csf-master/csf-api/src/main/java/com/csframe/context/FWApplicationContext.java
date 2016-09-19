@@ -37,4 +37,8 @@ public interface FWApplicationContext {
   Map<String, String> getTokenMap();
 
   List<FWRoleAcl> getRoleAcl();
+
+  boolean isUserManagementEnable();
+
+  void setUserManagementEnable(boolean userManagementEnable);
 }

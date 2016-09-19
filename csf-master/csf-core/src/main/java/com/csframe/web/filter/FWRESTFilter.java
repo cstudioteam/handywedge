@@ -61,6 +61,10 @@ public class FWRESTFilter implements Filter {
           && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user")
               || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/"))) {
         logger.info("User register request.");
+      } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
+          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/actual")
+              || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/actual/"))) {
+        logger.info("User actual register request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");
         logger.info("TOKEN:[{}]", tokenHeader);

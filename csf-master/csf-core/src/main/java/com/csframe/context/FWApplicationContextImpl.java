@@ -26,6 +26,7 @@ public class FWApplicationContextImpl implements FWApplicationContext {
   private String hostName;
   private String applicationId;
   private String contextPath;
+  private boolean userManagementEnable;
 
   // v0.3.0よりkey-valueを入れ替えてkeyはtokenとする
   private Map<String, String> tokenMap = Collections.synchronizedMap(new HashMap<String, String>());

@@ -7,7 +7,7 @@
  */
 package com.csframe.rest.api.user;
 
-import com.csframe.rest.FWRESTRequest;
+import com.csframe.rest.FWRESTResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -18,20 +18,8 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class FWUserManagerRequest extends FWRESTRequest {
+public class FWUserManagerResponse extends FWRESTResponse {
 
-  /*
-   * パスワード変更
-   */
-  private String current_password;
-  private String new_password;
+  private String preToken;
 
-  /*
-   * ユーザー登録
-   */
-  private String id;
-  private String password;
-  private Integer pre_register; // 仮登録フラグ
-
-  private String pre_token;
 }

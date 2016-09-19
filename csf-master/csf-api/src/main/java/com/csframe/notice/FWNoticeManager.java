@@ -17,7 +17,7 @@ public interface FWNoticeManager {
   /**
    * お知らせを登録します。
    * 
-   * @param notice
+   * @param notice お知らせ情報
    */
   void register(FWNotice notice);
 
@@ -39,7 +39,7 @@ public interface FWNoticeManager {
   /**
    * お知らせを更新します。該当するお知らせIDが存在しない場合は何もしません。
    * 
-   * @param notice
+   * @param notice お知らせ情報
    * @return 更新件数
    */
   int update(FWNotice notice);

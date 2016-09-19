@@ -89,4 +89,18 @@ public interface FWRequestContext {
    */
   void setRequestUrl(String url);
 
+  /**
+   * リクエストで発行された仮登録トークンを返します。
+   * 
+   * @return 仮登録トークン
+   */
+  String getPreToken();
+
+  /**
+   * リクエストで発行された仮登録トークンを設定します。
+   * 
+   * @param preToken 仮登録トークン
+   */
+  void setPreToken(String preToken);
+
 }

@@ -87,4 +87,36 @@ public interface FWFullContext extends FWContext {
    */
   void setRequestUrl(String url);
 
+  /**
+   * fw_user_managementテーブルが存在する場合はtrueを返します。
+   * 
+   * @return ユーザー管理機能が有効の場合true
+   * @since 0.4.0
+   */
+  boolean isUserManagementEnable();
+
+  /**
+   * fw_user_managementテーブルが存在するか設定します。
+   * 
+   * @param userManagementEnable fw_user_managementが存在する場合はtrue
+   * @since 0.4.0
+   */
+  void setUserManagementEnable(boolean userManagementEnable);
+
+  /**
+   * リクエストで発行された仮登録トークンを返します。
+   * 
+   * @return 仮登録トークン
+   * @since 0.4.0
+   */
+  String getPreToken();
+
+  /**
+   * リクエストで発行された仮登録トークンを設定します。
+   * 
+   * @param preToken 仮登録トークン
+   * @since 0.4.0
+   */
+  void setPreToken(String preToken);
+
 }

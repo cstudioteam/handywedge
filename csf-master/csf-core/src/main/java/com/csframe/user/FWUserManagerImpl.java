@@ -23,8 +23,23 @@ public class FWUserManagerImpl implements FWUserManager {
 
   @Override
   public boolean register(String id, String password) {
+    return register(id, password, null);
+  }
+
+  @Override
+  public boolean register(String id, String password, Integer preRegister) {
     try {
-      int result = service.insert(id, password);
+      int result = service.insert(id, password, preRegister);
+      return result == 1;
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
+  }
+
+  @Override
+  public boolean actualRegister(String preToken) {
+    try {
+      int result = service.actualRegister(preToken);
       return result == 1;
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);

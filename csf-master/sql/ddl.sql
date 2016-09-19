@@ -5,10 +5,9 @@ DROP TABLE IF EXISTS fw_role_action;
 DROP TABLE IF EXISTS fw_action;
 DROP TABLE IF EXISTS fw_api_token;
 DROP TABLE IF EXISTS fw_notice;
+DROP TABLE IF EXISTS fw_user_management;
 DROP TABLE IF EXISTS fw_user_passwd;
 DROP TABLE IF EXISTS fw_user;
-
-
 
 
 /* Create Tables */
@@ -98,6 +97,23 @@ CREATE TABLE fw_user
 ) WITHOUT OIDS;
 
 
+-- ユーザー管理
+CREATE TABLE fw_user_management
+(
+    -- ユーザーID
+    id varchar(128) NOT NULL,
+    -- 仮登録
+    pre_register boolean DEFAULT '1' NOT NULL,
+    -- 仮登録トークン
+    pre_token varchar(32) UNIQUE,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_user_management PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 -- ユーザーパスワード
 CREATE TABLE fw_user_passwd
 (
@@ -125,7 +141,15 @@ ALTER TABLE fw_role_action
 
 
 ALTER TABLE fw_api_token
-    ADD FOREIGN KEY (id)
+    ADD CONSTRAINT fk_fw_api_token FOREIGN KEY (id)
+    REFERENCES fw_user (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+;
+
+
+ALTER TABLE fw_user_management
+    ADD CONSTRAINT fk_fw_user_management FOREIGN KEY (id)
     REFERENCES fw_user (id)
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -138,6 +162,4 @@ ALTER TABLE fw_user_passwd
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
 ;
-
-
 

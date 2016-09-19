@@ -61,15 +61,58 @@ public class FWStringUtil {
     FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
     FWContext ctx = FWBeanManager.getBean(FWContext.class);
 
+    String loginUrl = resources.get(FWMessageResources.LOGIN_URL);
+    if (FWStringUtil.isEmpty(loginUrl)) {
+      return null;
+    }
+    if (!loginUrl.startsWith("/")) {
+      loginUrl = "/" + loginUrl;
+    }
     String contextPath = ctx.getContextPath();
     if (contextPath.endsWith("/")) {
       contextPath = contextPath.substring(0, contextPath.length() - 1);
     }
-    String loginUrl = resources.get(FWMessageResources.LOGIN_URL);
-    if (!loginUrl.startsWith("/")) {
-      loginUrl = "/" + loginUrl;
-    }
     return contextPath + loginUrl;
+  }
+
+  public static String getRegisterUrl() {
+
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+    FWContext ctx = FWBeanManager.getBean(FWContext.class);
+
+    String registerUrl = resources.get(FWMessageResources.REGISTER_URL);
+    if (FWStringUtil.isEmpty(registerUrl)) {
+      return null;
+    }
+    if (!registerUrl.startsWith("/")) {
+      registerUrl = "/" + registerUrl;
+    }
+
+    String contextPath = ctx.getContextPath();
+    if (contextPath.endsWith("/")) {
+      contextPath = contextPath.substring(0, contextPath.length() - 1);
+    }
+    return contextPath + registerUrl;
+  }
+
+  public static String getPreRegisterUrl() {
+
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+    FWContext ctx = FWBeanManager.getBean(FWContext.class);
+
+    String preRegisterUrl = resources.get(FWMessageResources.PRE_REGISTER_URL);
+    if (FWStringUtil.isEmpty(preRegisterUrl)) {
+      return null;
+    }
+    if (!preRegisterUrl.startsWith("/")) {
+      preRegisterUrl = "/" + preRegisterUrl;
+    }
+
+    String contextPath = ctx.getContextPath();
+    if (contextPath.endsWith("/")) {
+      contextPath = contextPath.substring(0, contextPath.length() - 1);
+    }
+    return contextPath + preRegisterUrl;
   }
 
   public static String splitBearerToken(String tokenHeader) {
