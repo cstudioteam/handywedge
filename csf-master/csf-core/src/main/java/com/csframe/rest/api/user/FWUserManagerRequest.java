@@ -32,6 +32,11 @@ public class FWUserManagerRequest extends FWRESTRequest {
   private String id;
   private String password;
   private Integer pre_register; // 仮登録フラグ
-
+  private String mail_address;
   private String pre_token;
+
+  /*
+   * パスワード初期化
+   */
+  private Integer length;
 }

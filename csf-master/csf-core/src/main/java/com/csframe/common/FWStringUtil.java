@@ -57,62 +57,116 @@ public class FWStringUtil {
   }
 
   public static String getLoginUrl() {
-
     FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
-    FWContext ctx = FWBeanManager.getBean(FWContext.class);
 
-    String loginUrl = resources.get(FWMessageResources.LOGIN_URL);
-    if (FWStringUtil.isEmpty(loginUrl)) {
+    String url = resources.get(FWMessageResources.LOGIN_URL);
+    if (FWStringUtil.isEmpty(url)) {
       return null;
+    } else {
+      return concatContext(url);
     }
-    if (!loginUrl.startsWith("/")) {
-      loginUrl = "/" + loginUrl;
-    }
-    String contextPath = ctx.getContextPath();
-    if (contextPath.endsWith("/")) {
-      contextPath = contextPath.substring(0, contextPath.length() - 1);
-    }
-    return contextPath + loginUrl;
   }
 
   public static String getRegisterUrl() {
-
     FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
-    FWContext ctx = FWBeanManager.getBean(FWContext.class);
 
-    String registerUrl = resources.get(FWMessageResources.REGISTER_URL);
-    if (FWStringUtil.isEmpty(registerUrl)) {
+    String url = resources.get(FWMessageResources.REGISTER_URL);
+    if (FWStringUtil.isEmpty(url)) {
       return null;
+    } else {
+      return concatContext(url);
     }
-    if (!registerUrl.startsWith("/")) {
-      registerUrl = "/" + registerUrl;
-    }
-
-    String contextPath = ctx.getContextPath();
-    if (contextPath.endsWith("/")) {
-      contextPath = contextPath.substring(0, contextPath.length() - 1);
-    }
-    return contextPath + registerUrl;
   }
 
   public static String getPreRegisterUrl() {
-
     FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
-    FWContext ctx = FWBeanManager.getBean(FWContext.class);
 
-    String preRegisterUrl = resources.get(FWMessageResources.PRE_REGISTER_URL);
-    if (FWStringUtil.isEmpty(preRegisterUrl)) {
+    String url = resources.get(FWMessageResources.PRE_REGISTER_URL);
+    if (FWStringUtil.isEmpty(url)) {
       return null;
+    } else {
+      return concatContext(url);
     }
-    if (!preRegisterUrl.startsWith("/")) {
-      preRegisterUrl = "/" + preRegisterUrl;
+  }
+
+  public static String getActRegisterSuccessUrl() {
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+
+    String url = resources.get(FWMessageResources.ACT_REGISTER_SUCCESS_REDIRECT);
+    if (FWStringUtil.isEmpty(url)) {
+      return null;
+    } else {
+      return concatContext(url);
+    }
+  }
+
+  public static String getActRegisterFailUrl() {
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+
+    String url = resources.get(FWMessageResources.ACT_REGISTER_FAIL_REDIRECT);
+    if (FWStringUtil.isEmpty(url)) {
+      return null;
+    } else {
+      return concatContext(url);
+    }
+  }
+
+  public static String getResetPasswdSuccessUrl() {
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+
+    String url = resources.get(FWMessageResources.RESET_PASSWD_SUCCESS_REDIRECT);
+    if (FWStringUtil.isEmpty(url)) {
+      return null;
+    } else {
+      return concatContext(url);
+    }
+  }
+
+  public static String getResetPasswdFailUrl() {
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+
+    String url = resources.get(FWMessageResources.RESET_PASSWD_FAIL_REDIRECT);
+    if (FWStringUtil.isEmpty(url)) {
+      return null;
+    } else {
+      return concatContext(url);
+    }
+  }
+
+  private static String concatContext(String baseUrl) {
+
+    FWContext ctx = FWBeanManager.getBean(FWContext.class);
+    if (!baseUrl.startsWith("/")) {
+      baseUrl = "/" + baseUrl;
     }
 
     String contextPath = ctx.getContextPath();
     if (contextPath.endsWith("/")) {
       contextPath = contextPath.substring(0, contextPath.length() - 1);
     }
-    return contextPath + preRegisterUrl;
+    return contextPath + baseUrl;
+  }
+
+  /**
+   * コンテキストパスまでのプロトコル付URLを返します。
+   * 
+   * @return コンテキストパスまでのURL
+   */
+  public static String getIncludeContextUrl() {
+
+    FWMessageResources resources = FWBeanManager.getBean(FWMessageResources.class);
+    FWContext ctx = FWBeanManager.getBean(FWContext.class);
+
+    String url = resources.get(FWMessageResources.SERVER_ADDR);
+    if (url.endsWith("/")) {
+      url = url.substring(0, url.length() - 1);
+    }
+    String contextPath = ctx.getContextPath();
+    if (contextPath.endsWith("/")) {
+      contextPath = contextPath.substring(0, contextPath.length() - 1);
+    }
+
+    return url + contextPath;
   }
 
   public static String splitBearerToken(String tokenHeader) {

@@ -7,7 +7,10 @@ DROP TABLE IF EXISTS fw_api_token;
 DROP TABLE IF EXISTS fw_notice;
 DROP TABLE IF EXISTS fw_user_management;
 DROP TABLE IF EXISTS fw_user_passwd;
+DROP TABLE IF EXISTS fw_user_passwd_reset;
 DROP TABLE IF EXISTS fw_user;
+
+
 
 
 /* Create Tables */
@@ -81,6 +84,8 @@ CREATE TABLE fw_user
     id varchar(128) NOT NULL,
     -- 名前
     name varchar(256),
+    -- メールアドレス
+    mail_address varchar(256),
     -- ロール
     role varchar(256),
     -- 国 : jpなどのLocale国コード
@@ -129,6 +134,19 @@ CREATE TABLE fw_user_passwd
 ) WITHOUT OIDS;
 
 
+-- パスワードリセット管理
+CREATE TABLE fw_user_passwd_reset
+(
+    -- ユーザーID
+    id varchar(128) NOT NULL,
+    -- リセットトークン
+    reset_token varchar(32) NOT NULL UNIQUE,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_fw_user_passwd_reset PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 
 /* Create Foreign Keys */
 
@@ -162,4 +180,14 @@ ALTER TABLE fw_user_passwd
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
 ;
+
+
+ALTER TABLE fw_user_passwd_reset
+    ADD CONSTRAINT fk_fw_user_passwd_reset FOREIGN KEY (id)
+    REFERENCES fw_user (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+;
+
+
 

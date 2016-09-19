@@ -7,13 +7,18 @@
  */
 package com.csframe.rest.api.user;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -21,7 +26,7 @@ import com.csframe.cdi.FWBeanManager;
 import com.csframe.common.FWConstantCode;
 import com.csframe.common.FWException;
 import com.csframe.common.FWStringUtil;
-import com.csframe.context.FWFullContext;
+import com.csframe.config.FWMessageResources;
 import com.csframe.context.FWRESTContext;
 import com.csframe.db.FWDatabaseMetaInfo;
 import com.csframe.log.FWLogger;
@@ -47,17 +52,17 @@ public class FWUserManageController {
 
   private FWRESTContext ctx;
 
-  private FWFullContext fwCtx;
-
   private FWUserService service;
+
+  private FWMessageResources fwMsg;
 
   @PostConstruct
   public void init() {
     userMgr = FWBeanManager.getBean(FWUserManager.class);
     loginMgr = FWBeanManager.getBean(FWLoginManager.class);
     ctx = FWBeanManager.getBean(FWRESTContext.class);
-    fwCtx = FWBeanManager.getBean(FWFullContext.class);
     service = FWBeanManager.getBean(FWUserService.class);
+    fwMsg = FWBeanManager.getBean(FWMessageResources.class);
   }
 
   @PUT
@@ -98,11 +103,111 @@ public class FWUserManageController {
   }
 
   @POST
+  @Path("/password/reset")
+  public Response resetPassword(FWUserManagerRequest request) {
+
+    logger.info("resetPassword start. args={}", request);
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    try {
+      if (request == null || FWStringUtil.isEmpty(request.getId())) {
+        FWException e =
+            new FWException(String.valueOf(FWConstantCode.FW_REST_USER_RESET_PASSWD_ID_EMPTY));
+        logger.warn(e.getMessage());
+        res.setReturn_cd(FWConstantCode.FW_REST_USER_RESET_PASSWD_ID_EMPTY);
+        res.setReturn_msg(e.getMessage());
+      } else {
+        String result = userMgr.initResetPassword(request.getId());
+        if (!FWStringUtil.isEmpty(result)) {
+          res.setReturn_cd(0);
+        } else {
+          res = createError("予期しないエラーが発生しました。");
+          logger.error(res.toString());
+        }
+      }
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      res = createError(e.getMessage());
+    }
+    logger.info("resetPassword end. res={}", res);
+    return Response.ok(res).build();
+  }
+
+  @GET
+  @Path("/password/reset")
+  public Response resetPassword(@QueryParam("token") String token) {
+
+    logger.info("resetPassword start. token={}", token);
+    FWRESTResponse res = new FWRESTEmptyResponse();
+    String redirect = null;
+    try {
+      if (FWStringUtil.isEmpty(token)) {
+        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_USER_TOKEN_EMPTY));
+        logger.warn(e.getMessage());
+        res.setReturn_cd(FWConstantCode.FW_REST_USER_TOKEN_EMPTY);
+        res.setReturn_msg(e.getMessage());
+      } else {
+        FWUserManagerPreRegisterStatus preRegisterStatus =
+            service.validResetToken(token);
+        if (preRegisterStatus == FWUserManagerPreRegisterStatus.NONE) {
+          redirect = FWStringUtil.getResetPasswdFailUrl();
+          FWException e =
+              new FWException(String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_INVALID));
+          logger.warn(e.getMessage());
+          res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_INVALID);
+          res.setReturn_msg(e.getMessage());
+        } else if (preRegisterStatus == FWUserManagerPreRegisterStatus.EXPIRE) {
+          redirect = FWStringUtil.getResetPasswdFailUrl();
+          FWException e =
+              new FWException(String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_EXPIRE));
+          logger.warn(e.getMessage());
+          res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_EXPIRE);
+          res.setReturn_msg(e.getMessage());
+        } else { // 初期化トークン有効
+          String password = userMgr.resetPassword(token);
+          if (!FWStringUtil.isEmpty(password)) {
+            redirect = FWStringUtil.getResetPasswdSuccessUrl();
+            res.setReturn_cd(0);
+          } else {
+            redirect = FWStringUtil.getResetPasswdFailUrl();
+            FWException e =
+                new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
+            logger.error(e.getMessage());
+            res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
+            res.setReturn_msg(e.getMessage());
+          }
+        }
+      }
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      res = createError(e.getMessage());
+    }
+    URI uri = null;
+    if (!FWStringUtil.isEmpty(redirect)) {
+      String url = fwMsg.get(FWMessageResources.SERVER_ADDR);
+      if (url.endsWith("/")) {
+        url = url.substring(0, url.length() - 1);
+      }
+      url += redirect;
+      try {
+        uri = new URI(url);
+      } catch (URISyntaxException e) {
+        logger.warn("リダイレクトURLの生成に失敗しました。", e);
+      }
+    }
+    logger.info("resetPassword end. res={}", res);
+    if (uri != null) {
+      return Response.seeOther(uri).build();
+    } else {
+      return Response.ok(res).build();
+    }
+  }
+
+  @POST
   @Path("/")
   public Response register(FWUserManagerRequest request) {
     logger.info("register start. args={}", request);
 
-    FWRESTResponse res = new FWUserManagerResponse();
+    FWRESTResponse res = new FWRESTEmptyResponse();
     try {
       if (request == null || FWStringUtil.isEmpty(request.getId())
           || FWStringUtil.isEmpty(request.getPassword())) {
@@ -117,15 +222,19 @@ public class FWUserManageController {
         logger.warn(e.getMessage());
         res.setReturn_cd(FWConstantCode.FW_REST_USER_REG_ID_INVALID);
         res.setReturn_msg(e.getMessage());
+      } else if (request.getPre_register() != null && request.getPre_register() > 0
+          && FWStringUtil.isEmpty(request.getMail_address())) {
+        FWException e =
+            new FWException(String.valueOf(FWConstantCode.FW_REST_USER_PRE_REG_MAIL_EMPTY));
+        logger.warn(e.getMessage());
+        res.setReturn_cd(FWConstantCode.FW_REST_USER_PRE_REG_MAIL_EMPTY);
+        res.setReturn_msg(e.getMessage());
       } else {
         boolean result =
-            userMgr.register(request.getId(), request.getPassword(), request.getPre_register());
+            userMgr.register(request.getId(), request.getPassword(), request.getPre_register(),
+                request.getMail_address());
         if (result) {
           res.setReturn_cd(0);
-          if (!FWStringUtil.isEmpty(fwCtx.getPreToken())) {
-            FWUserManagerResponse r = (FWUserManagerResponse) res;
-            r.setPreToken(fwCtx.getPreToken());
-          }
         } else {
           FWException e =
               new FWException(String.valueOf(FWConstantCode.FW_REST_USER_REG_ID_EXISTS));
@@ -142,34 +251,38 @@ public class FWUserManageController {
     return Response.ok(res).build();
   }
 
-  @POST
+  @GET
   @Path("/actual")
-  public Response actualRegister(FWUserManagerRequest request) {
-    logger.info("actualRegister start. args={}", request);
+  public Response actualRegister(@QueryParam("token") String token) {
+    logger.info("actualRegister start. token={}", token);
 
     FWRESTResponse res = new FWRESTEmptyResponse();
+    String redirect = null;
     try {
-      if (request == null || FWStringUtil.isEmpty(request.getPre_token())) {
-        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_TOKENPUB_INVALID));
+      if (FWStringUtil.isEmpty(token)) {
+        FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_USER_TOKEN_EMPTY));
         logger.warn(e.getMessage());
-        res.setReturn_cd(FWConstantCode.FW_REST_TOKENPUB_INVALID);
+        res.setReturn_cd(FWConstantCode.FW_REST_USER_TOKEN_EMPTY);
         res.setReturn_msg(e.getMessage());
       } else {
         FWUserManagerPreRegisterStatus preRegisterStatus =
-            service.validPreToken(request.getPre_token());
+            service.validPreToken(token);
         if (preRegisterStatus == FWUserManagerPreRegisterStatus.NONE) {
+          redirect = FWStringUtil.getActRegisterFailUrl();
           FWException e =
               new FWException(String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_INVALID));
           logger.warn(e.getMessage());
           res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_INVALID);
           res.setReturn_msg(e.getMessage());
         } else if (preRegisterStatus == FWUserManagerPreRegisterStatus.EXPIRE) {
+          redirect = FWStringUtil.getActRegisterFailUrl();
           FWException e =
               new FWException(String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_EXPIRE));
           logger.warn(e.getMessage());
           res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_EXPIRE);
           res.setReturn_msg(e.getMessage());
         } else if (preRegisterStatus == FWUserManagerPreRegisterStatus.REGISTER) {
+          redirect = FWStringUtil.getActRegisterFailUrl();
           FWException e =
               new FWException(
                   String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED));
@@ -177,10 +290,12 @@ public class FWUserManageController {
           res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED);
           res.setReturn_msg(e.getMessage());
         } else { // 仮登録状態
-          boolean result = userMgr.actualRegister(request.getPre_token());
+          boolean result = userMgr.actualRegister(token);
           if (result) {
+            redirect = FWStringUtil.getActRegisterSuccessUrl();
             res.setReturn_cd(0);
           } else {
+            redirect = FWStringUtil.getActRegisterFailUrl();
             FWException e =
                 new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
             logger.error(e.getMessage());
@@ -193,8 +308,25 @@ public class FWUserManageController {
       logger.error("予期しないエラーが発生しました。", e);
       res = createError(e.getMessage());
     }
+    URI uri = null;
+    if (!FWStringUtil.isEmpty(redirect)) {
+      String url = fwMsg.get(FWMessageResources.SERVER_ADDR);
+      if (url.endsWith("/")) {
+        url = url.substring(0, url.length() - 1);
+      }
+      url += redirect;
+      try {
+        uri = new URI(url);
+      } catch (URISyntaxException e) {
+        logger.warn("リダイレクトURLの生成に失敗しました。", e);
+      }
+    }
     logger.info("actualRegister end. res={}", res);
-    return Response.ok(res).build();
+    if (uri != null) {
+      return Response.seeOther(uri).build();
+    } else {
+      return Response.ok(res).build();
+    }
   }
 
   private FWRESTResponse createError(String args) {

@@ -25,6 +25,14 @@ public interface FWMessageResources {
   String CRYPTO_KEY = "fw.crypto.key";
   String CRYPTO_IV = "fw.crypto.iv";
   String SESSION_COOKIE_NAME = "fw.session.cookie.name";
+  String REGISTER_FROM_ADDR = "fw.user.register.notice.from.address";
+  String PRE_REGISTER_SUBJECT = "fw.pre.user.register.notice.subject";
+  String PASSWD_RESET_SUBJECT = "fw.user.register.notice.subject";
+  String ACT_REGISTER_SUCCESS_REDIRECT = "fw.pre.user.register.success.redirect";
+  String ACT_REGISTER_FAIL_REDIRECT = "fw.pre.user.register.fail.redirect";
+  String RESET_PASSWD_SUCCESS_REDIRECT = "fw.user.register.passwd.reset.success.redirect";
+  String RESET_PASSWD_FAIL_REDIRECT = "fw.user.register.passwd.reset.fail.redirect";
+  String SERVER_ADDR = "fw.server.address";
 
   /**
    * プロパティファイルに設定された値を取得します。<br>

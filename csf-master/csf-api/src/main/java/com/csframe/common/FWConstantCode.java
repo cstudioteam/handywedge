@@ -166,4 +166,19 @@ public interface FWConstantCode {
    */
   int FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED = -9012;
 
+  /**
+   * 仮登録時にメールアドレスが無い。
+   */
+  int FW_REST_USER_PRE_REG_MAIL_EMPTY = -9013;
+
+  /**
+   * トークンが無い。
+   */
+  int FW_REST_USER_TOKEN_EMPTY = -9014;
+  
+  /**
+   * ユーザーIDが無い。
+   */
+  int FW_REST_USER_RESET_PASSWD_ID_EMPTY = -9015;
+
 }

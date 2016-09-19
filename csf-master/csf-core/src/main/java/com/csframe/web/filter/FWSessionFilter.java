@@ -120,11 +120,7 @@ public class FWSessionFilter implements Filter {
     try {
       FWFullUser user = (FWFullUser) context.getUser();
       String loginUrl = FWStringUtil.getLoginUrl();
-      String registerUrl = FWStringUtil.getRegisterUrl();
-      String preRegisterUrl = FWStringUtil.getPreRegisterUrl();
-      if (!(requestUrl.equals(loginUrl) || requestUrl.equals(registerUrl)
-          || requestUrl.equals(preRegisterUrl))
-          && FWStringUtil.isEmpty(user.getId())) {
+      if (!isExternalAuth(requestUrl) && FWStringUtil.isEmpty(user.getId())) {
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
           String cookieName = messageResources.get(FWMessageResources.SESSION_COOKIE_NAME);
@@ -146,9 +142,7 @@ public class FWSessionFilter implements Filter {
 
       long start = logger.perfStart("doFilter");
       try {
-        if (!(requestUrl.equals(loginUrl) || requestUrl.equals(registerUrl)
-            || requestUrl.equals(preRegisterUrl))
-            && !roleMgr.isAccessAllow()) {
+        if (!isExternalAuth(requestUrl) && !roleMgr.isAccessAllow()) {
           logger.warn("許可されていないURLへアクセスがありました。user_id={}, role={}, url={}",
               context.getUser().getId(), context.getUser().getRole(), context.getRequestUrl());
           httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "このURLへのアクセスは許可されていません。");
@@ -173,6 +167,20 @@ public class FWSessionFilter implements Filter {
       logger.respLog(requestUrl, filterStart);
       terminate(httpServletRequest);
     }
+  }
+
+  private boolean isExternalAuth(String requestUrl) {
+    String loginUrl = FWStringUtil.getLoginUrl();
+    String registerUrl = FWStringUtil.getRegisterUrl();
+    String preRegisterUrl = FWStringUtil.getPreRegisterUrl();
+    String actRegisterFailUrl = FWStringUtil.getActRegisterFailUrl();
+    String actRegisterSuccessUrl = FWStringUtil.getActRegisterSuccessUrl();
+    String resetPasswordFailUrl = FWStringUtil.getResetPasswdFailUrl();
+    String resetPasswordSuccessUrl = FWStringUtil.getResetPasswdSuccessUrl();
+    return (requestUrl.equals(loginUrl) || requestUrl.equals(registerUrl)
+        || requestUrl.equals(preRegisterUrl) || requestUrl.equals(actRegisterFailUrl)
+        || requestUrl.equals(actRegisterSuccessUrl) || requestUrl.equals(resetPasswordFailUrl)
+        || requestUrl.equals(resetPasswordSuccessUrl));
   }
 
   private void terminate(HttpServletRequest request) {

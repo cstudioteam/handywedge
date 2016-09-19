@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -34,6 +35,8 @@ public class FWInternalUtil {
 
   @Inject
   private FWLogger logger;
+
+  // TODO テーブルチェック系はDB・JDBC依存が強いのでプロパティとかにしたほうが良いかもしれない
 
   // @FWTransactional(dataSourceName = "jdbc/fw")
   public void cacheAPIToken() {
@@ -106,5 +109,45 @@ public class FWInternalUtil {
     } catch (NoSuchAlgorithmException e) {
       throw new FWRuntimeException(FWConstantCode.FATAL, e);
     }
+  }
+
+  public static String generatePassword(int length, boolean digit, boolean upper,
+      boolean lower, boolean symbol) {
+
+    // 生成処理
+    StringBuilder result = new StringBuilder();
+    // パスワードに使用する文字を格納
+    StringBuilder source = new StringBuilder();
+    // 数字
+    if (digit) {
+      for (int i = 0x30; i < 0x3A; i++) {
+        source.append((char) i);
+      }
+    }
+    // 記号
+    if (symbol) {
+      for (int i = 0x21; i < 0x30; i++) {
+        source.append((char) i);
+      }
+    }
+    // アルファベット小文字
+    if (lower) {
+      for (int i = 0x41; i < 0x5b; i++) {
+        source.append((char) i);
+      }
+    }
+    // アルファベット大文字
+    if (upper) {
+      for (int i = 0x61; i < 0x7b; i++) {
+        source.append((char) i);
+      }
+    }
+
+    int sourceLength = source.length();
+    Random random = new Random();
+    while (result.length() < length) {
+      result.append(source.charAt(Math.abs(random.nextInt()) % sourceLength));
+    }
+    return result.toString();
   }
 }
