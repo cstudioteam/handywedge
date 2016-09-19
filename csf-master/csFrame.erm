@@ -11,8 +11,8 @@
 	</page_setting>
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
-	<x>-228</x>
-	<y>0</y>
+	<x>183</x>
+	<y>26</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -114,7 +114,7 @@
 				<category>
 					<id>8</id>
 					<height>469</height>
-					<width>825</width>
+					<width>733</width>
 						<font_name>.SF NS Text</font_name>
 						<font_size>9</font_size>
 					<x>-228</x>
@@ -137,11 +137,11 @@
 				<category>
 					<id>9</id>
 					<height>229</height>
-					<width>769</width>
+					<width>685</width>
 						<font_name>.SF NS Text</font_name>
 						<font_size>9</font_size>
-					<x>612</x>
-					<y>200</y>
+					<x>516</x>
+					<y>192</y>
 					<color>
 						<r>128</r>
 						<g>128</g>
@@ -181,7 +181,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2016-09-01 14:51:21</creation_date>
-			<updated_date>2016-09-20 00:13:52</updated_date>
+			<updated_date>2016-09-20 01:11:33</updated_date>
 			<model_property>
 				<name>プロジェクト名</name>
 				<value></value>
@@ -545,8 +545,8 @@
 			<width>224</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>336</x>
-			<y>36</y>
+			<x>252</x>
+			<y>48</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -732,8 +732,8 @@
 			<width>262</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>1044</x>
-			<y>237</y>
+			<x>900</x>
+			<y>229</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -919,8 +919,8 @@
 			<width>196</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>647</x>
-			<y>237</y>
+			<x>551</x>
+			<y>229</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -1149,8 +1149,8 @@
 			<width>221</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>337</x>
-			<y>214</y>
+			<x>228</x>
+			<y>206</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -1303,7 +1303,7 @@
 			<width>224</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>624</x>
+			<x>528</x>
 			<y>24</y>
 			<color>
 				<r>128</r>
@@ -1467,7 +1467,7 @@
 			<width>245</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>0</x>
+			<x>-72</x>
 			<y>36</y>
 			<color>
 				<r>128</r>
@@ -2013,11 +2013,11 @@
 		<table>
 			<id>7</id>
 			<height>107</height>
-			<width>245</width>
+			<width>267</width>
 				<font_name>.SF NS Text</font_name>
 				<font_size>9</font_size>
-			<x>120</x>
-			<y>342</y>
+			<x>71</x>
+			<y>348</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
