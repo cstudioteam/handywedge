@@ -53,7 +53,8 @@ public class FWUserManagerImpl implements FWUserManager {
   private static final String RESET_TEMPLATE =
       "fw.user.register.passwd.reset.mail.template";
 
-
+  private static final String TEMPLATE_VAR_URL = "<%url%>";
+  private static final String TEMPLATE_VAR_PASSWORD = "<%password%>";
 
   @Override
   public boolean register(String id, String password) {
@@ -70,10 +71,10 @@ public class FWUserManagerImpl implements FWUserManager {
           String template = readTemplate(path);
           String url = FWStringUtil.getIncludeContextUrl();
           url += "/csf/rest/api/user/actual?token=" + ctx.getPreToken();
-          String body = template.replace("<%url%>", url);
+          String body = template.replace(TEMPLATE_VAR_URL, url);
           String from = msg.get(FWMessageResources.REGISTER_FROM_ADDR);
           String subject = msg.get(FWMessageResources.PRE_REGISTER_SUBJECT);
-          sendMail(mailAddress, from, subject, body);
+          sendMail(mailAddress, from, subject, body, isHtml(path));
         } catch (IOException | FWMailException e) {
           logger.warn("メール通知でエラーが発生しました。", e);
           result = 0;
@@ -148,10 +149,10 @@ public class FWUserManagerImpl implements FWUserManager {
           String template = readTemplate(path);
           String url = FWStringUtil.getIncludeContextUrl();
           url += "/csf/rest/api/user/password/reset?token=" + token;
-          String body = template.replace("<%url%>", url);
+          String body = template.replace(TEMPLATE_VAR_URL, url);
           String from = msg.get(FWMessageResources.REGISTER_FROM_ADDR);
           String subject = msg.get(FWMessageResources.PASSWD_RESET_SUBJECT);
-          sendMail(mailAddress, from, subject, body);
+          sendMail(mailAddress, from, subject, body, isHtml(path));
         } catch (IOException | FWMailException e) {
           logger.warn("メール通知でエラーが発生しました。", e);
           token = null;
@@ -174,10 +175,10 @@ public class FWUserManagerImpl implements FWUserManager {
         String path = msg.get(RESET_TEMPLATE);
         try {
           String template = readTemplate(path);
-          String body = template.replace("<%password%>", password);
+          String body = template.replace(TEMPLATE_VAR_PASSWORD, password);
           String from = msg.get(FWMessageResources.REGISTER_FROM_ADDR);
           String subject = msg.get(FWMessageResources.PASSWD_RESET_SUBJECT);
-          sendMail(mailAddress, from, subject, body);
+          sendMail(mailAddress, from, subject, body, isHtml(path));
         } catch (IOException | FWMailException e) {
           logger.warn("メール通知でエラーが発生しました。", e);
           logger.info("初期化されたパスワード={}", password);
@@ -190,14 +191,14 @@ public class FWUserManagerImpl implements FWUserManager {
     }
   }
 
-  private void sendMail(String mailAddress, String from, String subject, String body)
+  private void sendMail(String mailAddress, String from, String subject, String body, boolean html)
       throws FWMailException {
     FWMailMessage mm = new FWMailMessage();
     mm.setToAddress(new String[] {mailAddress});
     mm.setFromAddress(from);
     mm.setSubject(subject);
     mm.setBody(body);
-    mm.setHtmlFlg(true);
+    mm.setHtmlFlg(html);
     mm.setCharacterEncoding(FWMailCharacterEncoding.UTF_8);
     mail.send(mm);
   }
@@ -215,6 +216,11 @@ public class FWUserManagerImpl implements FWUserManager {
       }
       return sb.toString();
     }
+  }
+
+  private boolean isHtml(String path) {
+    String l = path.toLowerCase();
+    return l.endsWith(".html") || l.endsWith(".htm");
   }
 
 }
