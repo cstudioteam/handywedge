@@ -193,4 +193,20 @@ public class FWStringUtil {
       return src;
     }
   }
+
+  public static String trimControlCharset(String src) {
+
+    if (isEmpty(src)) {
+      return src;
+    }
+
+    // Control Codes 0 <= 001f and 007f
+    StringBuilder sb = new StringBuilder();
+    for (char c : src.toCharArray()) {
+      if (c > 0x1f && c != 0x7f) {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
 }

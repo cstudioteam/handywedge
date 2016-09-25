@@ -8,8 +8,6 @@
 package com.csframe.web.filter;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,11 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.csframe.common.FWConstantCode;
-import com.csframe.common.FWRuntimeException;
 import com.csframe.common.FWSessionTimeoutException;
 import com.csframe.common.FWStringUtil;
 import com.csframe.config.FWMessageResources;
-import com.csframe.context.FWApplicationContext;
 import com.csframe.context.FWFullContext;
 import com.csframe.log.FWLogger;
 import com.csframe.log.FWMDC;
@@ -41,9 +37,6 @@ import com.csframe.util.FWThreadLocal;
 
 @WebFilter(filterName = "csf_session_filter")
 public class FWSessionFilter implements Filter {
-
-  @Inject
-  private FWApplicationContext appCtx;
 
   @Inject
   private FWFullContext context;
@@ -58,19 +51,7 @@ public class FWSessionFilter implements Filter {
   private FWMessageResources messageResources;
 
   @Override
-  public void init(FilterConfig filterConfig) throws ServletException {
-    try {
-      appCtx.setHostName(InetAddress.getLocalHost().getHostName());
-    } catch (UnknownHostException e) {
-      appCtx.setHostName("unknown");
-    }
-    String appId = filterConfig.getServletContext().getInitParameter("csf.app_id");
-    if (FWStringUtil.isEmpty(appId)) {
-      throw new FWRuntimeException(FWConstantCode.NO_APP_ID);
-    }
-    appCtx.setApplicationId(appId);
-    appCtx.setContextPath(filterConfig.getServletContext().getContextPath());
-  }
+  public void init(FilterConfig filterConfig) throws ServletException {}
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
