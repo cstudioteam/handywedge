@@ -92,6 +92,9 @@ public class FWSessionFilter implements Filter {
         chain.doFilter(httpServletRequest, httpServletResponse);
         logger.debug("FWSessionFilter REST API request return end.");
         return;
+      } catch (Exception e) {
+        terminateError(e);
+        throw new ServletException(e);
       } finally {
         logger.respLog(requestUrl, filterStart);
         terminate(httpServletRequest);
