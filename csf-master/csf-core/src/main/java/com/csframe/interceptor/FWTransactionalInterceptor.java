@@ -16,6 +16,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import com.csframe.common.FWBusinessException;
 import com.csframe.db.FWFullConnection;
 import com.csframe.db.FWFullConnectionManager;
 import com.csframe.db.FWTransactional;
@@ -106,8 +107,12 @@ public class FWTransactionalInterceptor {
         if (txMgr.isTopLayer()) {
           FWThreadLocal.put(FWThreadLocal.INTERCEPTOR_ERROR, true); // フィルタで二重出力させないようにする
 
-          // TODO 業務例外みたいなものを作る？
-          logger.error("Exception.", t);
+          FWBusinessException ke = t.getClass().getAnnotation(FWBusinessException.class);
+          if (ke == null) {
+            logger.error("Exception.", t);
+          } else {
+            logger.warn("BusinessLogic exception!", t);
+          }
 
           // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
           boolean rollback = true;
