@@ -20,9 +20,13 @@ import com.csframe.common.FWRuntimeException;
 public class FWInternalConnectionManager {
 
   public static Connection getConnection() {
+    return getConnection("jdbc/fw");
+  }
+
+  public static Connection getConnection(String dsName) {
     DataSource dataSource;
     try {
-      dataSource = (DataSource) InitialContext.doLookup("java:comp/env/jdbc/fw");
+      dataSource = (DataSource) InitialContext.doLookup("java:comp/env/" + dsName);
     } catch (NamingException e) {
       throw new FWRuntimeException(FWConstantCode.DS_LOOKUP_FAIL, e);
     }
