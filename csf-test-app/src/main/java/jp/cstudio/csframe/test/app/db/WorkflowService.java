@@ -1,0 +1,77 @@
+package jp.cstudio.csframe.test.app.db;
+
+import java.sql.SQLException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.csframe.db.FWConnectionManager;
+import com.csframe.db.FWPreparedStatement;
+import com.csframe.db.FWResultSet;
+import com.csframe.db.FWTransactional;
+import com.csframe.db.FWTransactional.FWTxType;
+import com.csframe.role.FWAction;
+import com.csframe.user.FWUser;
+
+import jp.cstudio.csframe.test.app.db.dto.Workflow;
+import jp.cstudio.csframe.test.app.db.dto.Workflow.Status;
+
+/*
+ * 実装サンプルコードで稼働はしません。
+ */
+@ApplicationScoped
+public class WorkflowService {
+
+  @Inject
+  private FWConnectionManager cm;
+
+  @Inject
+  private FWUser user;
+
+  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  public Workflow select(int id) throws SQLException {
+
+    Workflow wf = null;
+    try (FWPreparedStatement ps =
+        cm.getConnection().prepareStatement("SELECT * FROM workflow WHERE id = ?")) {
+      ps.setInt(1, id);
+      try (FWResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          wf = new Workflow();
+          wf.setId(rs.getInt("id"));
+          wf.setStatus(Status.toStatus(rs.getString("status")));
+          // 以下省略
+        }
+      }
+    }
+    return wf;
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  public int doAgree(Workflow workflow, FWAction action) throws SQLException {
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("UPDATE workflow SET status = ?");
+    sql.append(", update_date = CURRENT_TIMESTAMP");
+    sql.append(" WHERE id = ?");
+    int upCnt;
+    try (FWPreparedStatement ps = cm.getConnection().prepareStatement(sql.toString())) {
+      int idx = 1;
+      ps.setString(idx++, action.getPostStatus());
+      ps.setInt(idx++, workflow.getId());
+      upCnt = ps.executeUpdate();
+    }
+    if (upCnt == 1) {
+      sql = new StringBuilder();
+      sql.append("INSERT INTO action_history (action_code, user_id, description) VALUES(?, ?, ?)");
+      try (FWPreparedStatement ps = cm.getConnection().prepareStatement(sql.toString())) {
+        int idx = 1;
+        ps.setString(idx++, action.getActionCode());
+        ps.setString(idx++, user.getId());
+        ps.setString(idx++, "description");
+        ps.executeUpdate();
+      }
+    }
+    return upCnt;
+  }
+}
