@@ -50,6 +50,10 @@ public class FWSessionFilter implements Filter {
   @Inject
   private FWMessageResources messageResources;
 
+  private String[] ignoreAuthPath;
+
+  private boolean initConfig;
+
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
 
@@ -61,6 +65,20 @@ public class FWSessionFilter implements Filter {
     FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
+    if (!initConfig) { // rbがセッションスコープにアクセスするのでinitではなくこのタイミングで実施
+      initConfig = true;
+      try {
+        String uri = messageResources.get(FWMessageResources.IGNORE_AUTH_URL);
+        if (!FWStringUtil.isEmpty(uri)) {
+          this.ignoreAuthPath = uri.split(",");
+        } else {
+          ignoreAuthPath = null;
+        }
+      } catch (Exception e) {
+        ignoreAuthPath = null;
+      }
+    }
 
     // @セキュリティ webサーバーやapサーバーで設定がありそうだがフィルターで念の為に設定
     httpServletResponse.setHeader("X-XSS-Protection", "1; mode=block"); // ブラウザのXSSフィルターを強制的に有効
@@ -154,6 +172,16 @@ public class FWSessionFilter implements Filter {
   }
 
   private boolean isExternalAuth(String requestUrl) {
+
+    // #142575073 認証除外機能
+    if (ignoreAuthPath != null) {
+      for (String path : ignoreAuthPath) {
+        if (requestUrl.equals(FWStringUtil.concatContext(path))) {
+          return true;
+        }
+      }
+    }
+
     String loginUrl = FWStringUtil.getLoginUrl();
     String registerUrl = FWStringUtil.getRegisterUrl();
     String preRegisterUrl = FWStringUtil.getPreRegisterUrl();

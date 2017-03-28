@@ -33,10 +33,11 @@ public interface FWMessageResources {
   String RESET_PASSWD_SUCCESS_REDIRECT = "fw.user.register.passwd.reset.success.redirect";
   String RESET_PASSWD_FAIL_REDIRECT = "fw.user.register.passwd.reset.fail.redirect";
   String SERVER_ADDR = "fw.server.address";
+  String IGNORE_AUTH_URL = "fw.ignore.auth.url";
 
   /**
    * プロパティファイルに設定された値を取得します。<br>
-   * プロパティファイルにキーが設定されていない場合は例外がスローされます。<br>
+   * プロパティファイルにキーが設定されていない場合はnullが返されます。<br>
    * ロケールはログインしているユーザーに設定されたロケールが使用されます。<br>
    * 
    * @param key 取得するキー
@@ -46,7 +47,7 @@ public interface FWMessageResources {
 
   /**
    * プロパティファイルに設定された値を取得します。<br>
-   * プロパティファイルにキーが設定されていない場合は例外がスローされます。<br>
+   * プロパティファイルにキーが設定されていない場合はnullが返されます。<br>
    * ロケールは引数localeが使用されます。<br>
    * 
    * @param key 取得するキー

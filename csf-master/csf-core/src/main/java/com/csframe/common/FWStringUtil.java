@@ -133,7 +133,7 @@ public class FWStringUtil {
     }
   }
 
-  private static String concatContext(String baseUrl) {
+  public static String concatContext(String baseUrl) {
 
     FWContext ctx = FWBeanManager.getBean(FWContext.class);
     if (!baseUrl.startsWith("/")) {
