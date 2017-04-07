@@ -37,6 +37,13 @@ public interface FWFullUser extends FWUser {
   void setLastLoginTime(Timestamp date);
 
   /**
+   * 前回ログイン時間を設定します。
+   * 
+   * @param beforeLoginTime 前回ログイン時間
+   */
+  void setBeforeLoginTime(Timestamp beforeLoginTime);
+
+  /**
    * ロールを設定します。<br>
    * 
    * @param role ロール

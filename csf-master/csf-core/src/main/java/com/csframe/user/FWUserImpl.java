@@ -25,6 +25,8 @@ public class FWUserImpl extends FWUserData implements FWFullUser {
 
   private Timestamp lastLoginTime;
 
+  private Timestamp beforeLoginTime;
+
   @PostConstruct
   public void init() {
     super.setLocale(Locale.getDefault());
@@ -32,7 +34,8 @@ public class FWUserImpl extends FWUserData implements FWFullUser {
 
   @Override
   public String toString() {
-    return "FWUserImpl [lastLoginTime=" + lastLoginTime + ", toString()=" + super.toString() + "]";
+    return "FWUserImpl [lastLoginTime=" + lastLoginTime + ", beforeLoginTime=" + beforeLoginTime
+        + ", toString()=" + super.toString() + "]";
   }
 
 }

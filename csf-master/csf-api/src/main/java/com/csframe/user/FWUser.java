@@ -54,6 +54,13 @@ public interface FWUser extends Serializable {
   Timestamp getLastLoginTime();
 
   /**
+   * 前回ログイン時間を返します。
+   * 
+   * @return 前回ログイン時間
+   */
+  Timestamp getBeforeLoginTime();
+
+  /**
    * ユーザーに設定されているロールを返します。<br>
    * ロールの設定がない場合はnullとなります。
    * 

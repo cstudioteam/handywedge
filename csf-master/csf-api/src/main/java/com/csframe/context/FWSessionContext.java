@@ -23,16 +23,16 @@ import com.csframe.user.FWFullUser;
 public interface FWSessionContext extends Serializable {
 
   /**
-   * 最終ログイン時間を返します。
+   * 前回リクエストの最終アクセス時間を返します。。
    * 
-   * @return 最終ログイン時間
+   * @return 前回リクエストの最終アクセス時間
    */
   Date getLastAccessTime();
 
   /**
-   * 最終ログイン時間を設定します。
+   * 前回リクエストの最終アクセス時間を設定します。
    * 
-   * @param lastAccessTime 最終ログイン時間
+   * @param lastAccessTime 前回リクエストの最終アクセス時間
    */
   void setLastAccessTime(Date lastAccessTime);
 

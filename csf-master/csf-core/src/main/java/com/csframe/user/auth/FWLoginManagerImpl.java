@@ -91,6 +91,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       user.setLocale(innerUser.getLocale());
     }
     user.setRole(innerUser.getRole());
+    user.setBeforeLoginTime(innerUser.getLastLoginTime());
     updateLoginTime(id);
     FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
   }
@@ -171,9 +172,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
     try {
       if (!multiple) {
         logger.debug("token delete.");
-        try (FWPreparedStatement ps = con
-            .prepareStatement(
-                "DELETE FROM fw_api_token WHERE id = ?")) {
+        try (FWPreparedStatement ps =
+            con.prepareStatement("DELETE FROM fw_api_token WHERE id = ?")) {
           ps.setString(1, id);
           ps.executeUpdate();
         }
@@ -238,7 +238,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
       logger.perfEnd("authAPIToken", startTime);
       return false;
     }
-    updateLoginTime(id);
     FWUser innerUser = getUser(id);
     restCtx.setUserId(innerUser.getId());
     restCtx.setUserName(innerUser.getName());
@@ -247,6 +246,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       restCtx.setUserLocale(innerUser.getLocale());
     }
     restCtx.setToken(token);
+    updateLoginTime(id);
     logger.debug("authAPIToken ok.");
     logger.perfEnd("authAPIToken", startTime);
     return true;
@@ -255,10 +255,10 @@ public class FWLoginManagerImpl implements FWLoginManager {
   private void updateLoginTime(String id) {
     // 最終ログイン時間更新
     Timestamp t = new Timestamp(System.currentTimeMillis());
+    user.setLastLoginTime(t);
     FWConnection con = cm.getConnection();
-    try (FWPreparedStatement ps =
-        con.prepareStatement(
-            "UPDATE fw_user SET last_login_date = ?, update_date = ? WHERE id = ?");) {
+    try (FWPreparedStatement ps = con.prepareStatement(
+        "UPDATE fw_user SET last_login_date = ?, update_date = ? WHERE id = ?");) {
       ps.setTimestamp(1, t);
       ps.setTimestamp(2, t);
       ps.setString(3, id);
@@ -290,7 +290,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
             String country = rs.getString("country");
             innerUser.setLocale(new Locale.Builder().setLanguage(lang).setRegion(country).build());
           }
-          innerUser.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
+          innerUser.setLastLoginTime(rs.getTimestamp("last_login_date"));
 
         } else {
           throw new FWRuntimeException(FWConstantCode.FATAL, "ユーザー情報が取得できません。"); // 基本的に来ないはず
