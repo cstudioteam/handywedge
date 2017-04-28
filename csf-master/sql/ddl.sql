@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS fw_role_action;
 DROP TABLE IF EXISTS fw_action;
 DROP TABLE IF EXISTS fw_api_token;
 DROP TABLE IF EXISTS fw_notice;
+DROP TABLE IF EXISTS fw_role_acl;
 DROP TABLE IF EXISTS fw_user_management;
 DROP TABLE IF EXISTS fw_user_passwd;
 DROP TABLE IF EXISTS fw_user_passwd_reset;
@@ -59,6 +60,20 @@ CREATE TABLE fw_notice
     -- 更新日時
     update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT pk_fw_notice PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ロール別ACL
+CREATE TABLE fw_role_acl
+(
+    -- ロール
+    role varchar(256) NOT NULL,
+    -- URLパターン
+    url_pattern varchar(256) NOT NULL,
+    -- 作成日時
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- 更新日時
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITHOUT OIDS;
 
 
