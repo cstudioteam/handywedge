@@ -39,6 +39,26 @@ public class FWRESTExecutor {
 
   private FWLogger logger = FWLoggerFactory.getLogger(FWRESTExecutor.class);
 
+  private Response doPost(Class<?> logicClazz, InputStream in) throws Exception {
+    FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
+    Method method = logicClazz.getMethod("doPost", FWRESTRequest.class);
+    FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
+    Class<?> requestClazz = annotation.value();
+
+    ObjectMapper om = new ObjectMapper();
+    FWRESTRequest req = null;
+    try {
+      req = (FWRESTRequest) om.readValue(in, requestClazz);
+    } catch (Exception e) {
+      logger.error("リクエスト変換でエラーが発生しました。", e);
+      return Response.ok(createUnmarshalError(e.getMessage())).build();
+    }
+    logger.debug(req.toString());
+    FWRESTResponse res = logic.doPost(req);
+    logger.debug(res.toString());
+    return Response.ok(res).build();
+  }
+
   @POST
   @Path("/{logicClass}")
   public Response doPost(@PathParam("logicClass") String logicClass, InputStream in) {
@@ -49,28 +69,43 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
-      Method method = logicClazz.getMethod("doPost", FWRESTRequest.class);
-      FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
-      Class<?> requestClazz = annotation.value();
-
-      ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = null;
-      try {
-        req = (FWRESTRequest) om.readValue(in, requestClazz);
-      } catch (Exception e) {
-        logger.error("リクエスト変換でエラーが発生しました。", e);
-        return Response.ok(createUnmarshalError(e.getMessage())).build();
-      }
-      logger.debug(req.toString());
-      FWRESTResponse res = logic.doPost(req);
-      logger.debug(res.toString());
+      Response res = doPost(logicClazz, in);
       logger.info("REST doPost end.");
-      return Response.ok(res).build();
+      return res;
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
       return Response.ok(createError(e.getMessage())).build();
     }
+  }
+
+  @POST
+  @Path("/no_token/{logicClass}")
+  public Response doPostNoToken(@PathParam("logicClass") String logicClass, InputStream in) {
+
+    logger.info("REST doPostNoToken start. class={}", logicClass);
+    try {
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createRoutingError()).build();
+      }
+      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+        return Response.ok(createRoutingError()).build();
+      }
+      Response res = doPost(logicClazz, in);
+      logger.info("REST doPostNoToken end.");
+      return res;
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      return Response.ok(createError(e.getMessage())).build();
+    }
+  }
+
+  private Response doGet(Class<?> logicClazz, String param) {
+    FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
+    logger.debug("get parameter={}", param);
+    FWRESTResponse res = logic.doGet(param);
+    logger.debug(res.toString());
+    return Response.ok(res).build();
   }
 
   @GET
@@ -91,17 +126,63 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
-
-      logger.debug("get parameter={}", param);
-      FWRESTResponse res = logic.doGet(param);
-      logger.debug(res.toString());
+      Response res = doGet(logicClazz, param);
       logger.info("REST doGet end.");
-      return Response.ok(res).build();
+      return res;
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
       return Response.ok(createError(e.getMessage())).build();
     }
+  }
+
+  @GET
+  @Path("/no_token/{logicClass}")
+  public Response doGetNoToken(@PathParam("logicClass") String logicClass) {
+
+    return doGetNoToken(logicClass, null);
+  }
+
+  @GET
+  @Path("/no_token/{logicClass}/{param}")
+  public Response doGetNoToken(@PathParam("logicClass") String logicClass,
+      @PathParam("param") String param) {
+
+    logger.info("REST doGetNoToken start. class={}", logicClass);
+    try {
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createRoutingError()).build();
+      }
+      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+        return Response.ok(createRoutingError()).build();
+      }
+      Response res = doGet(logicClazz, param);
+      logger.info("REST doGetNoToken end.");
+      return res;
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      return Response.ok(createError(e.getMessage())).build();
+    }
+  }
+
+  private Response doPut(Class<?> logicClazz, InputStream in) throws Exception {
+    FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
+    Method method = logicClazz.getMethod("doPut", FWRESTRequest.class);
+    FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
+    Class<?> requestClazz = annotation.value();
+
+    ObjectMapper om = new ObjectMapper();
+    FWRESTRequest req = null;
+    try {
+      req = (FWRESTRequest) om.readValue(in, requestClazz);
+    } catch (Exception e) {
+      logger.error("リクエスト変換でエラーが発生しました。", e);
+      return Response.ok(createUnmarshalError(e.getMessage())).build();
+    }
+    logger.debug(req.toString());
+    FWRESTResponse res = logic.doPut(req);
+    logger.debug(res.toString());
+    return Response.ok(res).build();
   }
 
   @PUT
@@ -114,28 +195,55 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
-      Method method = logicClazz.getMethod("doPut", FWRESTRequest.class);
-      FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
-      Class<?> requestClazz = annotation.value();
-
-      ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = null;
-      try {
-        req = (FWRESTRequest) om.readValue(in, requestClazz);
-      } catch (Exception e) {
-        logger.error("リクエスト変換でエラーが発生しました。", e);
-        return Response.ok(createUnmarshalError(e.getMessage())).build();
-      }
-      logger.debug(req.toString());
-      FWRESTResponse res = logic.doPut(req);
-      logger.debug(res.toString());
+      Response res = doPut(logicClazz, in);
       logger.info("REST doPut end.");
-      return Response.ok(res).build();
+      return res;
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
       return Response.ok(createError(e.getMessage())).build();
     }
+  }
+
+  @PUT
+  @Path("/no_token/{logicClass}")
+  public Response doPutNoToken(@PathParam("logicClass") String logicClass, InputStream in) {
+
+    logger.info("REST doPutNoToken start. class=" + logicClass);
+    try {
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createRoutingError()).build();
+      }
+      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+        return Response.ok(createRoutingError()).build();
+      }
+      Response res = doPut(logicClazz, in);
+      logger.info("REST doPutNoToken end.");
+      return res;
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      return Response.ok(createError(e.getMessage())).build();
+    }
+  }
+
+  private Response doDelete(Class<?> logicClazz, InputStream in) throws Exception {
+    FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
+    Method method = logicClazz.getMethod("doDelete", FWRESTRequest.class);
+    FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
+    Class<?> requestClazz = annotation.value();
+
+    ObjectMapper om = new ObjectMapper();
+    FWRESTRequest req = null;
+    try {
+      req = (FWRESTRequest) om.readValue(in, requestClazz);
+    } catch (Exception e) {
+      logger.error("リクエスト変換でエラーが発生しました。", e);
+      return Response.ok(createUnmarshalError(e.getMessage())).build();
+    }
+    logger.debug(req.toString());
+    FWRESTResponse res = logic.doDelete(req);
+    logger.debug(res.toString());
+    return Response.ok(res).build();
   }
 
   @DELETE
@@ -148,24 +256,31 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
-      Method method = logicClazz.getMethod("doDelete", FWRESTRequest.class);
-      FWRESTRequestClass annotation = method.getAnnotation(FWRESTRequestClass.class);
-      Class<?> requestClazz = annotation.value();
-
-      ObjectMapper om = new ObjectMapper();
-      FWRESTRequest req = null;
-      try {
-        req = (FWRESTRequest) om.readValue(in, requestClazz);
-      } catch (Exception e) {
-        logger.error("リクエスト変換でエラーが発生しました。", e);
-        return Response.ok(createUnmarshalError(e.getMessage())).build();
-      }
-      logger.debug(req.toString());
-      FWRESTResponse res = logic.doDelete(req);
-      logger.debug(res.toString());
+      Response res = doDelete(logicClazz, in);
       logger.info("REST doDelete end.");
-      return Response.ok(res).build();
+      return res;
+    } catch (Exception e) {
+      logger.error("予期しないエラーが発生しました。", e);
+      return Response.ok(createError(e.getMessage())).build();
+    }
+  }
+
+  @DELETE
+  @Path("/no_token/{logicClass}")
+  public Response doDeleteNoToken(@PathParam("logicClass") String logicClass, InputStream in) {
+
+    logger.info("REST doDeleteNoToken start. class=" + logicClass);
+    try {
+      Class<?> logicClazz = getLogicClazz(logicClass);
+      if (logicClazz == null) {
+        return Response.ok(createRoutingError()).build();
+      }
+      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+        return Response.ok(createRoutingError()).build();
+      }
+      Response res = doDelete(logicClazz, in);
+      logger.info("REST doDeleteNoToken end.");
+      return res;
     } catch (Exception e) {
       logger.error("予期しないエラーが発生しました。", e);
       return Response.ok(createError(e.getMessage())).build();

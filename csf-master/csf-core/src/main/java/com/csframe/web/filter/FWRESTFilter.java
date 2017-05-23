@@ -71,6 +71,8 @@ public class FWRESTFilter implements Filter {
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("GET")
           && requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/password/reset")) {
         logger.info("password reset request.(GET)");
+      } else if (requestUrl.startsWith(restCtx.getContextPath() + "/csf/rest/app/no_token/")) {
+        logger.info("No Token API request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");
         logger.info("TOKEN:[{}]", tokenHeader);
