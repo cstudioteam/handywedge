@@ -107,6 +107,13 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("ワークフロー");
+    item = new DefaultMenuItem("ワークフローサンプル");
+    item.setOutcome("/contents/workflow/workflowView.xhtml");
+    item.setIcon("fa fa-users");
+    menu.addElement(item);
+    model.addElement(menu);
+
     // 実験menu
     new Thread(new AppLogReader(1000)).start();
     new Thread(new ErrorLogReader(5000)).start();
