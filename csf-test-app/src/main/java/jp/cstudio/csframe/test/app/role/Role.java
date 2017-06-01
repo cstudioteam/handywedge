@@ -3,7 +3,7 @@ package jp.cstudio.csframe.test.app.role;
 
 public enum Role {
 
-  ADMIN("管理者"), GENERAL("一般ユーザー");
+  ADMIN("管理者"), GENERAL("一般ユーザー"), STAFF("担当者"), SUPERIOR("上長"), DIRECTOR("部門長");
 
   private String role;
 
