@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context>
   <Resource
-    name="jdbc/ds_csf"
+    name="jdbc/ds_handywedge"
     auth="Container"
     type="javax.sql.DataSource"
     driverClassName="net.sf.log4jdbc.DriverSpy"
-    url="jdbc:log4jdbc:postgresql://localhost:5432/csf_test_app"
-    username="csf-app"
-    password="csf-app"
+    url="jdbc:log4jdbc:postgresql://localhost:5432/handywedge_test_app"
+    username="handywedge-app"
+    password="handywedge-app"
     initialSize="2"
     maxWaitMillis="10000" />
   <Resource
@@ -15,9 +15,9 @@
     auth="Container"
     type="javax.sql.DataSource"
     driverClassName="net.sf.log4jdbc.DriverSpy"
-    url="jdbc:log4jdbc:postgresql://localhost:5432/csf_test_app"
-    username="csf"
-    password="csf"
+    url="jdbc:log4jdbc:postgresql://localhost:5432/handywedge_test_app"
+    username="handywedge"
+    password="handywedge"
     initialSize="2"
     maxWaitMillis="10000" />
   <Resource

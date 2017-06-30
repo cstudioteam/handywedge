@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -8,7 +8,7 @@
 package com.handywedge.common;
 
 /**
- * csFrameのエラーコードとREST機能のリターンコードを定義するインターフェースです。<br>
+ * handywedgeのエラーコードとREST機能のリターンコードを定義するインターフェースです。<br>
  * エラーコードの末尾はF=Fatal、E=Exceptionを示し、Fatalはシステムで予期しないエラーとなります。<br>
  */
 public interface FWConstantCode {
@@ -19,7 +19,7 @@ public interface FWConstantCode {
   String FATAL = "00001F";
 
   /**
-   * web.xmlにcsf.app_idの設定がない。
+   * web.xmlにhandywedge.app_idの設定がない。
    */
   String NO_APP_ID = "00002E";
 

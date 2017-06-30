@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -11,7 +11,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 
-@ApplicationPath("/csf/rest/app")
+@ApplicationPath("/fw/rest/app")
 public class FWRESTServices extends Application {
 
 }

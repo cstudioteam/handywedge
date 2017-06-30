@@ -22,7 +22,7 @@ public class LoginAction {
 
   @Setter
   @Getter
-  private String id = "csf-test-app"; // デフォルトユーザ（入力を省略したい）
+  private String id = "handywedge-test-app"; // デフォルトユーザ（入力を省略したい）
 
   @Setter
   @Getter

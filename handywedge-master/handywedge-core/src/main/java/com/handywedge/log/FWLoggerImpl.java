@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -21,7 +21,7 @@ public class FWLoggerImpl implements FWLogger {
     this.logger = logger;
   }
 
-  private static final String FW_PREFIX = "com.csframe";
+  private static final String FW_PREFIX = "com.handywedge";
 
   private boolean start() {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -15,8 +15,8 @@ import com.handywedge.cdi.FWBeanManager;
 import com.handywedge.context.FWSessionContext;
 
 /**
- * csFrameの例外クラスがスローされた時にエラーメッセージを生成するためのクラスです。<br>
- * com.csframe.common.fw_error_messages.propertiesからエラーメッセージを取得します<br>
+ * handywedgeの例外クラスがスローされた時にエラーメッセージを生成するためのクラスです。<br>
+ * com.handywedge.common.fw_error_messages.propertiesからエラーメッセージを取得します<br>
  */
 public class FWErrorMessage {
 
@@ -30,7 +30,7 @@ public class FWErrorMessage {
       // コンテキストリスナーなどセッションスコープに入る前はエラーとなる
       locale = Locale.getDefault();
     }
-    ResourceBundle rb = ResourceBundle.getBundle("com.csframe.common.fw_error_messages", locale);
+    ResourceBundle rb = ResourceBundle.getBundle("com.handywedge.common.fw_error_messages", locale);
     String msg = rb.getString(code);
     if (args != null) {
       msg = MessageFormat.format(msg, args);

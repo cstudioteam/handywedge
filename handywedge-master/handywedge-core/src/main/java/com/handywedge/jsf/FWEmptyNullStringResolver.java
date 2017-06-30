@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -15,7 +15,7 @@ import javax.el.ELResolver;
 
 /*
  * JSF2.2のjavax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULLパラメータが機能しない不具合をカバーするクラス。
- * faces-config.xmlに<el-resolver>com.csframe.jsf.FWEmptyNullStringResolver</el-resolver>と記載する。
+ * faces-config.xmlに<el-resolver>com.handywedge.jsf.FWEmptyNullStringResolver</el-resolver>と記載する。
  * （web.xmlの上記パラメータは削除する）
  */
 public class FWEmptyNullStringResolver extends ELResolver {

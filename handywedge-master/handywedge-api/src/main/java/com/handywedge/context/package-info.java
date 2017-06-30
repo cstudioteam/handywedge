@@ -1,4 +1,4 @@
 /**
- * csFrameのコンテキスト情報に関連するクラスを提供します。
+ * handywedgeのコンテキスト情報に関連するクラスを提供します。
  */
 package com.handywedge.context;

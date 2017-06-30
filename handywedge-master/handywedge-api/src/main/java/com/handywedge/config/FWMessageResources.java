@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * プロパティファイルの値を取得するためのインターフェースです。<br>
  * プロパティファイルの基底名はアプリケーションIDを設定します。<br>
- * 例えばアプリケーションIDが「csf-test-app」の場合はcsf-test-app.properties、csf-test-app_ja.propertiesなどです。<br>
+ * 例えばアプリケーションIDが「handywedge-test-app」の場合はhandywedge-test-app.properties、handywedge-test-app_ja.propertiesなどです。<br>
  * プロパティファイルはルートに配置します。
  */
 public interface FWMessageResources {

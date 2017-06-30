@@ -26,7 +26,7 @@ public class WorkflowService {
   @Inject
   private FWUser user;
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public List<Workflow> selectAll() throws SQLException {
 
     try (FWStatement stmt = cm.getConnection().createStatement();
@@ -45,7 +45,7 @@ public class WorkflowService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public Workflow select(int id) throws SQLException {
 
     Workflow wf = null;
@@ -66,7 +66,7 @@ public class WorkflowService {
     return wf;
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
   public void insert(Workflow workflow) throws SQLException {
     try (FWPreparedStatement stmt =
         cm.getConnection().prepareStatement("insert into workflow (subject, status) values(?, ?)")) {
@@ -76,7 +76,7 @@ public class WorkflowService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public int doAgree(Workflow workflow, FWAction action) throws SQLException {
 
     StringBuilder sql = new StringBuilder();

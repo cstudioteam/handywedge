@@ -6,6 +6,6 @@
   version="2.2"
 >
   <factory>
-    <exception-handler-factory>com.csframe.log.FWCustomExceptionHandlerFactory</exception-handler-factory>
+    <exception-handler-factory>com.handywedge.log.FWCustomExceptionHandlerFactory</exception-handler-factory>
   </factory>
 </faces-config>

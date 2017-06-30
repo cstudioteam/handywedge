@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -27,8 +27,6 @@ import com.handywedge.mail.FWMailCharacterEncoding;
 import com.handywedge.mail.FWMailException;
 import com.handywedge.mail.FWMailMessage;
 import com.handywedge.mail.FWMailTransport;
-import com.handywedge.user.FWUserData;
-import com.handywedge.user.FWUserManager;
 import com.handywedge.util.FWInternalUtil;
 
 @ApplicationScoped
@@ -72,7 +70,7 @@ public class FWUserManagerImpl implements FWUserManager {
         try {
           String template = readTemplate(path);
           String url = FWStringUtil.getIncludeContextUrl();
-          url += "/csf/rest/api/user/actual?token=" + ctx.getPreToken();
+          url += "/fw/rest/api/user/actual?token=" + ctx.getPreToken();
           String body = template.replace(TEMPLATE_VAR_URL, url);
           String from = msg.get(FWMessageResources.REGISTER_FROM_ADDR);
           String subject = msg.get(FWMessageResources.PRE_REGISTER_SUBJECT);
@@ -150,7 +148,7 @@ public class FWUserManagerImpl implements FWUserManager {
         try {
           String template = readTemplate(path);
           String url = FWStringUtil.getIncludeContextUrl();
-          url += "/csf/rest/api/user/password/reset?token=" + token;
+          url += "/fw/rest/api/user/password/reset?token=" + token;
           String body = template.replace(TEMPLATE_VAR_URL, url);
           String from = msg.get(FWMessageResources.REGISTER_FROM_ADDR);
           String subject = msg.get(FWMessageResources.PASSWD_RESET_SUBJECT);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -49,7 +49,7 @@ public class FWServletContextListener implements ServletContextListener {
     } catch (UnknownHostException e) {
       appCtx.setHostName("unknown");
     }
-    String appId = sce.getServletContext().getInitParameter("csf.app_id");
+    String appId = sce.getServletContext().getInitParameter("handywedge.app_id");
     if (FWStringUtil.isEmpty(appId)) {
       throw new FWRuntimeException(FWConstantCode.NO_APP_ID);
     }

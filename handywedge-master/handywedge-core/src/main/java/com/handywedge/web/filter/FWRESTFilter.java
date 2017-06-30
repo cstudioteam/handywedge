@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -28,7 +28,7 @@ import com.handywedge.log.FWMDC;
 import com.handywedge.user.auth.FWLoginManager;
 import com.handywedge.util.FWThreadLocal;
 
-@WebFilter(filterName = "csf_rest_filter")
+@WebFilter(filterName = "handywedge_rest_filter")
 public class FWRESTFilter implements Filter {
 
   @Inject
@@ -54,24 +54,24 @@ public class FWRESTFilter implements Filter {
       final String requestUrl = httpServletRequest.getRequestURI();
 
       if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
-          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/token/pub")
-              || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/token/pub/"))) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/token/pub")
+              || requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/token/pub/"))) {
         logger.info("API Token publish request.");
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
-          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user")
-              || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/"))) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user")
+              || requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user/"))) {
         logger.info("User register request.");
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("GET")
-          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/actual"))) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user/actual"))) {
         logger.info("User actual register request.");
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
-          && (requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/password/reset"))
-          || requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/password/reset/")) {
+          && (requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user/password/reset"))
+          || requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user/password/reset/")) {
         logger.info("password reset request.(POST)");
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("GET")
-          && requestUrl.equals(restCtx.getContextPath() + "/csf/rest/api/user/password/reset")) {
+          && requestUrl.equals(restCtx.getContextPath() + "/handywedge/rest/api/user/password/reset")) {
         logger.info("password reset request.(GET)");
-      } else if (requestUrl.startsWith(restCtx.getContextPath() + "/csf/rest/app/no_token/")) {
+      } else if (requestUrl.startsWith(restCtx.getContextPath() + "/handywedge/rest/app/no_token/")) {
         logger.info("No Token API request.");
       } else {
         String tokenHeader = httpServletRequest.getHeader("Authorization");

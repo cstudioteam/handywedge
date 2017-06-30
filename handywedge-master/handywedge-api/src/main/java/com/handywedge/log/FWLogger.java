@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -12,7 +12,7 @@ import org.slf4j.Marker;
 
 /**
  * Loggerのラッパーインターフェースです。<br>
- * いくつかcsFrame用のメソッドが追加されています。
+ * いくつかhandywedge用のメソッドが追加されています。
  *
  * @see Logger
  */

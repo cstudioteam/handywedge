@@ -48,7 +48,7 @@ public class SeikyushoAction implements Serializable {
 
   @Setter
   @Getter
-  private String name = "csfテストアプリ";
+  private String name = "handywedgeテストアプリ";
 
   @Setter
   @Getter

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -8,7 +8,7 @@
 package com.handywedge.common;
 
 /**
- * 全てのcsFrameのチェック例外クラスのスーパークラスです。
+ * 全てのhandywedgeのチェック例外クラスのスーパークラスです。
  */
 public class FWException extends Exception {
 

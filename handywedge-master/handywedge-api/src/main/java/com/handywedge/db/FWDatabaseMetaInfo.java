@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -10,11 +10,11 @@ package com.handywedge.db;
 import java.util.ResourceBundle;
 
 /**
- * csFrameスキーマで扱うテーブルのメタ情報を取得するためのクラスです。
+ * handywedgeスキーマで扱うテーブルのメタ情報を取得するためのクラスです。
  */
 public class FWDatabaseMetaInfo {
 
-  private static ResourceBundle rb = ResourceBundle.getBundle("com.csframe.db.fw_db_metadata");
+  private static ResourceBundle rb = ResourceBundle.getBundle("com.handywedge.db.fw_db_metadata");
 
   public static int getUserIdLength() {
     return Integer.parseInt(rb.getString("user.id"));

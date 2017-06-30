@@ -1,4 +1,4 @@
-GRANT ALL ON DATABASE "csf_test_app" TO "csf";
-GRANT ALL ON DATABASE "csf_test_app" TO "csf-app";
-CREATE SCHEMA AUTHORIZATION "csf";
-CREATE SCHEMA AUTHORIZATION "csf-app";
+GRANT ALL ON DATABASE "handywedge_test_app" TO "handywedge";
+GRANT ALL ON DATABASE "handywedge_test_app" TO "handywedge-app";
+CREATE SCHEMA AUTHORIZATION "handywedge";
+CREATE SCHEMA AUTHORIZATION "handywedge-app";

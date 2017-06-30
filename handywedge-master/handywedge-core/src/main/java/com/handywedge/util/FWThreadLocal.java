@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class FWThreadLocal {
 
-  public static final String INTERCEPTOR_ERROR = "csf.interceptor.error";
-  public static final String LOGIN = "csf.login";
+  public static final String INTERCEPTOR_ERROR = "handywedge.interceptor.error";
+  public static final String LOGIN = "handywedge.login";
 
   private static final ThreadLocal<ConcurrentHashMap> instance =
       new ThreadLocal<ConcurrentHashMap>() {

@@ -7,7 +7,7 @@ import javax.websocket.Session;
 public class AppLogReader extends LogReader {
 
   public AppLogReader(int myInterval) {
-    super("/opt/tomcat/logs/csf-test-app.log", myInterval);
+    super("/opt/tomcat/logs/handywedge-test-app.log", myInterval);
   }
 
   @Override

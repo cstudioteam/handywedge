@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -44,7 +44,7 @@ public @interface FWTransactional {
   @Nonbinding
   /**
    * トランザクション内で例外が発生した場合はインターセプターによりロールバックされますが、ここで指定した例外クラスがスローされた場合はロールバックを行いません。<br>
-   * JTA仕様ではチェック例外が発生した場合はロールバックされませんが、csFrameでは指定しないかぎりは<b>全ての例外</b>がロールバックされるので注意して下さい。<br>
+   * JTA仕様ではチェック例外が発生した場合はロールバックされませんが、handywedgeでは指定しないかぎりは<b>全ての例外</b>がロールバックされるので注意して下さい。<br>
    * 
    * @return ロールバックさせない例外クラス配列
    */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -16,7 +16,7 @@ import javax.ws.rs.core.Application;
 import com.handywedge.rest.api.token.FWAPITokenPublisher;
 import com.handywedge.rest.api.user.FWUserManageController;
 
-@ApplicationPath("/csf/rest/api")
+@ApplicationPath("/fw/rest/api")
 public class FWRESTServices extends Application {
 
   @Override

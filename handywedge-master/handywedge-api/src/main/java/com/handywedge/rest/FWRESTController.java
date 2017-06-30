@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -19,20 +19,20 @@ import com.handywedge.user.auth.FWLoginManager;
  * RESTインターフェースで公開するための抽象クラスです。<br>
  * HTTPのGET、POST、PUT、DELETEメソッドをサポートします。<br>
  * それぞれdoXXXメソッドをオーバーライドし処理を実装して下さい。<br>
- * 
+ *
  * GET以外は引数にJSONをアンマーシャルしたDTOクラスが渡されます。<br>
  * メソッドにFWRESTRequestClassアノテーションを修飾し、JSONをマッピングするFWRESTRequestを継承したクラスを指定します。<br>
- * 
+ *
  * GETメソッドについてはURLのパスパラメータが渡されます。<br>
- * 
+ *
  * 各メソッドとも、戻り値はFWRESTResponseを継承したFWRESTResponseを継承したクラスを返却するとJSONにマーシャルしてクライアントに応答します。<br>
  * RESTインターフェースを使用する場合はweb.xmlにフィルターの設定が必要です。<br>
- * 
+ *
  * <pre>
- * {@code 
+ * {@code
  * <filter-mapping>
- *   <filter-name>csf_rest_filter</filter-name>
- *   <url-pattern>/csf/rest/*</url-pattern>
+ *   <filter-name>handywedge_rest_filter</filter-name>
+ *   <url-pattern>/fw/rest/*</url-pattern>
  * </filter-mapping>
  * }
  * </pre>
@@ -40,7 +40,7 @@ import com.handywedge.user.auth.FWLoginManager;
  * RESTインターフェースではAPIトークン認証が行われます。<br>
  * クライアントは、予めFWLoginManagerでトークンを発行し、リクエスト時にHTTPヘッダー(Authorization)でトークンを送信する必要があります。<br>
  * {@code Authorization: Bearer APIトークン}
- * 
+ *
  * @see FWLoginManager
  */
 @RequestScoped
@@ -48,7 +48,7 @@ public abstract class FWRESTController {
 
   /**
    * HTTPのPOSTメソッドのリクエストで実行されます。
-   * 
+   *
    * @param request JSONをアンマーシャルしたDTO
    * @return クライアントに応答するJSONにマーシャルするためのDTO
    */
@@ -59,7 +59,7 @@ public abstract class FWRESTController {
 
   /**
    * HTTPのGETメソッドのリクエストで実行されます。
-   * 
+   *
    * @param param URLのパスパラメータ。
    * @return クライアントに応答するJSONにマーシャルするためのDTO
    */
@@ -69,7 +69,7 @@ public abstract class FWRESTController {
 
   /**
    * HTTPのPUTメソッドのリクエストで実行されます。
-   * 
+   *
    * @param request JSONをアンマーシャルしたDTO
    * @return クライアントに応答するJSONにマーシャルするためのDTO
    */
@@ -80,7 +80,7 @@ public abstract class FWRESTController {
 
   /**
    * HTTPのDELETEメソッドのリクエストで実行されます。
-   * 
+   *
    * @param request JSONをアンマーシャルしたDTO
    * @return クライアントに応答するJSONにマーシャルするためのDTO
    */

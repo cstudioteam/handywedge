@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 C Studio Co.,Ltd.
+ * Copyright (c) 2016-2017 C Studio Co.,Ltd.
  *
  * This software is released under the MIT License.
  *
@@ -35,7 +35,7 @@ import com.handywedge.role.FWRoleManager;
 import com.handywedge.user.FWFullUser;
 import com.handywedge.util.FWThreadLocal;
 
-@WebFilter(filterName = "csf_session_filter")
+@WebFilter(filterName = "handywedge_session_filter")
 public class FWSessionFilter implements Filter {
 
   @Inject
@@ -104,7 +104,7 @@ public class FWSessionFilter implements Filter {
       }
     }
     // REST APIはRESTフィルターで処理
-    if (requestUrl.startsWith(context.getContextPath() + "/csf/rest/")) {
+    if (requestUrl.startsWith(context.getContextPath() + "/handywedge/rest/")) {
       try {
         context.setRest(true);
         chain.doFilter(httpServletRequest, httpServletResponse);

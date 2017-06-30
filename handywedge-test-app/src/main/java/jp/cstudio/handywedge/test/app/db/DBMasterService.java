@@ -26,7 +26,7 @@ public class DBMasterService {
   @Inject
   private FWLogger logger;
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public List<Test> selectAll() throws SQLException {
 
     logger.info("DBマスタ参照");
@@ -43,7 +43,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
   public Test select(String key) throws SQLException {
 
     logger.info("テストテーブル取得");
@@ -62,7 +62,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public void update(Test test) throws SQLException {
 
     logger.info("テストテーブル更新");
@@ -75,7 +75,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
   public void insert(Test test) throws SQLException {
 
     logger.info("テストテーブル追加");
@@ -88,7 +88,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_csf")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
   public void delete(String key) throws SQLException {
 
     logger.info("テストテーブル削除");

@@ -6,7 +6,7 @@
     <!-- JDBC関連ログをAOPでlogNameを設定したい。とりあえずはAppenderを分けてフォーマットを分ける -->
     <Property name="pattern_jdbc"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[%mdc{userId}]\t[JDBC]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
     <Property name="catalina_home">/opt/tomcat</Property>
-    <Property name="app_id">csf-test-app</Property>
+    <Property name="app_id">handywedge-test-app</Property>
   </Properties>
   <Appenders>
     <Console
@@ -41,8 +41,8 @@
     </RollingFile>
     <RollingFile
       name="error"
-      fileName="${catalina_home}/logs/csf_error.log"
-      filePattern="${catalina_home}/logs/archive/csf_error_%d{yyyy-MM-dd}.gz"
+      fileName="${catalina_home}/logs/handywedge_error.log"
+      filePattern="${catalina_home}/logs/archive/handywedge_error_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout
         pattern="${pattern}"
@@ -54,7 +54,7 @@
   </Appenders>
   <Loggers>
     <Logger
-      name="com.csframe"
+      name="com.handywedge"
       level="debug"
     >
       <AppenderRef ref="${app_id}" />
