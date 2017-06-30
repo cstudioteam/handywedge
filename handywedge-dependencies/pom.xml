@@ -9,13 +9,13 @@
   <version>0.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <module>csf-dependencies-api</module>
-    <module>csf-dependencies-logging</module>
-    <module>csf-dependencies-cdi</module>
-    <module>csf-dependencies-jsf</module>
-    <module>csf-dependencies-rest</module>
-    <module>csf-dependencies-report</module>
-    <module>csf-dependencies-reference</module>
-    <module>csf-dependencies-mail</module>
+    <module>handywedge-dependencies-api</module>
+    <module>handywedge-dependencies-logging</module>
+    <module>handywedge-dependencies-cdi</module>
+    <module>handywedge-dependencies-jsf</module>
+    <module>handywedge-dependencies-rest</module>
+    <module>handywedge-dependencies-report</module>
+    <module>handywedge-dependencies-reference</module>
+    <module>handywedge-dependencies-mail</module>
   </modules>
 </project>

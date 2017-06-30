@@ -10,8 +10,8 @@
   <packaging>pom</packaging>
   <description>handywedgeのルートプロジェクト</description>
   <modules>
-    <module>csf-api</module>
-    <module>csf-core</module>
+    <module>handywedge-api</module>
+    <module>handywedge-core</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
