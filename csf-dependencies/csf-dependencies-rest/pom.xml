@@ -5,11 +5,11 @@
 >
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.csframe</groupId>
-    <artifactId>csf-dependencies</artifactId>
-    <version>0.4.0</version>
+    <groupId>com.handywedge</groupId>
+    <artifactId>handywedge-dependencies</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
   </parent>
-  <artifactId>csf-dependencies-rest</artifactId>
+  <artifactId>handywedge-dependencies-rest</artifactId>
   <packaging>pom</packaging>
   <dependencies>
     <!--JAX-RS実装。 APサーバで実装済の場合はコメントアウト -->

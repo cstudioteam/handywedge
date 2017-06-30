@@ -4,11 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.csframe</groupId>
-  <artifactId>csf-master</artifactId>
-  <version>0.4.0</version>
+  <groupId>com.handywedge</groupId>
+  <artifactId>handywedge-master</artifactId>
+  <version>0.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <description>csFrameのルートプロジェクト</description>
+  <description>handywedgeのルートプロジェクト</description>
   <modules>
     <module>csf-api</module>
     <module>csf-core</module>
@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-reference</artifactId>
+      <artifactId>handywedge-dependencies-reference</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <type>pom</type>

@@ -5,46 +5,46 @@
 >
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.csframe</groupId>
-    <artifactId>csf-dependencies</artifactId>
-    <version>0.4.0</version>
+    <groupId>com.handywedge</groupId>
+    <artifactId>handywedge-dependencies</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
   </parent>
-  <artifactId>csf-dependencies-reference</artifactId>
+  <artifactId>handywedge-dependencies-reference</artifactId>
   <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-api</artifactId>
+      <artifactId>handywedge-dependencies-api</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-cdi</artifactId>
+      <artifactId>handywedge-dependencies-cdi</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-logging</artifactId>
+      <artifactId>handywedge-dependencies-logging</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-jsf</artifactId>
+      <artifactId>handywedge-dependencies-jsf</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-rest</artifactId>
+      <artifactId>handywedge-dependencies-rest</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csf-dependencies-report</artifactId>
+      <artifactId>handywedge-dependencies-report</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
