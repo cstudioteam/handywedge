@@ -1,0 +1,130 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/layout/layout.xhtml"
+>
+  <ui:define name="title">ワークフロー詳細サンプル</ui:define>
+  <ui:define name="extHeader">
+  </ui:define>
+  <ui:define name="content">
+    <f:metadata>
+      <f:viewParam name="selectId" value="#{workflow2Detail.selectId}"/>
+      <f:viewAction action="#{workflow2Detail.init()}"/>
+    </f:metadata>
+    <style type="text/css">
+            .ui-datalist-content{
+              border: none;
+            }
+    </style>
+    <span>※ログイン者のロールに応じ実施可能なActionが変わります</span>
+    <br />
+    <br />
+    <span>あなたのロールは「<h:outputText value="#{workflow2Detail.user.role}" />」です</span>
+    <p:panelGrid id="panel">
+      <p:row>
+        <p:column>
+          <p:outputLabel value="ID" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.id}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="タイトル" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.subject}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="申請内容（詳細）" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.body}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="WFID" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.wfId}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="ステータス" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.status.statusName}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="作成日時" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.createDate}">
+            <f:convertDateTime  pattern="yyyy/MM/dd HH:mm:ss" timeZone="JST" />
+          </h:outputText>
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="最終更新日時" />
+        </p:column>
+        <p:column>
+          <h:outputText value="#{workflow2Detail.workflow.updateDate}">
+            <f:convertDateTime  pattern="yyyy/MM/dd HH:mm:ss" timeZone="JST" />
+          </h:outputText>
+        </p:column>
+      </p:row>
+    </p:panelGrid>
+    <br />
+    <ui:fragment rendered="#{workflow2Detail.doActionFlg}">
+      <p:inputText id="description" value="#{workflow2Detail.description}" placeholder="回付時のコメント入力欄" style="width:300px" />
+    </ui:fragment>
+    <p:dataList value="#{workflow2Detail.wfActions}" var="data" type="none" styleClass="border:none" emptyMessage="">
+      <p:commandButton
+        value="#{data.action}"
+        action="#{workflow2Detail.doAction(data.actionCode)}"
+      />
+    </p:dataList>
+    <br />
+    <p:separator />
+    <p:dataTable
+      id="wfLogs"
+      var="data"
+      value="#{workflow2Detail.wfLogs}"
+      rowKey="#{data.wfSerNo}"
+    >
+      <f:facet name="header">データ履歴</f:facet>
+      <p:column headerText="日時">
+        <h:outputText value="#{data.actionDate}">
+          <f:convertDateTime  pattern="yyyy/MM/dd HH:mm:ss" timeZone="JST" />
+        </h:outputText>
+      </p:column>
+      <p:column headerText="アクション">
+        <h:outputText value="#{data.actionName}" />
+      </p:column>
+      <p:column headerText="ステータス">
+        <h:outputText value="#{data.statusName}" />
+      </p:column>
+      <p:column headerText="氏名">
+        <h:outputText value="#{data.actionOwnerName}" />
+      </p:column>
+      <p:column headerText="コメント">
+        <h:outputText value="#{data.description}" />
+      </p:column>
+    </p:dataTable>
+    <p:separator />
+    <h:commandLink action="/contents/workflow2/workflow2View.xhtml" style="color: #0000ff;">
+      <h:outputText value="戻る"/>
+    </h:commandLink>
+  </ui:define>
+</ui:composition>

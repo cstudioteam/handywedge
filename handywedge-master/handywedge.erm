@@ -41,7 +41,7 @@
 		<suspend_validator>false</suspend_validator>
 		<export_setting>
 			<export_ddl_setting>
-				<output_path>csFrame3-ddl.sql</output_path>
+				<output_path>handywedgerame.sql</output_path>
 				<encoding>UTF-8</encoding>
 				<line_feed>LF</line_feed>
 				<is_open_after_saved>true</is_open_after_saved>
@@ -73,10 +73,10 @@
 			</export_ddl_setting>
 			<export_excel_setting>
 				<category_id>null</category_id>
-				<output_path>C:\Users\fujioka03650\Desktop\csFrame2.xls</output_path>
+				<output_path></output_path>
 				<template></template>
 				<template_path></template_path>
-				<used_default_template_lang>en</used_default_template_lang>
+				<used_default_template_lang></used_default_template_lang>
 				<image_output></image_output>
 				<is_open_after_saved>true</is_open_after_saved>
 				<is_put_diagram>true</is_put_diagram>

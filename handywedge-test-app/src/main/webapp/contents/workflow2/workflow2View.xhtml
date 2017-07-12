@@ -1,0 +1,67 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/layout/layout.xhtml"
+>
+  <ui:define name="title">ワークフローサンプル</ui:define>
+  <ui:define name="extHeader">
+  </ui:define>
+  <ui:define name="content">
+    <style type="text/css">
+            .ui-datalist-content{
+              border: none;
+            }
+    </style>
+    <span>※「タイトル」Linkを選択し詳細画面（承認/否認）へ遷移</span>
+    <p:dataTable
+      id="workflowTbl"
+      var="data"
+      value="#{workflow2View.wfList}"
+      rowKey="#{data.id}"
+    >
+      <f:facet name="header">WorkFlowテーブル</f:facet>
+      <p:column headerText="ID">
+        <h:outputText value="#{data.id}" />
+      </p:column>
+      <p:column headerText="タイトル">
+        <h:commandLink action="#{workflow2View.viewDetailAction(data.id)}" style="color: #0000ff;">
+          <h:outputText value="#{data.subject}"/>
+        </h:commandLink>
+      </p:column>
+      <p:column headerText="ステータス">
+        <h:outputText value="#{data.status.statusName}" />
+      </p:column>
+      <p:column headerText="最終更新日時">
+        <h:outputText value="#{data.updateDate}">
+          <f:convertDateTime  pattern="yyyy/MM/dd HH:mm:ss" timeZone="JST" />
+        </h:outputText>
+      </p:column>
+    </p:dataTable>
+    <br />
+    <p:separator />
+    <br />
+    <ui:fragment rendered="#{workflow2View.actionFlag}">
+      <span>※新規起票データを登録</span>
+      <br />
+      <h:panelGrid
+        id="addData"
+        columns="2"
+      >
+        <h:outputLabel for="subject" value="タイトル" />
+        <p:inputText id="subject" value="#{workflow2View.subject}" />
+        <h:outputLabel for="body" value="申請内容（詳細）" />
+        <p:inputText id="body" value="#{workflow2View.body}" />
+      </h:panelGrid>
+      <p:dataList value="#{workflow2View.wfActions}" var="data2" type="none" styleClass="border:none" emptyMessage="">
+        <p:commandButton
+          value="#{data2.action}"
+          action="#{workflow2View.addData(data2.actionCode)}"
+          update=":form:workflowTbl"
+        />
+      </p:dataList>
+   </ui:fragment>
+  </ui:define>
+</ui:composition>
