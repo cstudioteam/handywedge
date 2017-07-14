@@ -111,7 +111,7 @@ public class FWWFManagerImpl implements FWWFManager {
         actions = service.getActions(status.getStatus(), role);
       }
       // RollBackアクション生成
-      if (wfId != null && actions.size() != 0) {
+      if (wfId != null && !actions.isEmpty()) {
         // 実行可能なアクションが存在することにより現在ステータスより前に戻すことが可能なロールであると判断
         // Rollbackアクション生成
         FWWFAction rollbackAction = service.getRollbackAction(wfId);
@@ -440,7 +440,7 @@ public class FWWFManagerImpl implements FWWFManager {
     // 否認系アクション（ロールバック）
     if (status != null) {
       // ステータス有り＝チェック：実行可能なアクション取得。存在することにより現在ステータスより前に戻すことが可能なロールであると判断
-      if (service.getActions(status.getStatus(), role).size() == 0) {
+      if (service.getActions(status.getStatus(), role).isEmpty()) {
         return null;
       }
     }
