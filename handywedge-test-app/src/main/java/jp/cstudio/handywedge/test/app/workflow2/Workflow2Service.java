@@ -64,9 +64,10 @@ public class Workflow2Service {
   public void insert(Workflow2 workflow) throws SQLException {
     try (FWPreparedStatement stmt = cm.getConnection()
         .prepareStatement("INSERT INTO workflow2 (subject, body, wf_id) VALUES(?, ?, ?)")) {
-      stmt.setString(1, workflow.getSubject());
-      stmt.setString(2, workflow.getBody());
-      stmt.setString(3, workflow.getWfId());
+      int idx = 1;
+      stmt.setString(idx++, workflow.getSubject());
+      stmt.setString(idx++, workflow.getBody());
+      stmt.setString(idx++, workflow.getWfId());
       stmt.executeUpdate();
     }
   }
@@ -74,8 +75,9 @@ public class Workflow2Service {
   @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
   public void update(Workflow2 workflow) throws SQLException {
     try (FWPreparedStatement ps = cm.getConnection().prepareStatement("UPDATE workflow2 SET update_date = ? WHERE id = ?")) {
-      ps.setTimestamp(1, workflow.getUpdateDate());
-      ps.setInt(2, workflow.getId());
+      int idx = 1;
+      ps.setTimestamp(idx++, workflow.getUpdateDate());
+      ps.setInt(idx++, workflow.getId());
       ps.executeUpdate();
     }
   }
