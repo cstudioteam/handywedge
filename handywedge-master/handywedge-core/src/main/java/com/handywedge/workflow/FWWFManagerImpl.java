@@ -107,7 +107,7 @@ public class FWWFManagerImpl implements FWWFManager {
       }
       // 実行可能なアクションリスト取得
       List<FWWFAction> actions = new ArrayList<>();
-      if (role != null) {
+      if (status != null && role != null) {
         actions = service.getActions(status.getStatus(), role);
       }
       // RollBackアクション生成
@@ -161,7 +161,7 @@ public class FWWFManagerImpl implements FWWFManager {
       }
       // 実行可能なアクションリスト取得
       List<FWWFAction> actions = new ArrayList<>();
-      if (role != null) {
+      if (status != null && role != null) {
         actions = service.getActions(status.getStatus(), role);
       }
       // ワークフローIDのセット
@@ -219,7 +219,6 @@ public class FWWFManagerImpl implements FWWFManager {
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
-    //    return checkAction(wfId, actionCode, ctx.getUser().getRole());
   }
 
   @Override
@@ -417,8 +416,10 @@ public class FWWFManagerImpl implements FWWFManager {
           // 現在ステータス取得
           status = service.getStatus(wfId);
           // アクションコード、ロールに加え、ステータスの突合を行う場合（＝現在ステータスとの整合性チェック）
-          action = service.getAction(actionCode, status.getStatus(), role);
-          action.setWfId(wfId);
+          if (status != null) {
+              action = service.getAction(actionCode, status.getStatus(), role);
+              action.setWfId(wfId);
+          }
         }
       } else {
         // 否認系アクション（ロールバック）
