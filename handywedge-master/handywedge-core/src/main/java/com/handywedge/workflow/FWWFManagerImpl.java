@@ -124,11 +124,7 @@ public class FWWFManagerImpl implements FWWFManager {
         }
       }
       // ワークフローIDのセット
-      for (int i = 0; i < actions.size(); i++) {
-        FWWFAction action = actions.get(i);
-        action.setWfId(wfId);
-        actions.set(i, action);
-      }
+      actions.forEach(action -> action.setWfId(wfId));
       logger.debug("role={}, wfId={}", role, wfId);
       return actions;
     } catch (SQLException e) {
@@ -165,11 +161,7 @@ public class FWWFManagerImpl implements FWWFManager {
         actions = service.getActions(status.getStatus(), role);
       }
       // ワークフローIDのセット
-      for (int i = 0; i < actions.size(); i++) {
-        FWWFAction action = actions.get(i);
-        action.setWfId(wfId);
-        actions.set(i, action);
-      }
+      actions.forEach(action -> action.setWfId(wfId));
       logger.debug("role={}, wfId={}", role, wfId);
       return actions;
     } catch (SQLException e) {
@@ -369,13 +361,11 @@ public class FWWFManagerImpl implements FWWFManager {
       List<FWWFLog> logs = new ArrayList<>();
       if (wfId != null) {
         logs = service.getWFLogs(wfId);
-        for (int i = 0; i < logs.size(); i++) {
-          FWWFLog log = logs.get(i);
-          if (log != null && log.getActionCode().equals(ROLLBACK_ACTION_CODE)) {
+        logs.forEach(log -> {
+          if (log.getActionCode().equals(ROLLBACK_ACTION_CODE)) {
             log.setActionName(ROLLBACK_ACTION_NAME);
-            logs.set(i, log);
           }
-        }
+        });
       }
       logger.debug("wfId={}", wfId);
       logger.perfEnd("getWFLogs", startTime);
