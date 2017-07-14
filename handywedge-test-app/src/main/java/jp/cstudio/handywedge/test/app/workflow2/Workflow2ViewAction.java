@@ -5,8 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -22,7 +21,7 @@ import lombok.Setter;
 /*
  * ワークフローデータの一覧表示、新規登録を行うためのActionクラス。
  */
-@RequestScoped
+@ViewScoped
 @Named("workflow2View")
 public class Workflow2ViewAction implements Serializable {
 
@@ -50,23 +49,27 @@ public class Workflow2ViewAction implements Serializable {
   @Getter
   private boolean actionFlag; // ボタン表示・非表示用
 
-  @PostConstruct
   public void init() {
     try {
-      // 初期処理としてデータ一覧を表示
-      wfList = daoService.selectAll();
-      for (int i = 0; i < wfList.size(); i++) {
-        // ■WF処理：文書ステータスの取得
-        // 文書のステータス情報をWFエンジンより取得
-        // WFエンジンでは問合せ回数分、DBへのアクセスが発生するため、表示用に業務データにステータスを保持していても良い。
-        // 特にテキスト出力機能などの対象レコード数が多い場合はレスポンス悪化が想定されるため検討すること。
-        Workflow2 wf = wfList.get(i);
-        wf.setStatus(wfManager.getStatus(wf.getWfId()));
-        wfList.set(i, wf);
-      }
+      view();
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  public void view() throws SQLException {
+    // 初期処理としてデータ一覧を表示
+    wfList = daoService.selectAll();
+    for (int i = 0; i < wfList.size(); i++) {
+      // ■WF処理：文書ステータスの取得
+      // 文書のステータス情報をWFエンジンより取得
+      // WFエンジンでは問合せ回数分、DBへのアクセスが発生するため、表示用に業務データにステータスを保持していても良い。
+      // 特にテキスト出力機能などの対象レコード数が多い場合はレスポンス悪化が想定されるため検討すること。
+      Workflow2 wf = wfList.get(i);
+      wf.setStatus(wfManager.getStatus(wf.getWfId()));
+      wfList.set(i, wf);
+    }
+
     // ■WF処理：実行可能なアクション（初期）の取得
     // WF初期アクションではWFIDを保有していない為、アクションコードを指定し実施可能なアクションを取得する
     // 当該はサンプルとしての実装例。初期アクションとなるデータの登録画面は、通常URL-ロールにて制御を行うことを想定する。その場合、ボタンの表示・非表示制御は不要と思慮。
@@ -114,7 +117,7 @@ public class Workflow2ViewAction implements Serializable {
     workflow.setWfId(wfLog.getWfId()); // 業務データとしてWFIDを保有すること
     try {
       daoService.insert(workflow);
-      init();
+      view();
     } catch (SQLException e) {
       e.printStackTrace();
     }

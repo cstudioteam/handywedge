@@ -92,6 +92,6 @@ public class Workflow2DetailAction implements Serializable {
     workflow.setUpdateDate(wfLog.getActionDate());
     daoService.update(workflow);
 
-    return "/contents/workflow2/workflow2View.xhtml"; // アクション実行後は一覧画面へ遷移
+    return "/contents/workflow2/workflow2View.xhtml?faces-redirect=true"; // アクション実行後は一覧画面へ遷移
   }
 }
