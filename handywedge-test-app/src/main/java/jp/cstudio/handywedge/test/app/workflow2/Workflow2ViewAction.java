@@ -73,22 +73,14 @@ public class Workflow2ViewAction implements Serializable {
     // ■WF処理：実行可能なアクション（初期）の取得
     // WF初期アクションではWFIDを保有していない為、アクションコードを指定し実施可能なアクションを取得する
     // 当該はサンプルとしての実装例。初期アクションとなるデータの登録画面は、通常URL-ロールにて制御を行うことを想定する。その場合、ボタンの表示・非表示制御は不要と思慮。
-    // 通常は１アクションを指定するが、当該は「通常フロー」「合流フロー」「分岐フロー」と各検証用のボタン表示とする
+    // 通常は１アクションを指定するが、当該は複合フローの検証用として定義している為、2アクションのボタン表示を制御する
     wfActions = new ArrayList<>();
-    //通常フロー用[保存]アクション
-    FWWFAction action = wfManager.getAction("ACT00100");
+    //A部申請用「保存[A部]」アクション
+    FWWFAction action = wfManager.getAction("ACT10000");
     if (action != null)
       wfActions.add(action);
-    //合流フロー用[A:保存]アクション
-    action = wfManager.getAction("ACTA0100");
-    if (action != null)
-      wfActions.add(action);
-    //合流フロー用[B:保存]アクション
-    action = wfManager.getAction("ACTB0100");
-    if (action != null)
-      wfActions.add(action);
-    //分岐フロー用[C:保存]アクション
-    action = wfManager.getAction("ACTC0100");
+    //B部申請用「保存[B部]」アクション
+    action = wfManager.getAction("ACT20000");
     if (action != null)
       wfActions.add(action);
 
