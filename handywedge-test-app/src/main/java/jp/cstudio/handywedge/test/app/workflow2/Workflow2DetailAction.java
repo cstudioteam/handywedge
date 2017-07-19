@@ -8,7 +8,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.handywedge.user.FWUser;
 import com.handywedge.workflow.FWWFAction;
 import com.handywedge.workflow.FWWFException;
 import com.handywedge.workflow.FWWFLog;
@@ -30,9 +29,6 @@ public class Workflow2DetailAction implements Serializable {
   private transient FWWFManager wfManager;
   @Inject
   private transient Workflow2Service daoService; // ワークフローテーブル管理（業務データ）
-  @Getter
-  @Inject
-  private transient FWUser user;
 
   @Getter
   private Workflow2 workflow; // 業務データ

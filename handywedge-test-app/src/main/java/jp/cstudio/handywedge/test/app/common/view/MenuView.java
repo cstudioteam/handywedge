@@ -18,9 +18,6 @@ import org.primefaces.model.menu.MenuModel;
 import com.handywedge.context.FWContext;
 import com.handywedge.log.FWLogger;
 
-import jp.cstudio.handywedge.test.app.log.AppLogReader;
-import jp.cstudio.handywedge.test.app.log.ErrorLogReader;
-import jp.cstudio.handywedge.test.app.role.Role;
 import lombok.Getter;
 
 @ViewScoped
@@ -37,9 +34,6 @@ public class MenuView implements Serializable {
   private FWContext ctx;
 
   @Getter
-  private Role role;
-
-  @Getter
   private MenuModel model;
 
   private String lang;
@@ -50,27 +44,26 @@ public class MenuView implements Serializable {
     long startTime = logger.perfStart("init");
     model = new DefaultMenuModel();
 
-    role = Role.toEnum(ctx.getUser().getRole());
     // ログは実験menu
     DefaultSubMenu menu;
     DefaultMenuItem item;
-    if (role == Role.ADMIN) {
-      menu = new DefaultSubMenu("ログ（管理者メニュー）");
-      item = new DefaultMenuItem("アプリケーションログ");
-      item.setIcon("fa fa-file-text");
-      item.setOutcome("/contents/log/app_log.xhtml");
-      menu.addElement(item);
-
-      item = new DefaultMenuItem("サーバログ");
-      item.setIcon("fa fa-file-text");
-      menu.addElement(item);
-
-      item = new DefaultMenuItem("エラーログ");
-      item.setIcon("fa fa-ban");
-      item.setOutcome("/contents/log/error_log.xhtml");
-      menu.addElement(item);
-      model.addElement(menu);
-    }
+//    if (role == Role.ADMIN) {
+//      menu = new DefaultSubMenu("ログ（管理者メニュー）");
+//      item = new DefaultMenuItem("アプリケーションログ");
+//      item.setIcon("fa fa-file-text");
+//      item.setOutcome("/contents/log/app_log.xhtml");
+//      menu.addElement(item);
+//
+//      item = new DefaultMenuItem("サーバログ");
+//      item.setIcon("fa fa-file-text");
+//      menu.addElement(item);
+//
+//      item = new DefaultMenuItem("エラーログ");
+//      item.setIcon("fa fa-ban");
+//      item.setOutcome("/contents/log/error_log.xhtml");
+//      menu.addElement(item);
+//      model.addElement(menu);
+//    }
 
     menu = new DefaultSubMenu("データベース");
     item = new DefaultMenuItem("マスタ参照");
@@ -119,8 +112,8 @@ public class MenuView implements Serializable {
     model.addElement(menu);
 
     // 実験menu
-    new Thread(new AppLogReader(1000)).start();
-    new Thread(new ErrorLogReader(5000)).start();
+//    new Thread(new AppLogReader(1000)).start();
+//    new Thread(new ErrorLogReader(5000)).start();
     logger.perfEnd("init", startTime);
   }
 

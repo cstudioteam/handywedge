@@ -214,7 +214,7 @@ public class FWWFService {
     }
     // 履歴登録処理
     try (FWPreparedStatement ps = con.prepareStatement(
-        "insert into fw_wf_log (wf_id, wf_ser_no, action_date, action_owner, action_code, status_code, description) values(?, ?, ?, ?, ?, ?, ?)")) {
+        "INSERT INTO fw_wf_log (wf_id, wf_ser_no, action_date, action_owner, action_code, status_code, description) VALUES(?, ?, ?, ?, ?, ?, ?)")) {
       int idx = 1;
       ps.setString(idx++, wfLog.getWfId());
       ps.setInt(idx++, wfSerNo);
@@ -297,7 +297,7 @@ public class FWWFService {
   public int insertWFProgressManagement(FWWFProgressManagement wfProgressManagement) throws SQLException {
     FWConnection con = cm.getConnection();
     try (FWPreparedStatement ps = con.prepareStatement(
-        "insert into fw_wf_progress_management (wf_id, wf_ser_no, action_code, status_code, create_date) values(?, ?, ?, ?, ?)")) {
+        "INSERT INTO fw_wf_progress_management (wf_id, wf_ser_no, action_code, status_code, create_date) VALUES(?, ?, ?, ?, ?)")) {
       int idx = 1;
       ps.setString(idx++, wfProgressManagement.getWfId());
       ps.setInt(idx++, wfProgressManagement.getWfSerNo());
