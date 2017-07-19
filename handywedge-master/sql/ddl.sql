@@ -72,8 +72,8 @@ CREATE TABLE fw_notice
 -- ロール別ACL
 CREATE TABLE fw_role_acl
 (
-    -- ロール
-    role varchar(256) NOT NULL,
+    -- ロールコード : v0.4.0以前ではロール名として扱っていたためカラムサイズは256
+    role varchar(16) NOT NULL,
     -- URLパターン
     url_pattern varchar(256) NOT NULL,
     -- 作成日時
@@ -86,8 +86,8 @@ CREATE TABLE fw_role_acl
 -- ロール別アクション : ロール別のアクション制御を定義するテーブルです。
 CREATE TABLE fw_role_action
 (
-    -- ロール
-    role varchar(256) NOT NULL,
+    -- ロールコード : v0.4.0以前ではロール名として扱っていたためカラムサイズは256
+    role varchar(16) NOT NULL,
     -- アクションコード
     action_code varchar(16) NOT NULL,
     -- 作成日時
@@ -106,9 +106,9 @@ CREATE TABLE fw_role_master
     -- ロール名
     role_name varchar(256),
     -- 作成日時
-    create_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
-    update_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (role)
 ) WITHOUT OIDS;
 
@@ -121,9 +121,9 @@ CREATE TABLE fw_status_master
     -- ステータス名
     status_name varchar(256),
     -- 作成日時
-    create_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
-    update_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (status)
 ) WITHOUT OIDS;
 
@@ -137,8 +137,8 @@ CREATE TABLE fw_user
     name varchar(256),
     -- メールアドレス
     mail_address varchar(256),
-    -- ロール
-    role varchar(256),
+    -- ロールコード : v0.4.0以前ではロール名として扱っていたためカラムサイズは256
+    role varchar(16),
     -- 国 : jpなどのLocale国コード
     country varchar(64),
     -- 言語 : jaなどのLocale言語情報
@@ -203,12 +203,12 @@ CREATE TABLE fw_wf_id_management
 (
     -- ワークフローID
     wf_id varchar(36) NOT NULL,
-    -- ステータスコード
+    -- アクションステータスコード
     status_code varchar(16),
     -- 作成日時
-    create_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
-    update_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (wf_id)
 ) WITHOUT OIDS;
 
@@ -246,7 +246,7 @@ CREATE TABLE fw_wf_progress_management
     -- アクションステータスコード
     status_code varchar(16),
     -- 作成日時
-    create_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (wf_id, wf_ser_no)
 ) WITHOUT OIDS;
 
@@ -263,9 +263,9 @@ CREATE TABLE fw_wf_rote
     -- アクション後ステータス
     post_status varchar(256),
     -- 作成日時
-    create_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
-    update_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (action_code)
 ) WITHOUT OIDS;
 

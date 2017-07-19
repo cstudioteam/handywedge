@@ -13,14 +13,16 @@ import java.util.Locale;
 import javax.enterprise.context.SessionScoped;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
  * ユーザー情報を更新するときの引数となるビーンクラスです。
  */
 @ToString
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @SessionScoped
 public class FWUserData implements Serializable {
@@ -30,6 +32,7 @@ public class FWUserData implements Serializable {
   private String id;
   private String name;
   private String role;
+  private String roleName;
   private Locale locale;
 
   public FWUserData() {}
@@ -38,6 +41,7 @@ public class FWUserData implements Serializable {
     id = user.getId();
     name = user.getName();
     role = user.getRole();
+    roleName = user.getRoleName();
     locale = user.getLocale();
   }
 

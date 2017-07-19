@@ -15,10 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import com.handywedge.context.FWApplicationContext;
-import com.handywedge.context.FWFullRESTContext;
-import com.handywedge.context.FWRequestContext;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +30,9 @@ public class FWRESTContextImpl implements FWFullRESTContext {
   @Getter
   @Setter
   private String userRole;
+  @Getter
+  @Setter
+  private String userRoleName;
   @Getter
   @Setter
   private Locale userLocale;

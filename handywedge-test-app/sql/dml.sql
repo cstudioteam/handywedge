@@ -38,10 +38,10 @@ insert into fw_role_action (role, action_code) values(N'部門長','00301');
 insert into fw_role_action (role, action_code) values(N'部門長','00302');
 
 -- [申請取消し]追加定義
-/*
-insert into fw_action (action_code, action, pre_status, post_status) values ('00102', N'申請取消し', N'上長承認待ち', N'新規作成');
-insert into fw_role_action (role, action_code) values(N'担当者','00102');
-*/
+
+--insert into fw_action (action_code, action, pre_status, post_status) values ('00102', N'申請取消し', N'上長承認待ち', N'新規作成');
+--insert into fw_role_action (role, action_code) values(N'担当者','00102');
+
 
 -- 新WFテスト用
 insert into fw_user (id, name, role, country, language, last_login_date)  values('wf2001', N'WFユーザーA部担当', 'RLA0001', 'jp', 'ja', null);

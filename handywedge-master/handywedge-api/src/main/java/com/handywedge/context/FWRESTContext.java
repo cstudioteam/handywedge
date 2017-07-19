@@ -19,57 +19,65 @@ public interface FWRESTContext {
 
   /**
    * ユーザーIDを返します。
-   * 
+   *
    * @return ユーザーID
    */
   String getUserId();
 
   /**
    * ユーザー名を返します。
-   * 
+   *
    * @return ユーザー名
    */
   String getUserName();
 
   /**
    * ユーザーのロケール情報を返します。
-   * 
+   *
    * @return ロケール情報
    */
   Locale getUserLocale();
 
   /**
-   * ユーザーに設定されているロールを返します。<br>
-   * ロールの設定がない場合はnullとなります。
-   * 
+   * ユーザーに設定されているロールコードを返します。<br>
+   * ロールコードの設定がない場合はnullとなります。
+   *
    * @return ロール
    */
   String getUserRole();
 
   /**
+   * ユーザーに設定されているロールを返します。<br>
+   * ロール名の設定がない場合はロールコードとなります。
+   *
+   * @return ロール名もしくはロールコード
+   */
+  String getUserRoleName();
+
+  /**
    * リクエストがREST APIの場合はtrueを返します。
-   * 
+   *
    * @return リクエストがREST APIの場合はtrue
    */
   boolean isRest();
 
   /**
    * リクエストで認証されたAPIトークンを返します。
-   * 
+   *
    * @return APIトークン
    */
   String getToken();
 
   /**
    * リクエストIDを返します。
-   * 
+   *
    * @return リクエストID
    */
   String getRequestId();
 
   /**
    * リクエスト開始時間を返します。
-   * 
+   *
    * @return リクエスト開始時間
    */
   Date getRequestStartTime();
