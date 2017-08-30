@@ -45,11 +45,11 @@
       </span>
       <span class="fa fa-user" />
       <h:outputText
-        value="#{menuView.ctx.user.name}"
+        value="#{fwContext.user.name}"
         style="margin:5px;"
       />
       <h:outputText
-        value="(#{menuView.role.role})"
+        value="(#{fwContext.user.roleName})"
         style="margin:5px;"
       />
       <span class="ui-separator"> <span class="ui-icon ui-icon-grip-dotted-vertical" />

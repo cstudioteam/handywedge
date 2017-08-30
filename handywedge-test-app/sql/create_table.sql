@@ -13,3 +13,13 @@ CREATE TABLE workflow(
     update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT pk_workflow PRIMARY KEY (id)
 );
+
+CREATE TABLE workflow2(
+    id SERIAL NOT NULL,
+    subject VARCHAR(100),
+    body VARCHAR(200),
+    wf_id varchar(36),
+    create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_workflow2 PRIMARY KEY (id)
+);

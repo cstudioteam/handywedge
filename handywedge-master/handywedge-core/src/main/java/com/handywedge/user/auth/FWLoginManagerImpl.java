@@ -35,7 +35,6 @@ import com.handywedge.log.FWLogger;
 import com.handywedge.user.FWFullUser;
 import com.handywedge.user.FWUser;
 import com.handywedge.user.FWUserImpl;
-import com.handywedge.user.auth.FWLoginManager;
 import com.handywedge.util.FWInternalUtil;
 import com.handywedge.util.FWThreadLocal;
 
@@ -92,6 +91,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
       user.setLocale(innerUser.getLocale());
     }
     user.setRole(innerUser.getRole());
+    if (FWStringUtil.isEmpty(innerUser.getRoleName())) {// ロールマスタに名称が無い場合はコードを名称としてセット
+      user.setRoleName(user.getRole());
+    } else {
+      user.setRoleName(innerUser.getRoleName());
+    }
     user.setBeforeLoginTime(innerUser.getLastLoginTime());
     updateLoginTime(id);
     FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
@@ -243,6 +247,11 @@ public class FWLoginManagerImpl implements FWLoginManager {
     restCtx.setUserId(innerUser.getId());
     restCtx.setUserName(innerUser.getName());
     restCtx.setUserRole(innerUser.getRole());
+    if (FWStringUtil.isEmpty(innerUser.getRoleName())) { // ロールマスタに名称が無い場合はコードを名称としてセット
+      restCtx.setUserRoleName(restCtx.getUserRole());
+    } else {
+      restCtx.setUserRoleName(innerUser.getRoleName());
+    }
     if (innerUser.getLocale() != null) {
       restCtx.setUserLocale(innerUser.getLocale());
     }
@@ -278,7 +287,8 @@ public class FWLoginManagerImpl implements FWLoginManager {
   private FWUser getUser(String id) {
     FWFullUser innerUser = null;
     FWConnection con = cm.getConnection();
-    try (FWPreparedStatement ps = con.prepareStatement("SELECT * FROM fw_user WHERE id = ?")) {
+    try (FWPreparedStatement ps = con.prepareStatement(
+        "SELECT fu.*, frm.role_name FROM fw_user AS fu LEFT JOIN  fw_role_master AS frm ON frm.role = fu.role WHERE fu.id = ?")) {
       ps.setString(1, id);
       try (FWResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -286,6 +296,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
           innerUser.setId(id);
           innerUser.setName(rs.getString("name"));
           innerUser.setRole(rs.getString("role"));
+          innerUser.setRoleName(rs.getString("role_name"));
           String lang = rs.getString("language");
           if (!FWStringUtil.isEmpty(lang)) {
             String country = rs.getString("country");

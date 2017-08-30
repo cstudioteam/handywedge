@@ -13,14 +13,11 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 
-import com.handywedge.user.FWFullUser;
-import com.handywedge.user.FWUserData;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @SessionScoped
 public class FWUserImpl extends FWUserData implements FWFullUser {
 
