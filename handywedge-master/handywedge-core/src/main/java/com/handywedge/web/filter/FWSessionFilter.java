@@ -104,7 +104,7 @@ public class FWSessionFilter implements Filter {
       }
     }
     // REST APIはRESTフィルターで処理
-    if (requestUrl.startsWith(context.getContextPath() + "/handywedge/rest/")) {
+    if (requestUrl.startsWith(context.getContextPath() + "/fw/rest/")) {
       try {
         context.setRest(true);
         chain.doFilter(httpServletRequest, httpServletResponse);
