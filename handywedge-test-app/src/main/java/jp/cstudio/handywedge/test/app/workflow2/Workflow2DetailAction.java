@@ -29,6 +29,8 @@ public class Workflow2DetailAction implements Serializable {
   private transient FWWFManager wfManager;
   @Inject
   private transient Workflow2Service daoService; // ワークフローテーブル管理（業務データ）
+  @Inject
+  private transient Workflow2Synchronizer synchronizer;
 
   @Getter
   private Workflow2 workflow; // 業務データ
@@ -81,7 +83,8 @@ public class Workflow2DetailAction implements Serializable {
     FWWFAction wfAction = wfManager.checkAction(workflow.getWfId(), actionCode);
     // ■WF処理：指定アクションの実行
     // WFアクションを実行し（WFエンジン内に保有しているステータスを進める）、またWF履歴を書き込みます
-    FWWFLog wfLog = wfManager.doAction(wfAction, description);
+    // FWWFLog wfLog = wfManager.doAction(wfAction, description);
+    FWWFLog wfLog = wfManager.doAction(wfAction, description, synchronizer);
 
     // 業務処理
     // サンプルでは更新日付の更新を行います（WF履歴と同時刻をセット）
