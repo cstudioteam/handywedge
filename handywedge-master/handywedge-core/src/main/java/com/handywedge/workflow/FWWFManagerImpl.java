@@ -279,31 +279,53 @@ public class FWWFManagerImpl implements FWWFManager {
     }
   }
 
+
   @Override
   public FWWFLog doAction(String wfId, String actionCode) throws FWWFException {
-    FWWFAction action = new FWWFAction();
-    action.setWfId(wfId);
-    action.setAction(actionCode);
-    return doAction(action, null);
+    return doAction(wfId, actionCode, null, null);
   }
 
   @Override
   public FWWFLog doAction(String wfId, String actionCode, String description) throws FWWFException {
-    FWWFAction action = new FWWFAction();
-    action.setWfId(wfId);
-    action.setAction(actionCode);
-    return doAction(action, description);
+    return doAction(wfId, actionCode, description, null);
   }
 
   @Override
   public FWWFLog doAction(FWWFAction wfAction) throws FWWFException {
-    return doAction(wfAction, null);
+    return doAction(wfAction, null, null);
   }
 
   @Override
   public FWWFLog doAction(FWWFAction wfAction, String description) throws FWWFException {
-    long startTime = logger.perfStart("doAction");
-    try {
+    return doAction(wfAction, description, null);
+  }
+
+
+  @Override
+  public FWWFLog doAction(String wfId, String actionCode, FWWFSynchronizer synchronizer) throws FWWFException {
+    return doAction(wfId, actionCode, null, synchronizer);
+  }
+
+  @Override
+  public FWWFLog doAction(String wfId, String actionCode, String description, FWWFSynchronizer synchronizer)
+  		throws FWWFException {
+	  FWWFAction action = new FWWFAction();
+	  action.setWfId(wfId);
+	  action.setAction(actionCode);
+	  return doAction(action, description, synchronizer);
+  }
+
+  @Override
+  public FWWFLog doAction(FWWFAction wfAction, FWWFSynchronizer synchronizer) throws FWWFException {
+	  return doAction(wfAction, null, synchronizer);
+  }
+
+  @Override
+  public FWWFLog doAction(FWWFAction wfAction, String description, FWWFSynchronizer synchronizer) throws FWWFException {
+
+	long startTime = logger.perfStart("doAction");
+
+	try {
       String role = ctx.getUser().getRole();
       String actionCode = wfAction.getActionCode();
       String wfId = wfAction.getWfId();
@@ -344,6 +366,17 @@ public class FWWFManagerImpl implements FWWFManager {
         wfProgressManagement.setStatusCode(action.getPostStatus());
         wfProgressManagement.setCreateDate(currentTime);
         service.insertWFProgressManagement(wfProgressManagement);
+      }
+
+      if (synchronizer != null) {
+    	  try {
+    	      long st = logger.perfStart("Synchronizer(" + synchronizer + ")");
+    		  synchronizer.doSynchronize(wfId);
+    	      logger.perfEnd("Synchronizer(" + synchronizer + ")", st);
+    	  } catch (Throwable t) {
+    	      logger.warn("Synchronizer(" + synchronizer + ") throw Exception. wfId={}, exception={}",
+    	    		  wfId, t.getMessage());
+    	  }
       }
 
       logger.debug("role={}, wfId={}, actionCode={}", role, wfId, actionCode);
@@ -444,5 +477,6 @@ public class FWWFManagerImpl implements FWWFManager {
     }
     return action;
   }
+
 
 }

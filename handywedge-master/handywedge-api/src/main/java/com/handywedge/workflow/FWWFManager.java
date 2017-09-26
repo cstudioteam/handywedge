@@ -192,6 +192,50 @@ public interface FWWFManager {
   FWWFLog doAction(FWWFAction wfAction, String description) throws FWWFException;
 
   /**
+   * ログイン中のユーザーによるWFアクションを実行します。
+   *
+   * @param wfId ワークフローID
+   * @param actionCode 実行対象のアクションコード
+   * @param synchronizer アクション終了後に呼び出す同期処理クラスのインスタンス
+   * @return ワークフロー履歴のDTOリスト
+   * @throws FWWFException 権限がない場合にスロー
+   */
+  FWWFLog doAction(String wfId, String actionCode, FWWFSynchronizer synchronizer) throws FWWFException;
+
+  /**
+   * ログイン中のユーザーによるWFアクションを実行します。
+   *
+   * @param wfId ワークフローID
+   * @param actionCode 実行対象のアクションコード
+   * @param description ワークフロー履歴-備考
+   * @param synchronizer アクション終了後に呼び出す同期処理クラスのインスタンス
+   * @return ワークフロー履歴のDTOリスト
+   * @throws FWWFException 権限がない場合にスロー
+   */
+  FWWFLog doAction(String wfId, String actionCode, String description, FWWFSynchronizer synchronizer) throws FWWFException;
+
+  /**
+   * ログイン中のユーザーによるWFアクションを実行します。
+   *
+   * @param wfAction 実行対象のアクションオブジェクト（wfId, actionCodeの指定必須）
+   * @param synchronizer アクション終了後に呼び出す同期処理クラスのインスタンス
+   * @return ワークフロー履歴のDTOリスト
+   * @throws FWWFException 権限がない場合にスロー
+   */
+  FWWFLog doAction(FWWFAction wfAction, FWWFSynchronizer synchronizer) throws FWWFException;
+
+  /**
+   * ログイン中のユーザーによるWFアクションを実行します。
+   *
+   * @param wfAction 実行対象のアクションオブジェクト（wfId, actionCodeの指定必須）
+   * @param description ワークフロー履歴-備考
+   * @param synchronizer アクション終了後に呼び出す同期処理クラスのインスタンス
+   * @return ワークフロー履歴のDTOリスト
+   * @throws FWWFException 権限がない場合にスロー
+   */
+  FWWFLog doAction(FWWFAction wfAction, String description, FWWFSynchronizer synchronizer) throws FWWFException;
+
+  /**
    * 指定されたWFIDのワークフロー履歴のDTOリストを返します。
    *
    * @param wfId ワークフローID
