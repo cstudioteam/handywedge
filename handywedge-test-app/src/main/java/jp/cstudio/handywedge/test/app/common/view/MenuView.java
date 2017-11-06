@@ -111,6 +111,17 @@ public class MenuView implements Serializable {
     menu.addElement(item);
     model.addElement(menu);
 
+    menu = new DefaultSubMenu("スクリプト");
+    item = new DefaultMenuItem("JavaScript");
+    item.setOutcome("/contents/script/javaScript.xhtml");
+    item.setIcon("fa fa-pencil");
+    menu.addElement(item);
+    item = new DefaultMenuItem("Python");
+    item.setOutcome("/contents/script/python.xhtml");
+    item.setIcon("fa fa-pencil");
+    menu.addElement(item);
+    model.addElement(menu);
+
     // 実験menu
 //    new Thread(new AppLogReader(1000)).start();
 //    new Thread(new ErrorLogReader(5000)).start();

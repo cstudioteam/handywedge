@@ -1,0 +1,92 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:jsf="http://xmlns.jcp.org/jsf"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/layout/layout.xhtml"
+>
+  <ui:define name="title">JavaScript</ui:define>
+  <ui:define name="extHeader">
+    <style type="text/css">
+.ui-panelgrid>*>tr, .ui-panelgrid .ui-panelgrid-cell {
+	border: none;
+}
+</style>
+  </ui:define>
+  <ui:define name="content">
+    <h3>JavaScript</h3>
+    <div></div>
+    <h4>Eval実行</h4>
+    <p:panelGrid columns="2">
+      <p:outputLabel
+        for="script1"
+        value="スクリプト"
+      />
+      <p:inputTextarea rows="3" cols="75"
+        id="script1"
+        value="#{javaScript.script1}"
+      />
+      <h:commandButton
+        value="実行"
+        action="#{javaScript.eval}"
+        update="result1"
+      />
+      <p:outputLabel/>
+      <p:outputLabel
+        for="result1"
+        value="実行結果"
+      />
+      <div jsf:id="result1">
+        <h:outputText value="#{javaScript.result1}" />
+      </div>
+    </p:panelGrid>
+
+    <p:separator />
+
+    <div></div>
+    <h4>Function呼び出し</h4>
+    <p:panelGrid columns="2">
+      <p:outputLabel
+        for="script2"
+        value="スクリプト"
+      />
+      <p:inputTextarea rows="5" cols="75"
+        id="script2"
+        value="#{javaScript.script2}"
+      />
+      <p:outputLabel
+        for="arg1"
+        value="arg1"
+      />
+      <p:inputText
+        id="arg1"
+        value="#{javaScript.arg1}"
+      />
+      <p:outputLabel
+        for="arg2"
+        value="arg2"
+      />
+      <p:inputText
+        id="arg2"
+        value="#{javaScript.arg2}"
+      />
+      <h:commandButton
+        value="実行"
+        action="#{javaScript.callFunction}"
+        update="data2"
+      />
+      <p:outputLabel
+        value="関数名は「f」、引数は2個固定です。"
+      />
+      <p:outputLabel
+        for="result2"
+        value="実行結果"
+      />
+      <div jsf:id="result2">
+        <h:outputText value="#{javaScript.result2}" />
+      </div>
+    </p:panelGrid>
+  </ui:define>
+</ui:composition>
