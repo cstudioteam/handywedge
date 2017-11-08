@@ -10,6 +10,7 @@ import javax.script.ScriptEngineManager;
 
 import com.handywedge.context.FWContext;
 import com.handywedge.log.FWLogger;
+
 /**
  * ScriptEngineを生成するクラスです。<br>
  * JavaScriptへアクセスするにはgetEngineメソッドからScriptEngineインスタンスを取得してアクセスします。 <br>
@@ -25,138 +26,125 @@ import com.handywedge.log.FWLogger;
  * }
  *
  * </pre>
+ *
  * @see ScriptEngineManager
  * @see FWScriptEngine
  */
 @RequestScoped
 public class FWScriptEngineManager extends ScriptEngineManager {
-  @Inject
-  private FWLogger logger;
-  @Inject
-  private FWContext ctx;
 
-  private ScriptEngineManager scriptEngineManager;
+	@Inject
+	private FWLogger logger;
 
-  public FWScriptEngineManager() {
-    this.scriptEngineManager = new ScriptEngineManager();
-  }
+	@Inject
+	private FWContext ctx;
 
-  public FWScriptEngineManager(ClassLoader loader) {
-    this.scriptEngineManager = new ScriptEngineManager(loader);
-  }
+	private ScriptEngineManager scriptEngineManager;
 
-  @Override
-  public void setBindings(Bindings bindings) {
-    logger.trace("setBindings bindings={}", bindings);
-    scriptEngineManager.setBindings(bindings);
-  }
 
-  @Override
-  public Bindings getBindings() {
-    logger.trace("getBindings");
-    return scriptEngineManager.getBindings();
-  }
+	public FWScriptEngineManager() {
+		this.scriptEngineManager = new ScriptEngineManager();
+	}
 
-  @Override
-  public void put(String key, Object value) {
-    logger.trace("put key={}, value={}", key, value);
-    scriptEngineManager.put(key, value);
-  }
+	public FWScriptEngineManager(ClassLoader loader) {
+		this.scriptEngineManager = new ScriptEngineManager(loader);
+	}
 
-  @Override
-  public Object get(String key) {
-    logger.trace("get key={}", key);
-    return scriptEngineManager.get(key);
-  }
+	@Override
+	public void setBindings(Bindings bindings) {
+		logger.trace("setBindings bindings={}", bindings);
+		scriptEngineManager.setBindings(bindings);
+	}
 
-  // 拡張メソッド（FW独自実装）
-  /**
-   * FWにて最適なエンジンを選択し、FWScriptEngine を返します。
-   * @return FWScriptEngineオブジェクト
-   */
-  public FWScriptEngine getEngine() {
-    long startTime = logger.perfStart("getEngine");
-    FWScriptEngine engine = generateEngine();
-    logger.perfEnd("getEngine", startTime);
-    return engine;
-  }
+	@Override
+	public Bindings getBindings() {
+		logger.trace("getBindings");
+		return scriptEngineManager.getBindings();
+	}
 
-  // エンジン生成
-  private FWScriptEngine generateEngine() {
-    // nashorn固定
-    FWScriptEngine engine = new FWScriptEngineWrapper(scriptEngineManager.getEngineByName("nashorn"));
-    // コンテキスト情報をセット
-    engine.put("fwContext", ctx);
-    return engine;
-  }
+	@Override
+	public void put(String key, Object value) {
+		logger.trace("put key={}, value={}", key, value);
+		scriptEngineManager.put(key, value);
+	}
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #getEngineByName(String)
-   */
-  @Override
-  @Deprecated
-  public FWScriptEngine getEngineByName(String shortName) {
-    throw new UnsupportedOperationException();
-  }
+	@Override
+	public Object get(String key) {
+		logger.trace("get key={}", key);
+		return scriptEngineManager.get(key);
+	}
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #getEngineByExtension(String)
-   */
-  @Override
-  @Deprecated
-  public FWScriptEngine getEngineByExtension(String extension) {
-    throw new UnsupportedOperationException();
-  };
+	@Override
+	public FWScriptEngine getEngineByName(String shortName) {
+		long startTime = logger.perfStart("getEngineByname");
+		FWScriptEngine engine = new FWScriptEngineWrapper(scriptEngineManager.getEngineByName(shortName));
+		// コンテキスト情報をセット
+		engine.put("fwContext", ctx);
+		logger.perfEnd("getEngineByName", startTime);
+		return engine;
+	}
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #getEngineByMimeType(String)
-   */
-  @Override
-  @Deprecated
-  public FWScriptEngine getEngineByMimeType(String mimeType) {
-    throw new UnsupportedOperationException();
-  };
+	/**
+	 * @see #getEngineByExtension(String)
+	 */
+	@Override
+	public FWScriptEngine getEngineByExtension(String extension) {
+		long startTime = logger.perfStart("getEngineByExtension");
+		logger.trace("getEngineByExtension mimeType={}", extension);
+		FWScriptEngine engine =  new FWScriptEngineWrapper(scriptEngineManager.getEngineByExtension(extension));
+		// コンテキスト情報をセット
+		engine.put("fwContext", ctx);
+		logger.perfEnd("getEngineByExtension", startTime);
+		return engine;
+	};
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #getEngineFactories()
-   */
-  @Override
-  @Deprecated
-  public List<ScriptEngineFactory> getEngineFactories() {
-    throw new UnsupportedOperationException();
-  };
+	/**
+	 * @see #getEngineByMimeType(String)
+	 */
+	@Override
+	public FWScriptEngine getEngineByMimeType(String mimeType) {
+		long startTime = logger.perfStart("getEngineByMimeType");
+		logger.trace("getEngineByMimeType mimeType={}", mimeType);
+		FWScriptEngine engine =  new FWScriptEngineWrapper(scriptEngineManager.getEngineByMimeType(mimeType));
+		// コンテキスト情報をセット
+		engine.put("fwContext", ctx);
+		logger.perfEnd("getEngineByMimeType", startTime);
+		return engine;
+	};
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #registerEngineName(String, ScriptEngineFactory)
-   */
-  @Override
-  @Deprecated
-  public void registerEngineName(String name, ScriptEngineFactory factory) {
-    throw new UnsupportedOperationException();
-  };
+	/**
+	 * @see #getEngineFactories()
+	 */
+	@Override
+	public List<ScriptEngineFactory> getEngineFactories() {
+		logger.trace("getEngineFactories");
+		return scriptEngineManager.getEngineFactories();
+	};
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #registerEngineMimeType(String, ScriptEngineFactory)
-   */
-  @Override
-  @Deprecated
-  public void registerEngineMimeType(String type, ScriptEngineFactory factory) {
-    throw new UnsupportedOperationException();
-  };
+	/**
+	 * @see #registerEngineName(String, ScriptEngineFactory)
+	 */
+	@Override
+	public void registerEngineName(String name, ScriptEngineFactory factory) {
+		logger.trace("registerEngineName name={}, factory={}", name, factory);
+		scriptEngineManager.registerEngineName(name, factory);
+	};
 
-  /**
-   * @deprecated ScriptEngineはFWにて最適なエンジンを制御、選択するため、当該メソッドは非推奨
-   * @see #registerEngineExtension(String, ScriptEngineFactory)
-   */
-  @Override
-  @Deprecated
-  public void registerEngineExtension(String extension, ScriptEngineFactory factory) {
-    throw new UnsupportedOperationException();
-  };
+	/**
+	 * @see #registerEngineMimeType(String, ScriptEngineFactory)
+	 */
+	@Override
+	public void registerEngineMimeType(String type, ScriptEngineFactory factory) {
+		logger.trace("registerEngineMimeType type={}, factory={}", type, factory);
+		scriptEngineManager.registerEngineMimeType(type, factory);
+	};
+
+	/**
+	 * @see #registerEngineExtension(String, ScriptEngineFactory)
+	 */
+	@Override
+	public void registerEngineExtension(String extension, ScriptEngineFactory factory) {
+		logger.trace("registerEngineExtension extension={}, factory={}", extension, factory);
+		scriptEngineManager.registerEngineExtension(extension, factory);
+	};
 }

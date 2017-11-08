@@ -16,8 +16,19 @@
 </style>
   </ui:define>
   <ui:define name="content">
-    <h3>JavaScript</h3>
+    <h3>スクリプト連携</h3>
     <div></div>
+    <p:panelGrid columns="2">
+      <p:outputLabel
+        for="language"
+        value="スクリプト言語"
+      />
+      <p:selectOneMenu id="language" value="#{script.shortName}" >
+        <p:ajax listener="#{script.onLanguageChange}" update="script1, script2" />
+		<f:selectItems value="#{script.languages}" />
+	  </p:selectOneMenu>
+    </p:panelGrid>
+
     <h4>Eval実行</h4>
     <p:panelGrid columns="2">
       <p:outputLabel
@@ -26,11 +37,11 @@
       />
       <p:inputTextarea rows="3" cols="75"
         id="script1"
-        value="#{javaScript.script1}"
+        value="#{script.script1}"
       />
       <h:commandButton
         value="実行"
-        action="#{javaScript.eval}"
+        action="#{script.eval}"
         update="result1"
       />
       <p:outputLabel/>
@@ -39,7 +50,7 @@
         value="実行結果"
       />
       <div jsf:id="result1">
-        <h:outputText value="#{javaScript.result1}" />
+        <h:outputText value="#{script.result1}" />
       </div>
     </p:panelGrid>
 
@@ -54,7 +65,7 @@
       />
       <p:inputTextarea rows="5" cols="75"
         id="script2"
-        value="#{javaScript.script2}"
+        value="#{script.script2}"
       />
       <p:outputLabel
         for="arg1"
@@ -62,7 +73,7 @@
       />
       <p:inputText
         id="arg1"
-        value="#{javaScript.arg1}"
+        value="#{script.arg1}"
       />
       <p:outputLabel
         for="arg2"
@@ -70,11 +81,11 @@
       />
       <p:inputText
         id="arg2"
-        value="#{javaScript.arg2}"
+        value="#{script.arg2}"
       />
       <h:commandButton
         value="実行"
-        action="#{javaScript.callFunction}"
+        action="#{script.callFunction}"
         update="data2"
       />
       <p:outputLabel
@@ -85,7 +96,7 @@
         value="実行結果"
       />
       <div jsf:id="result2">
-        <h:outputText value="#{javaScript.result2}" />
+        <h:outputText value="#{script.result2}" />
       </div>
     </p:panelGrid>
   </ui:define>

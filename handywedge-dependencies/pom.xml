@@ -17,5 +17,6 @@
     <module>handywedge-dependencies-report</module>
     <module>handywedge-dependencies-reference</module>
     <module>handywedge-dependencies-mail</module>
+    <module>handywedge-dependencies-script</module>
   </modules>
 </project>
