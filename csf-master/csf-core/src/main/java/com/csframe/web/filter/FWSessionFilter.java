@@ -199,7 +199,8 @@ public class FWSessionFilter implements Filter {
     Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
     if (login != null) {
       if (login) {
-        request.changeSessionId(); // @セキュリティ セッションは維持してIDだけ変更(Session Fixation)
+        // 2017/11/25 セッションID変更の動作でセッションがクリアされる事象が発生するため解決まで無効化
+//        request.changeSessionId(); // @セキュリティ セッションは維持してIDだけ変更(Session Fixation)
       } else {
         request.getSession().invalidate();
       }

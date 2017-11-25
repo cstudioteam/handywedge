@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.csframe</groupId>
     <artifactId>csf-dependencies</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </parent>
   <artifactId>csf-dependencies-cdi</artifactId>
   <packaging>pom</packaging>
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
       <artifactId>weld-servlet</artifactId>
-      <version>2.3.3.Final</version>
+      <version>2.4.5.Final</version>
     </dependency>
   </dependencies>
 </project>
