@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta
+  http-equiv="X-UA-Compatible"
+  content="IE=edge"
+>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
+<meta
+  http-equiv="Pragma"
+  content="no-cache"
+>
+<meta
+  http-equiv="Cache-Control"
+  content="no-cache"
+>
+<meta
+  http-equiv="Expires"
+  content="0"
+>
+<title>WF_SQL_TESTING</title>
+<script src="wf_sql.js"/></script>
+<!-- 申し訳ありません。色々面倒なのでCDN使用しました。
+何か不都合があればローカルに変更します-->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>SQL機能テスト</h1>
+  </header>
+  <section>
+    <p>JSONからSQL_INSERT生成</p>
+    <button id="insert_b">生成</button>
+    <textarea id="json_insert">{"status":0,"status_name":"WFTEST"}</textarea>
+    <textarea id="sql_insert"></textarea>
+  </section>
+  <script type="text/javascript">
+  var fw_status_master=new sql('fw_status_master');
+
+    $('#insert_b').click(function(){
+      $('#sql_insert').val(fw_status_master.insert($('#json_insert').val()));
+    });
+  </script>
+</body>
+</html>
