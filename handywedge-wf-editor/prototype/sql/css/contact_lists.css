@@ -1,0 +1,156 @@
+#paper-elements {
+  position: relative;
+  border: 1px solid gray;
+  display: inline-block;
+  background: transparent;
+  overflow: hidden;
+}
+
+#paper-elements svg {
+  background: transparent;
+}
+
+#paper-elements svg .link {
+  z-index: 2;
+}
+
+.html-element {
+  position: absolute;
+  /*   -webkit-user-select: none; */
+  user-select: text;
+  border-radius: 4px;
+  padding: 5px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+#paper2 {
+  /* 	border: solid 1px #808080; */
+  width: 750px;
+  height: 280mm;
+  /* 	padding: 0.5em; */
+  overflow: scroll;
+  pointer-events: auto;
+}
+
+q {
+  color: #008000;
+}
+
+.html-element>.panel>.panel-body {
+  overflow: scroll;
+  width: auto;
+  height: 400px;
+}
+
+.html-element .member-table th, td {
+  white-space: nowrap;
+}
+
+/* メンバー編集モーダル */
+.member-edit .panel-body {
+  overflow: hidden;
+  height: 270px;
+}
+
+.member-edit .member-grid-container {
+  overflow: hidden;
+  width: auto;
+  height: 250px;
+}
+
+.member-edit .handsontable .htDimmed {
+  background-color: #dbdcdb; /* リードオンリーの背景色 */
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+#fileinput {
+  display: inline;
+  margin-left: 5px;
+}
+
+.right {
+  float: right;
+}
+
+.free-html-element {
+  position: absolute;
+  /*     background: #3498DB; */
+  /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
+  pointer-events: none;
+  -webkit-user-select: none;
+  /* 	border: solid 1px #000000; */
+  /*     box-shadow: inset 0 0 5px black, 2px 2px 1px gray; */
+  padding: 5px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.link-disabled {
+  display: none;
+}
+
+.link-toggle {
+  margin-left: 10px;
+}
+
+#modelCanvas, #modelCanvas2 {
+  overflow: hidden;
+}
+
+.modal-footer {
+  margin-top: 10px;
+}
+
+#sideOpenBtn, .side {
+  margin-right: 5px;
+  text-align: right;
+  cursor: pointer;
+  font-size: large;
+}
+
+#sideHistory {
+  overflow: hidden;
+}
+
+#history_table {
+  overflow: hidden;
+  width: auto;
+}
+
+.dropdown-link {
+  display: inline-block;
+}
+
+form#depAddForm ul, form#systemForm ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+form#depAddForm li, form#systemForm li {
+  margin: 0;
+  padding: 0;
+  list-style-position: outside;
+}
+
+.inline-label {
+  margin-left: 10px;
+}
+
+.link-like:focus, .link-like:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
+
+.link-like:active, .link-like:hover {
+  outline: 0;
+}
+
+.link-like {
+  color: #337ab7;
+  text-decoration: none;
+}

@@ -2,48 +2,69 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta
-  http-equiv="X-UA-Compatible"
-  content="IE=edge"
->
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1"
->
-<meta
-  http-equiv="Pragma"
-  content="no-cache"
->
-<meta
-  http-equiv="Cache-Control"
-  content="no-cache"
->
-<meta
-  http-equiv="Expires"
-  content="0"
->
+<meta  http-equiv="X-UA-Compatible"  content="IE=edge">
+<meta  name="viewport"  content="width=device-width, initial-scale=1">
+<meta  http-equiv="Pragma"  content="no-cache">
+<meta  http-equiv="Cache-Control"  content="no-cache">
+<meta  http-equiv="Expires"  content="0">
+
 <title>WF_SQL_TESTING</title>
-<script src="wf_sql.js"/></script>
-<!-- 申し訳ありません。色々面倒なのでCDN使用しました。
-何か不都合があればローカルに変更します-->
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link  rel="stylesheet"  type="text/css"  href="css/joint.min.css"/>
+<link  rel="stylesheet"  type="text/css"  href="css/contact_lists.css?v=20170628"/>
+<link  rel="stylesheet"  type="text/css"  href="css/jquery-ui.css"/>
+<link  rel="stylesheet"  type="text/css"  href="css/bootstrap.min.css">
+<link  rel="stylesheet"  type="text/css"  href="css/handsontable.full.css"/>
+<link rel="stylesheet" type="text/css" href="css/jquery.contextMenu.min.css"/>
+<script src="lib/jquery.js"></script>
+<script src="lib/jquery-ui.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/lodash.js"></script>
+<script src="lib/backbone.js"></script>
+<script src="lib/joint.min.js"></script>
+<script src="lib/jquery.contextMenu.min.js"></script>
+<script src="lib/jquery.ui.position.min.js"></script>
+<script src="lib/handsontable.full.min.js?v=20170531"></script>
+
+<link  rel="stylesheet"  type="text/css"  href="wf_sql.css"/>
+
 </head>
 <body>
-  <header>
-    <h1>SQL機能テスト</h1>
-  </header>
-  <section>
-    <p>JSONからSQL_INSERT生成</p>
-    <button id="insert_b">生成</button>
-    <textarea id="json_insert">{"status":0,"status_name":"WFTEST"}</textarea>
-    <textarea id="sql_insert"></textarea>
-  </section>
-  <script type="text/javascript">
-  var fw_status_master=new sql('fw_status_master');
-
-    $('#insert_b').click(function(){
-      $('#sql_insert').val(fw_status_master.insert($('#json_insert').val()));
-    });
-  </script>
+<section id="headbar">
+  <div>
+    <span class="head_btn">Add Box</span>
+  </div>
+</section>
+<div id="paper"></div>
+</section>
+<section id="belowbar">
+  <div class="pull">
+    <span class="pull_btn">STATUS</span>
+    <span class="pull_btn">ACTION</span>
+  </div>
+  <div class="content_area">
+    <div class="contents tab_status">
+      <div id="view_status" class="container">
+        <div>STATUS BOX</div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>status</th>
+              <th>status_name</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="contents tab-action">
+      <div id="view_action"></div>
+    </div>
+  </div>
+</section>
 </body>
+
+<script src="wf_sql.js"/></script>
+<script src="wf_sql_model.js"/></script>
+<script src="wf_sql_cont.js"></script>
+
 </html>

@@ -1,0 +1,211 @@
+/* ページサイズ */
+@page {
+  size: A3 landscape;
+}
+
+/* 連絡先ページの左右2段組 */
+div.contact-lists-left {
+  float: left;
+  width: 50%;
+  padding: 5px;
+}
+
+div.contact-lists-right {
+  float: right;
+  width: 50%;
+  padding: 5px;
+}
+
+/* 連絡先テーブル */
+.content-lists {
+  margin-top: 10px;
+}
+
+table.contact-lists-table {
+  width: 720px;
+  border: 1px solid black;
+}
+
+table.contact-lists-table th, table.contact-lists-table td {
+  border: 1px solid black;
+  padding: 1px;
+  font-size: 0.7rem;
+}
+
+table.contact-lists-table th {
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* 部署ボックス属性 */
+.department-role-area {
+  margin-top: 5px;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.department-role {
+  border: none;
+  padding: 0 1em 0;
+  width: auto;
+  margin-bottom: 0px;
+}
+
+.department {
+  margin-bottom: 15px;
+}
+
+.department-name {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.department-category {
+  display: inline-block;
+  font-size: small;
+}
+
+/* 連絡先テーブル内のレイアウト */
+table.contact-lists-table .priority {
+  width: auto;
+}
+
+table.contact-lists-table .personal-id {
+  width: auto;
+}
+
+table.contact-lists-table .personal-name {
+  min-width: 50px;
+  white-space: nowrap;
+}
+
+table.contact-lists-table .tel-internal, table.contact-lists-table .tel-anywhere-internal {
+  min-width: 70px;
+  white-space: nowrap;
+}
+
+table.contact-lists-table .tel-mobile, table.contact-lists-table .tel-working {
+  min-width: 80px;
+  white-space: nowrap;
+}
+
+table.contact-lists-table .email-priority {
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+/* ヘッダー フッター */
+table.header {
+  text-align: center;
+  border: 1px solid black;
+  width: 100%;
+  border: 1px solid black;
+}
+
+table.header td {
+  border: 1px solid black;
+  padding: 1px;
+}
+
+h3.header-right {
+  text-align: right;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+hr.header-horizon, hr.footer-horizon {
+  height: 10px;
+  border-width: 3px 0 0 0;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.footer {
+  text-align: center;
+}
+
+div.footer-left {
+  float: left;
+  display: inline-block;
+  font-size: smaller;
+}
+
+div.footer-center {
+  display: inline-block;
+  font-size: smaller;
+}
+
+div.footer-right {
+  float: right;
+  display: inline-block;
+  font-style: oblique;
+  font-size: smaller;
+}
+
+.common-footer {
+  height: 3rem;
+}
+
+.main-contents {
+  height: 880px;
+}
+
+/* 更新履歴 */
+div.history-title-area, div.history-table-area {
+  text-align: center;
+}
+
+table.history {
+  display: inline-block;
+  border: 2px solid black;
+}
+
+table.history th {
+  border-bottom: 4px double black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  padding: 1px;
+  text-align: center;
+}
+
+table.history td {
+  border: 1px solid black;
+  padding: 1px;
+  text-align: center;
+  padding: 1px;
+}
+
+table.history .version {
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+table.history .description {
+  min-width: 450px;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+
+table.history .update-date {
+  width: 150px;
+  white-space: nowrap;
+}
+
+table.history .department {
+  min-width: 200px;
+  white-space: nowrap;
+}
+
+table.history .user, table.history .approver {
+  min-width: 120px;
+  white-space: nowrap;
+}
+
+#paper {
+  margin-top: 10px;
+  margin-left: 5px;
+}
