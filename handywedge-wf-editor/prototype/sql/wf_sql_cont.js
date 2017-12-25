@@ -8,13 +8,14 @@ db_status.AddData=function(box,datum){
     }
     if(sa){
       this.data.push(datum);
+      var t=db_status.data.length-1;
       var toappend='<tbody><td>'+datum[0]+'</td>'+
       '<td><input class="'+datum[0]+' value='+datum[1]+'"></input></td>';
       $('#view_status table').append(toappend);
       //依存性の解決
       $('#view_status .'+datum[0]).on('keyup',function(){
         box.model.set('.status_name', $('#view_status .'+datum[0]).val());
-        db_status.data[db_status.data.length-1][1]=$('#view_status .'+datum[0]).val();
+        db_status.data[t][1]=$('#view_status .'+datum[0]).val();
       });
     }
   };
