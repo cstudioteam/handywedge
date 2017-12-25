@@ -84,7 +84,7 @@ var paper = new joint.dia.Paper({
 
 //イベントハンドラ
 //上部ボタン
-$('.head_btn').on('click', function () {
+$('.head_btn.add_box').on('click', function () {
   var num=db_status.box.length;
   var datum='S'+num;
   db_status.box.push(new joint.shapes.status.Element({

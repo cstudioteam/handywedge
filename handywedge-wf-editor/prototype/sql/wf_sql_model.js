@@ -7,23 +7,7 @@ function db_model(table_name,columns){
 db_model.prototype={
   table:'',
   box:new Array(),
-  data:new Array(),//[[status,status_name]]
-  AddData:function(box,datum){
-    var sa=true;
-    for(i=0;i<this.data.length;i++){//order:O(n). 速度改善の余地あり
-      if(this.data[i][0]==datum[0]) sa=false;
-    }
-    if(sa){
-      this.data.push(datum);
-      var toappend='<tbody><td>'+datum[0]+'</td>'+
-      '<td><input class="'+datum[0]+' value='+datum[1]+'"></input></td>';
-      $('#view_status table').append(toappend);
-      //依存性の解決
-      $('#view_status .'+datum[0]).on('keyup',function(){
-        box.model.set('.status_name', $('#view_status .'+datum[0]).val());
-      });
-    }
-  }
+  data:new Array()//[[status,status_name]].handsontableの為に配列でデータを保持した名残。
 };
 
 //DnDボックス
@@ -53,10 +37,20 @@ sql={
     var s='';
     for(i=0;i<data.length;i++){
       if(!data[i][0]) continue;
-      s+='INSERT INTO '+table+' SET';
-      for(c in column){
-        s+=' '+column[c]+'='+data[i][c];
-      }s+=';\n';
+      s+='INSERT INTO '+table+'(';
+      for(k=0;k<column.length;k++){
+        s+=column[k];
+        if(k<column.length-1){
+          s+=','
+        }
+      }
+      s+=') VALUES(';
+      for(k=0;k<column.length;k++){
+        s+='\''+data[i][k]+'\'';
+        if(k<column.length-1){
+          s+=','
+        }
+      }s+=');\n';
     }return s;
   }
 };
