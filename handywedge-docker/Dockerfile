@@ -58,6 +58,33 @@ RUN su - postgres -c "pg_ctl start -w && \
     pg_ctl stop -m fast \
 "
 
+#JDK
+RUN cd /tmp && mkdir install && cd install && \
+    curl -LO -b "oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u152-b16/aa0333dd3019491ca4f6ddbe78cdb6d0/server-jre-8u152-linux-x64.tar.gz" && \
+    tar xzf server-jre-8u152-linux-x64.tar.gz
+RUN mkdir /usr/java && \
+    mv /tmp/install/jdk1.8.0_152 /usr/java/
+RUN cd  /usr/bin && \
+    ln -s /usr/java/jdk1.8.0_152/bin/java java
+ADD java.sh /etc/profile.d/java.sh
+ADD java.csh /etc/profile.d/java.csh
+RUN exec -l $SHELL
+
+#tomcat
+RUN yum -y install wget
+WORKDIR /opt/
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-tomcat-8.0.47.tar.gz && \
+    tar xzf apache-tomcat-8.0.47.tar.gz && \
+    ln -s apache-tomcat-8.0.47 tomcat && \
+    rm -rf tomcat/webapps/* && \
+    useradd -r -s /sbin/nologin tomcat && \
+    chown -R tomcat:tomcat apache-tomcat-8.0.47 && \
+    rm apache-tomcat-8.0.47.tar.gz
+ADD tomcat.service /etc/systemd/system/tomcat.service
+RUN chmod 755 /etc/systemd/system/tomcat.service
+RUN systemctl enable tomcat
+
+
 # systemd起動。常に最後に記載する
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
