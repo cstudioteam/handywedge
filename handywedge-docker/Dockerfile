@@ -85,6 +85,29 @@ RUN chmod 755 /etc/systemd/system/tomcat.service
 RUN systemctl enable tomcat
 
 
+# warビルド&デプロイ
+WORKDIR /tmp/install
+RUN yum install -y which
+RUN wget http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
+    tar xzf apache-maven-3.5.2-bin.tar.gz && \
+    wget https://sourceforge.net/p/itext/code/HEAD/tree/tags/iText_2_1_7/lib/iTextAsian.jar?format=raw -O iTextAsian.jar
+RUN /tmp/install/apache-maven-3.5.2/bin/mvn install:install-file -Dfile=iTextAsian.jar -DgroupId=com.lowagie -DartifactId=iTextAsian -Dversion=2.1.7 -Dpackaging=jar
+RUN cd /tmp/git/handywedge/handywedge-dependencies/ && /tmp/install/apache-maven-3.5.2/bin/mvn install
+RUN cd /tmp/git/handywedge/handywedge-master/ && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn -Dmaven.javadoc.skip=true install
+RUN cd /tmp/git/handywedge/handywedge-test-app/ && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn install
+#RUN chown tomcat:tomcat /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war
+RUN cp /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war /opt/tomcat/webapps/
+RUN chown tomcat:tomcat /opt/tomcat/webapps/handywedge-test-app.war
+
+
+
+# インストーラー等削除
+RUN rm -rf /tmp/git/ && \
+    rm -rf /tmp/install/
+
+
 # systemd起動。常に最後に記載する
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
