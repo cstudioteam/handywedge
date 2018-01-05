@@ -4,18 +4,28 @@ var db_status=new db_model('fw_status_master',['status','status_name']);
 db_status.AddData=function(box,datum){
     var sa=true;
     for(i=0;i<this.data.length;i++){//order:O(n). 速度改善の余地あり
-      if(this.data[i][0]==datum[0]) sa=false;
+      if(this.data[i].id==datum[0]) sa=false;
     }
     if(sa){
-      this.data.push(datum);
+      this.data.push({id:datum[0],status:datum[1],status_name:datum[2]});
       var t=db_status.data.length-1;
-      var toappend='<tbody><td>'+datum[0]+'</td>'+
-      '<td><input class="'+datum[0]+' value='+datum[1]+'"></input></td>';
+      var toappend='<tbody><td><input class="status '+datum[0]+'" value='+datum[1]+'></input></td>'+
+      '<td><input class="status_name '+datum[0]+'" value='+datum[2]+'></input></td></tbody>';
       $('#view_status table').append(toappend);
-      //依存性の解決
-      $('#view_status .'+datum[0]).on('keyup',function(){
-        box.model.set('.status_name', $('#view_status .'+datum[0]).val());
-        db_status.data[t][1]=$('#view_status .'+datum[0]).val();
+      //データ更新
+      //status
+      $('#view_status .status.'+datum[0]).on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.status', $('#view_status .status.'+datum[0]).val());
+        //データベース内のデータを更新
+        db_status.data[t].status=$('#view_status .status.'+datum[0]).val();
+      });
+      //status_name
+      $('#view_status .status_name.'+datum[0]).on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.status_name', $('#view_status .status_name.'+datum[0]).val());
+        //データベース内のデータを更新
+        db_status.data[t].status_name=$('#view_status .status_name.'+datum[0]).val();
       });
     }
   };
@@ -33,8 +43,13 @@ paper.on('cell:pointerup', function(cellView, evt, x, y) {
   if (elementBelow&&elementBelow.get('id')==db_status.dnd.dropzone.get('id')) {
   //重ねた部分の特定部分をthis.target.dataに書き出す。
   //名前部分の変数の呼び出しが汚い。改善を検討中。
-  db_status.AddData(cellView,[cellView.model.id,cellView.model.get('.status_name')]);
+  db_status.AddData(cellView,[cellView.model.id,cellView.model.get('.status'),cellView.model.get('.status_name')]);
 }});
+
+var db_action=new db_model('fw_wf_rote',['action_code','action','pre_status','post_status']);
+
+
+//ボックスとdb_modelを紐付ける
 
 //イベントハンドラ
 //上メニュー

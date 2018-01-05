@@ -1,4 +1,4 @@
-//データベースをやり取りするオブジェクトを生成
+//データベースへの情報を保持するオブジェクトを生成
 function db_model(table_name,columns){
   this.table=table_name;
   this.column=columns;
@@ -7,7 +7,7 @@ function db_model(table_name,columns){
 db_model.prototype={
   table:'',
   box:new Array(),
-  data:new Array()//[[status,status_name]].handsontableの為に配列でデータを保持した名残。
+  data:new Array()//[[status,status_name]].
 };
 
 //DnDボックス
@@ -36,7 +36,6 @@ sql={
   insert:function(table,column,data){
     var s='';
     for(i=0;i<data.length;i++){
-      if(!data[i][0]) continue;
       s+='INSERT INTO '+table+'(';
       for(k=0;k<column.length;k++){
         s+=column[k];
@@ -46,7 +45,7 @@ sql={
       }
       s+=') VALUES(';
       for(k=0;k<column.length;k++){
-        s+='\''+data[i][k]+'\'';
+        s+='\''+data[i][column[k]]+'\'';
         if(k<column.length-1){
           s+=','
         }

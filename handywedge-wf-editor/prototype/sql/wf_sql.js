@@ -32,6 +32,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.$box.find('.status_name').on('mousedown click', function(evt) {
             evt.stopPropagation();
         });*/
+        //status_nameの更新
         this.$box.find('.status_name').on('change', _.bind(function(evt) {
             this.model.set('.status_name', $(evt.target).val());
         }, this));
@@ -53,7 +54,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         // Set the position and dimension of the box so that it covers the JointJS element.
         var bbox = this.model.getBBox();
         // Example of updating the HTML with a data stored in the cell model.
-        this.$box.find('.status').text(this.model.get('id'));
+        this.$box.find('.status').text(this.model.get('.status'));
         this.$box.find('.status_name').text(this.model.get('.status_name'));
         this.$box.css({
             width: bbox.width,
@@ -64,7 +65,12 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         });
     },
     removeBox: function(evt) {
-        this.$box.remove();
+      for(i in db_status.data){
+        if(this.model.id==db_status.data[i].id)
+        db_status.data.splice(i,1);
+        $('#view_status .'+this.model.id).remove();
+      }
+      this.$box.remove();
     }
 });
 
@@ -88,7 +94,7 @@ $('.head_btn.add_box').on('click', function () {
   var num=db_status.box.length;
   var datum='S'+num;
   db_status.box.push(new joint.shapes.status.Element({
-    id : datum,
+    '.status':datum,
     '.status_name':'',
     position: { x: 50+num*5, y: 50+num*5 },
     size: { width: 90, height: 90 }
