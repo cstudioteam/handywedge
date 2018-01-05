@@ -1,49 +1,50 @@
 FROM centos:7
 
-# systemd関連の設定（公式からの手順）
+# systemd関連の設定
 # https://docs.docker.com/samples/library/centos/#systemd-integration
 ENV container docker
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
-systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-rm -f /lib/systemd/system/multi-user.target.wants/*;\
-rm -f /etc/systemd/system/*.wants/*;\
-rm -f /lib/systemd/system/local-fs.target.wants/*; \
-rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-rm -f /lib/systemd/system/basic.target.wants/*;\
-rm -f /lib/systemd/system/anaconda.target.wants/*;
+    systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+    rm -f /lib/systemd/system/multi-user.target.wants/*; \
+    rm -f /etc/systemd/system/*.wants/*; \
+    rm -f /lib/systemd/system/local-fs.target.wants/*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+    rm -f /lib/systemd/system/basic.target.wants/*; \
+    rm -f /lib/systemd/system/anaconda.target.wants/*;
 
-
-# yum update
-RUN yum -y update && yum clean all
+# yum updateと必要なパッケージをインストール
+# ロケール関連：glibc-common
+# postgres関連：postgresql,postgresql-server
+# アプリケーション関連：git,which
+RUN yum -y update && \
+    yum clean all && \
+    yum -y reinstall glibc-common && \
+    yum -y install \
+    git \
+    postgresql \
+    postgresql-server \
+    which
 
 # ロケール設定
-RUN yum reinstall -y glibc-common && yum clean all
-RUN yum -y reinstall glibc-common
 RUN localedef -v -c -i ja_JP -f UTF-8 ja_JP.UTF-8; echo "";
 ENV LANG=ja_JP.UTF-8
 
 # タイムゾーン設定
-RUN rm -f /etc/localtime
-RUN ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+RUN rm -f /etc/localtime && \
+    ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# postgresqlインストール
-RUN yum -y install postgresql-server postgresql
-
-# postgresql初期化＆設定バックアップ
-RUN su - postgres -c "initdb"
-RUN cp /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/postgresql.conf.bak
-RUN cp /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf.bak
-
-# 設定値置換
-RUN sed -i -e "s/#listen_addresses = 'localhost'/listen_addresses = 'localhost'/g" /var/lib/pgsql/data/postgresql.conf
-
-# 自動起動
-RUN systemctl enable postgresql
+# postgresql初期化＆設定バックアップ&設定
+RUN su - postgres -c "initdb" && \
+    cp /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/postgresql.conf.bak && \
+    cp /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf.bak && \
+    sed -i -e "s/#listen_addresses = 'localhost'/listen_addresses = 'localhost'/g" /var/lib/pgsql/data/postgresql.conf && \
+    systemctl enable postgresql
 
 # gitクローン
-RUN yum -y install git
-RUN cd /tmp && mkdir git && cd /tmp/git &&\
+RUN cd /tmp && \
+    mkdir git && \
+    cd /tmp/git && \
     git clone https://github.com/cstudioteam/handywedge.git
 
 # データベース、DDL、DML
@@ -58,55 +59,71 @@ RUN su - postgres -c "pg_ctl start -w && \
     pg_ctl stop -m fast \
 "
 
-#JDK
-RUN cd /tmp && mkdir install && cd install && \
-    curl -LO -b "oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u152-b16/aa0333dd3019491ca4f6ddbe78cdb6d0/server-jre-8u152-linux-x64.tar.gz" && \
-    tar xzf server-jre-8u152-linux-x64.tar.gz
-RUN mkdir /usr/java && \
-    mv /tmp/install/jdk1.8.0_152 /usr/java/
-RUN cd  /usr/bin && \
-    ln -s /usr/java/jdk1.8.0_152/bin/java java
-ADD java.sh /etc/profile.d/java.sh
-ADD java.csh /etc/profile.d/java.csh
-RUN exec -l $SHELL
+# JDK
+RUN cd /tmp && \
+    mkdir install && \
+    cd install && \
+    curl -LO -b "oraclelicense=accept-securebackup-cookie" \
+    "http://download.oracle.com/otn-pub/java/jdk/8u152-b16/aa0333dd3019491ca4f6ddbe78cdb6d0/server-jre-8u152-linux-x64.tar.gz" && \
+    tar xzf server-jre-8u152-linux-x64.tar.gz && \
+    mkdir /usr/java && \
+    mv /tmp/install/jdk1.8.0_152 /usr/java/ && \
+    cd /usr/bin && \
+    ln -s /usr/java/jdk1.8.0_152/bin/java java && \
+    echo "export JAVA_HOME=/usr/java/jdk1.8.0_152" > /etc/profile.d/java.sh && \
+    echo "setenv JAVA_HOME /usr/java/jdk1.8.0_152" > /etc/profile.d/java.csh && \
+    exec -l $SHELL
 
-#tomcat
-RUN yum -y install wget
+# tomcat
 WORKDIR /opt/
-RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-tomcat-8.0.47.tar.gz && \
+RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-tomcat-8.0.47.tar.gz && \
     tar xzf apache-tomcat-8.0.47.tar.gz && \
     ln -s apache-tomcat-8.0.47 tomcat && \
     rm -rf tomcat/webapps/* && \
     useradd -r -s /sbin/nologin tomcat && \
     chown -R tomcat:tomcat apache-tomcat-8.0.47 && \
-    rm apache-tomcat-8.0.47.tar.gz
-ADD tomcat.service /etc/systemd/system/tomcat.service
-RUN chmod 755 /etc/systemd/system/tomcat.service
-RUN systemctl enable tomcat
-
+    rm apache-tomcat-8.0.47.tar.gz && \
+    echo "[Unit]" > /etc/systemd/system/tomcat.service && \
+    cd /etc/systemd/system && \
+    echo "Description=Apache Tomcat 8" >> tomcat.service && \
+    echo "After=network.target" >> tomcat.service && \
+    echo "" >> tomcat.service && \
+    echo "[Service]" >> tomcat.service && \
+    echo "User=tomcat" >> tomcat.service && \
+    echo "Group=tomcat" >> tomcat.service && \
+    echo "Type=oneshot" >> tomcat.service && \
+    echo "PIDFile=/opt/tomcat/tomcat.pid" >> tomcat.service && \
+    echo "RemainAfterExit=yes" >> tomcat.service && \
+    echo "" >> tomcat.service && \
+    echo "ExecStart=/opt/tomcat/bin/startup.sh" >> tomcat.service && \
+    echo "ExecStop=/opt/tomcat/bin/shutdown.sh" >> tomcat.service && \
+    echo "ExecReStart=/opt/tomcat/bin/shutdown.sh;/opt/tomcat/bin/startup.sh" >> tomcat.service && \
+    echo "" >> tomcat.service && \
+    echo "[Install]" >> tomcat.service && \
+    echo "WantedBy=multi-user.target" >> tomcat.service && \
+    chmod 755 tomcat.service && \
+    systemctl enable tomcat
 
 # warビルド&デプロイ
 WORKDIR /tmp/install
-RUN yum install -y which
-RUN wget http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
+RUN curl -O http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
     tar xzf apache-maven-3.5.2-bin.tar.gz && \
-    wget https://sourceforge.net/p/itext/code/HEAD/tree/tags/iText_2_1_7/lib/iTextAsian.jar?format=raw -O iTextAsian.jar
-RUN /tmp/install/apache-maven-3.5.2/bin/mvn install:install-file -Dfile=iTextAsian.jar -DgroupId=com.lowagie -DartifactId=iTextAsian -Dversion=2.1.7 -Dpackaging=jar
-RUN cd /tmp/git/handywedge/handywedge-dependencies/ && /tmp/install/apache-maven-3.5.2/bin/mvn install
-RUN cd /tmp/git/handywedge/handywedge-master/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn -Dmaven.javadoc.skip=true install
-RUN cd /tmp/git/handywedge/handywedge-test-app/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn install
-#RUN chown tomcat:tomcat /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war
-RUN cp /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war /opt/tomcat/webapps/
-RUN chown tomcat:tomcat /opt/tomcat/webapps/handywedge-test-app.war
-
-
+    curl -o iTextAsian.jar https://sourceforge.net/p/itext/code/HEAD/tree/tags/iText_2_1_7/lib/iTextAsian.jar?format=raw && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn install:install-file -Dfile=iTextAsian.jar \
+    -DgroupId=com.lowagie -DartifactId=iTextAsian -Dversion=2.1.7 -Dpackaging=jar && \
+    cd /tmp/git/handywedge/handywedge-dependencies/ && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn install && \
+    cd /tmp/git/handywedge/handywedge-master/ && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn -Dmaven.javadoc.skip=true install && \
+    cd /tmp/git/handywedge/handywedge-test-app/ && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn install && \
+    cp /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war /opt/tomcat/webapps/ && \
+    chown tomcat:tomcat /opt/tomcat/webapps/handywedge-test-app.war
 
 # インストーラー等削除
+WORKDIR /root
 RUN rm -rf /tmp/git/ && \
     rm -rf /tmp/install/
-
 
 # systemd起動。常に最後に記載する
 VOLUME [ "/sys/fs/cgroup" ]
