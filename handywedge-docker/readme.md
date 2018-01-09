@@ -1,19 +1,26 @@
 # dockerエンジンのインストール
+[参考](https://docs.docker.com/engine/installation/linux/docker-ce/centos/)
 
 ```
-yum -y install docker
-systemctl enable docker.service
-systemctl start docker.service
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum makecache fast
+
+sudo yum install docker-ce
+
+sudo systemctl enable docker
+sudo systemctl start docker
 ```
 
 # docker build,run,execの手順
-
-- dockerfileのある階層に移動、もしくはパスをかく
-- posgretestの部分は任意
-
 ```
-sudo docker build --rm -t posgretest .
-sudo docker run --privileged -d -i -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name posgretest posgretest
-sudo docker exec -it posgretest /bin/bash
+sudo docker build --rm -t [タグ(任意)] [Dockerfileのパス]
+sudo docker run --privileged -d -i -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name [コンテナ名(任意)] [タグ]
+sudo docker exec -it [コンテナ名] /bin/bash
 ```
-
