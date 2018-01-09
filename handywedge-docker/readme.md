@@ -1,4 +1,6 @@
 # dockerエンジンのインストール
+##### インストール環境：CentOS7
+
 [参考](https://docs.docker.com/engine/installation/linux/docker-ce/centos/)
 
 ```
