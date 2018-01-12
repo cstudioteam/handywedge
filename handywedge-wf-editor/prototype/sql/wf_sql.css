@@ -118,10 +118,11 @@
     padding: 5px;
     height: 16px;
     width:90%;
+    word-wrap: break-word;
 }
 .status-element .status {
   position:absolute;
   right:3px;
-    color: #0000CC;
-    text-shadow: 1px 0 0 lightgray;
+  color: #0000CC;
+  text-shadow: 1px 0 0 lightgray;
 }

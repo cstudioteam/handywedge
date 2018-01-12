@@ -2,15 +2,17 @@
 function db_model(table_name,columns){
   this.table=table_name;
   this.column=columns;
-  this.dnd=new db_DnDBox();
+  //this.dnd=new db_DnDBox();
+  this.data={};
 }
 db_model.prototype={
   table:'',
-  box:new Array(),
-  data:new Array()//[[status,status_name]].
+  column:[],
+  data:{}//{id:{status:'',status_name:''}}
 };
 
-//DnDボックス
+//DnDボックス(未使用)
+/*
 function db_DnDBox(){
 }
 db_DnDBox.prototype={
@@ -30,12 +32,12 @@ db_DnDBox.prototype={
     this.dropzone.remove();
   }
 };
-
+*/
 //sqlオブジェクト。
 sql={
   insert:function(table,column,data){
     var s='';
-    for(i=0;i<data.length;i++){
+    for(i in data){
       s+='INSERT INTO '+table+'(';
       for(k=0;k<column.length;k++){
         s+=column[k];

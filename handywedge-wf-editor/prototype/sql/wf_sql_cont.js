@@ -2,35 +2,34 @@
 //fw_db_statusを管理するオブジェクト
 var db_status=new db_model('fw_status_master',['status','status_name']);
 db_status.AddData=function(box,datum){
-    var sa=true;
-    for(i=0;i<this.data.length;i++){//order:O(n). 速度改善の余地あり
-      if(this.data[i].id==datum[0]) sa=false;
-    }
-    if(sa){
-      this.data.push({id:datum[0],status:datum[1],status_name:datum[2]});
-      var t=db_status.data.length-1;
-      var toappend='<tbody><td><input class="status '+datum[0]+'" value='+datum[1]+'></input></td>'+
-      '<td><input class="status_name '+datum[0]+'" value='+datum[2]+'></input></td></tbody>';
+  var sa=true;
+  if(this.data[datum[0]]) sa=false;
+
+  if(sa){
+      this.data[datum[0]]={status:datum[1],status_name:datum[2]};
+      var t=Object.keys(this.data).length-1;
+      var toappend='<tbody class='+datum[0]+'><td><input class="status" value='+datum[1]+'></input></td>'+
+      '<td><input class="status_name" value='+datum[2]+'></input></td></tbody>';
       $('#view_status table').append(toappend);
       //データ更新
       //status
-      $('#view_status .status.'+datum[0]).on('keyup',function(){
+      $('#view_status .'+datum[0]+' .status').on('keyup',function(){
         //box内のデータを更新
-        box.model.set('.status', $('#view_status .status.'+datum[0]).val());
+        box.model.set('.status', $('#view_status .'+datum[0]+' .status').val());
         //データベース内のデータを更新
-        db_status.data[t].status=$('#view_status .status.'+datum[0]).val();
+        db_status.data[datum[0]].status=$('#view_status .'+datum[0]+' .status').val();
       });
       //status_name
-      $('#view_status .status_name.'+datum[0]).on('keyup',function(){
+      $('#view_status .'+datum[0]+' .status_name').on('keyup',function(){
         //box内のデータを更新
-        box.model.set('.status_name', $('#view_status .status_name.'+datum[0]).val());
+        box.model.set('.status_name', $('#view_status .'+datum[0]+' .status_name').val());
         //データベース内のデータを更新
-        db_status.data[t].status_name=$('#view_status .status_name.'+datum[0]).val();
+        db_status.data[datum[0]].status_name=$('#view_status .'+datum[0]+' .status_name').val();
       });
-    }
-  };
+  }
+};
 
-//ボックスとdb_modelを紐付ける
+/*DnDボックスとdb_modelを紐付ける
 paper.on('cell:pointerup', function(cellView, evt, x, y) {
   var elementBelow = graph.get('cells').find(function(cell) {
     if (cell instanceof joint.dia.Link) return false;
@@ -44,12 +43,56 @@ paper.on('cell:pointerup', function(cellView, evt, x, y) {
   //重ねた部分の特定部分をthis.target.dataに書き出す。
   //名前部分の変数の呼び出しが汚い。改善を検討中。
   db_status.AddData(cellView,[cellView.model.id,cellView.model.get('.status'),cellView.model.get('.status_name')]);
-}});
+}});*/
 
-var db_action=new db_model('fw_wf_rote',['action_code','action','pre_status','post_status']);
+var db_rote=new db_model('fw_wf_rote',['action_code','action','pre_status','post_status']);
+db_rote.AddData=function(box,datum){
+  var sa=true;
+  if(this.data[datum[0]]) sa=false;
 
+  if(sa){
+      this.data[datum[0]]={action_code:datum[1],action:datum[2],pre_status:'',post_status:''};
+      var t=Object.keys(this.data).length-1;
+      var toappend='<tbody class='+datum[0]+'>'+
+        '<td><input class="action_code" value='+datum[1]+'></input></td>'+
+        '<td><input class="action" value='+datum[2]+'></input></td>'+
+        '<td><input class="pre_status" value=""></input></td>'+
+        '<td><input class="post_status" value=""></input></td>'+
+        '</tbody>';
+      $('#view_action table').append(toappend);
+      //データ更新
+      //action_code
+      $('#view_action .'+datum[0]+' .action_code').on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.action_code', $('#view_action .'+datum[0]+' .action_code').val());
+        //データベース内のデータを更新
+        db_rote.data[datum[0]].action_code=$('#view_action .'+datum[0]+' .action_code').val();
+      });
+      //action
+      $('#view_action .'+datum[0]+' .action').on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.action', $('#view_action .'+datum[0]+' .action').val());
+        //データベース内のデータを更新
+        db_rote.data[datum[0]].action=$('#view_action .'+datum[0]+' .action').val();
+      });
+      //pre_status
+      $('#view_action .'+datum[0]+' .pre_status').on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.pre_status', $('#view_action .'+datum[0]+' .pre_status').val());
+        //データベース内のデータを更新
+        db_rote.data[datum[0]].pre_status=$('#view_action .'+datum[0]+' .pre_status').val();
+      });
+      //post_status
+      $('#view_action .'+datum[0]+' .post_status').on('keyup',function(){
+        //box内のデータを更新
+        box.model.set('.post_status', $('#view_action .'+datum[0]+' .post_status').val());
+        //データベース内のデータを更新
+        db_rote.data[datum[0]].post_status=$('#view_action .'+datum[0]+' .post_status').val();
+      });
 
-//ボックスとdb_modelを紐付ける
+    }
+};
+
 
 //イベントハンドラ
 //上メニュー
@@ -57,7 +100,7 @@ var db_action=new db_model('fw_wf_rote',['action_code','action','pre_status','po
 $('.tosql').on('click',function(){
   var output='';
   output+=sql.insert(db_status.table,db_status.column,db_status.data);
-  console.log(output);
+  //console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
   $(".head_btn.tosql").attr("href", window.URL.createObjectURL(blob));
@@ -73,19 +116,19 @@ $('.pull .pull_btn').on('click', function () {
   if($(this).hasClass('selected')){
     $('.pull .pull_btn.selected').removeClass('selected');
     $('#belowbar').removeClass('open');
-    graph.removeCells(db_status.dnd.dropzone);
+    //graph.removeCells(db_status.dnd.dropzone);
   }
   else{
     var index = $('.pull span').index(this);
     $('.pull .pull_btn.selected').removeClass('selected');
-    graph.removeCells(db_status.dnd.dropzone);
+    //graph.removeCells(db_status.dnd.dropzone);
     $(this).addClass('selected');
     $('#belowbar').addClass('open');
     $('#belowbar .content_area .contents').css('display','none');
     $('#belowbar .content_area .contents').eq(index).css('display','block');
-    if(index==0){
+    //if(index==0){
       //DnDできる箱を表示
-      graph.addCell(db_status.dnd.dropzone);
-    }
+      //graph.addCell(db_status.dnd.dropzone);
+    //}
   }
 });
