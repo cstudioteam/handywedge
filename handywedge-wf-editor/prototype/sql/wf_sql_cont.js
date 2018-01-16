@@ -56,8 +56,8 @@ db_rote.AddData=function(box,datum){
       var toappend='<tbody class='+datum[0]+'>'+
         '<td><input class="action_code" value='+datum[1]+'></input></td>'+
         '<td><input class="action" value='+datum[2]+'></input></td>'+
-        '<td><input class="pre_status" value=""></input></td>'+
-        '<td><input class="post_status" value=""></input></td>'+
+        '<td><label class="pre_status" value=""></p></td>'+
+        '<td><p class="post_status" value=""></p></td>'+
         '</tbody>';
       $('#view_action table').append(toappend);
       //データ更新
@@ -75,21 +75,8 @@ db_rote.AddData=function(box,datum){
         //データベース内のデータを更新
         db_rote.data[datum[0]].action=$('#view_action .'+datum[0]+' .action').val();
       });
-      //pre_status
-      $('#view_action .'+datum[0]+' .pre_status').on('keyup',function(){
-        //box内のデータを更新
-        box.model.set('.pre_status', $('#view_action .'+datum[0]+' .pre_status').val());
-        //データベース内のデータを更新
-        db_rote.data[datum[0]].pre_status=$('#view_action .'+datum[0]+' .pre_status').val();
-      });
-      //post_status
-      $('#view_action .'+datum[0]+' .post_status').on('keyup',function(){
-        //box内のデータを更新
-        box.model.set('.post_status', $('#view_action .'+datum[0]+' .post_status').val());
-        //データベース内のデータを更新
-        db_rote.data[datum[0]].post_status=$('#view_action .'+datum[0]+' .post_status').val();
-      });
-
+      //pre_status - リンクモデル内に記述
+      //post_status- リンクモデル内に記述
     }
 };
 
@@ -100,7 +87,8 @@ db_rote.AddData=function(box,datum){
 $('.tosql').on('click',function(){
   var output='';
   output+=sql.insert(db_status.table,db_status.column,db_status.data);
-  //console.log(output);
+  output+=sql.insert(db_rote.table,db_rote.column,db_rote.data);
+  console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
   $(".head_btn.tosql").attr("href", window.URL.createObjectURL(blob));
