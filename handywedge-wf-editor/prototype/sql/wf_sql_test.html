@@ -29,55 +29,72 @@
 
 </head>
 <body>
-<section id="headbar">
-  <div>
-    <span class="head_btn add_box">Add Box</span>
-    <span class="head_btn add_link">Add Link</span>
-    <span class="head_btn tosql">Download SQL</span>
-  </div>
-</section>
-<div id="paper"></div>
-</section>
-<section id="belowbar">
-  <div class="pull">
-    <span class="pull_btn">STATUS</span>
-    <span class="pull_btn">ACTION</span>
-  </div>
-  <div class="content_area">
-    <div class="contents tab_status">
-      <div id="view_status" class="container">
-        <div>STATUS BOX</div>
-        <div style="height:180px; overflow-y:scroll;">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>status</th>
-                <th>status_name</th>
-              </tr>
-            </thead>
-          </table>
+  <!--ファイル読み込みモーダル -->
+  <section class="modal fade load_json">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3 class="modal-title">Load File</h3>
+        </div>
+        <div class="modal-body">
+          <input type="file" id="file_json" name="file"/>
         </div>
       </div>
     </div>
-    <div class="contents tab-action">
-      <div id="view_action"　class="container">
-        <div>ACTION LINK</div>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>action_code</th>
-              <th>action</th>
-              <th>pre_status</th>
-              <th>post_status</th>
-            </tr>
-          </thead>
-        </table>
+  </section>
+  <!--上部バー-->
+  <section id="headbar">
+    <div>
+      <span class="head_btn add_box">Add Box</span>
+      <span class="head_btn add_link">Add Link</span>
+      <span class="head_btn tosql">Download SQL</span>
+      <span class="head_btn load_json">Load</span>
+      <span class="head_btn save_json">Save</span>
+    </div>
+  </section>
+  <div id="paper"></div>
+  </section>
+  <section id="belowbar">
+    <div class="pull">
+      <span class="pull_btn">STATUS</span>
+      <span class="pull_btn">ACTION</span>
+    </div>
+    <div class="content_area">
+      <div class="contents tab_status">
+        <div id="view_status" class="container">
+          <div>STATUS BOX</div>
+          <div style="height:180px; overflow-y:scroll;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>status</th>
+                  <th>status_name</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
       </div>
-
+      <div class="contents tab-action">
+        <div id="view_action"　class="container">
+          <div>ACTION LINK</div>
+          <div style="height:180px; overflow-y:scroll;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>action_code</th>
+                  <th>action</th>
+                  <th>pre_status</th>
+                  <th>post_status</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 </body>
 
 <script src="wf_sql.js"/></script>
