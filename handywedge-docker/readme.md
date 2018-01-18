@@ -30,9 +30,11 @@ sudo docker run --privileged -d -i -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name [�
 sudo docker exec -it [コンテナ名] /bin/bash
 ```
 
-# export,importの手順
+# export,import,runの手順
 ```
 sudo docker export [コンテナ名] | gzip > [任意のファイル名].tgz
 
 sudo docker import -c "CMD /usr/sbin/init" -c "ENV LANG=ja_JP.UTF-8" https://s3-ap-northeast-1.amazonaws.com/handywedge/docker/images/handywedge.tgz [リポジトリ名:タグ名（オプション）]
+
+sudo docker run --privileged -d -i -p 8080:8080 -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name [コンテナ名(任意)] [タグ]
 ```
