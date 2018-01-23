@@ -32,24 +32,47 @@ $('#file_json').on('change',function(evt){
     db_rote.data=loaded.fw_wf_rote;
     graph.clear();
     graph.fromJSON(loaded.graph);
+    $('#view_status .status').removeClass('bg-danger');
+    for(i in db_status.data){
+      for(j in db_status.data){
+        if(i!=j&&db_status.data[i].status==db_status.data[j].status){
+          $('#view_status .'+i+' .status').addClass('bg-danger');
+        }
+      }
+    }
+    $('#view_action .action_code').removeClass('bg-danger');
+    for(i in db_rote.data){
+      for(j in db_rote.data){
+        if(i!=j&&db_rote.data[i].action_code==db_rote.data[j].action_code){
+          $('#view_action .'+i+' .action_code').addClass('bg-danger');
+        }
+      }
+    }
   });
   reader.readAsText(input,'UTF-8');
+  //バリテーション
 });
 //上メニュー
 //statusノード生成
 $('.head_btn.add_box').on('click', function () {
   var num=Object.keys(db_status.data).length;
+  while(validate(db_status.data,'status','S'+num)){
+    num++;
+  }
   var datum='S'+num;
   graph.addCell(new joint.shapes.status.Element({
     '.status':datum,
     '.status_name':'',
-    position: { x: 50+num*25, y: 50+num*25},
+    position: { x: 50-Math.floor(num/20)*475+num*25, y: 50-Math.floor(num/20)*500+num*25},
     size: { width: 150, height: 100 }
   }));
 });
 //roteリンク生成
 $('.head_btn.add_link').on('click', function () {
   var num=Object.keys(db_rote.data).length;
+  while(validate(db_rote.data,'action_code','R'+num)){
+    num++;
+  }
   var datum='R'+num;
   graph.addCell(new joint.shapes.rote({
     source: { x: 300+num*10, y: 100+num*10},
@@ -72,13 +95,15 @@ $('.head_btn.tosql').on('click',function(){
   output+=sql.insert(db_status.table,db_status.column,db_status.data);
   output+=sql.insert(db_rote.table,db_rote.column,db_rote.data);
   //console.log(output);
-  var blob = new Blob([ output ], { "type" : "text/plain" });
-  window.URL = window.URL || window.webkitURL;
-  $(".head_btn.tosql").attr("href", window.URL.createObjectURL(blob));
-  var link = document.createElement( 'a' );
-  link.href = window.URL.createObjectURL(blob);
-  link.download = 'sql_ddl';
-  link.click();
+  if(!sql.error.validate){
+    var blob = new Blob([ output ], { "type" : "text/plain" });
+    window.URL = window.URL || window.webkitURL;
+    $(".head_btn.tosql").attr("href", window.URL.createObjectURL(blob));
+    var link = document.createElement( 'a' );
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'sql_ddl';
+    link.click();
+  }
 });
 //セーブボタン
 $('.head_btn.save_json').on('click',function(){

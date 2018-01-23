@@ -13,3 +13,26 @@ var paper = new joint.dia.Paper({
    color: '#fffafa'
 }
 });
+//バリデーション,同じものがあるとそのidを返す
+function validate(db,targetdata,toadd,j){//toadd:追加されるid,j:toaddのid
+  for(i in db){
+    if(i!=j&&toadd==db[i][targetdata]){
+      return true
+    }
+  }
+  return false;
+}
+
+//events
+//マウスオーバー
+paper.on('cell:pointerclick', function(cellView, evt, x, y) {
+  if(cellView.model.get('type')=='status.Element'){
+    $('.status-element.editable').css('visibility','visible');
+    $('.status-element.uneditable').css('visibility','hidden');
+  }
+});
+
+paper.on('blank:pointerdown', function(cellView, evt, x, y) {
+  $('.status-element.uneditable').css('visibility','visible');
+  $('.status-element.editable').css('visibility','hidden');
+});

@@ -16,10 +16,14 @@ joint.shapes.status.Element = joint.shapes.basic.Rect
 //ElementView
 joint.shapes.status.ElementView = joint.dia.ElementView.extend({
     template: [
-        '<div class="status-element">',
-        '<button class="delete">x</button>',
+        '<div class="status-element unedittable">',
         '<label class="status"/>',
         '<label class="status_name"/>',
+        '</div>',
+        '<div class="status-element editable">',
+        '<button class="delete">x</button>',
+        '<input class="status"/>',
+        '<input class="status_name"/>',
         '</div>'
     ].join(''),
 //関数、不明部分多し。
@@ -30,17 +34,26 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.$box = $(_.template(this.template)());
         db_status.data[this.model.id]={status:this.model.prop(['.status']),status_name:''};
         var toappend='<tbody class='+this.model.id+'>'+
-        '<td><input class="status" value="'+this.model.prop(['.status'])+'"></input></td>'+
-        '<td><input class="status_name" value=""></input></td></tbody>';
+        '<td>'+
+        '<input class="status" value="'+this.model.prop(['.status'])+'"></input>'+
+        '</td>'+
+        '<td><input class="status_name" value="'+this.model.prop(['.status_name'])+'"></input></td></tbody>';
         $('#view_status table').append(toappend);
-        //データ更新
+        //データ更新 下段->グラフ
         //status
         var upd_status=function(t){
           $('#view_status .'+t.model.id+' .status').on('keyup',function(){
             //box内のデータを更新
             t.model.set('.status', $(this).val());
-            //データベース内のデータを更新
-            db_status.data[t.model.id].status=$(this).val();
+            //バリデーション.アルゴリズムは後でメモ付きに改良すること
+            $('#view_status .status').removeClass('bg-danger');
+            for(i in db_status.data){
+              for(j in db_status.data){
+                if(i!=j&&db_status.data[i].status==db_status.data[j].status){
+                  $('#view_status .'+i+' .status').addClass('bg-danger');
+                }
+              }
+            }
           });
         };
         upd_status(this);
@@ -49,20 +62,18 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
           $('#view_status .'+t.model.id+' .status_name').on('keyup',function(){
             //box内のデータを更新
             t.model.set('.status_name', $(this).val());
-            //データベース内のデータを更新
-            db_status.data[t.model.id].status_name=$(this).val();
           });
         };
         upd_status_name(this);
         // Prevent paper from handling pointerdown.
-        /*
+
         this.$box.find('.status_name').on('mousedown click', function(evt) {
             evt.stopPropagation();
-        });*/
-        /*status_nameの更新,現在はGUI外から操作している為コメントアウト
-        this.$box.find('.status_name').on('change', _.bind(function(evt) {
-            this.model.set('.status_name', $(evt.target).val());
-        }, this));*/
+        });
+        //statusの更新
+        this.$box.find('.status').on('change', _.bind(function(evt) {
+            this.model.set('.status', $(evt.target).val());
+        }, this));
         this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateBox, this);
@@ -78,6 +89,10 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         return this;
     },
     updateBox: function() {
+      //データベース内のデータを更新 グラフ->db
+      db_status.data[this.model.id].status=this.model.prop('.status');
+
+      db_status.data[this.model.id].status_name=this.model.prop('.status_name');
         // Set the position and dimension of the box so that it covers the JointJS element.
         var bbox = this.model.getBBox();
         // Example of updating the HTML with a data stored in the cell model.
@@ -121,7 +136,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       labels : [
         {
                   markup: '<g><rect /><text class="action"/></g>',
-                  position : 0.6,
+                  position : 0.5,
                   attrs : {
                     text : {
                       text : '',
@@ -152,12 +167,13 @@ joint.shapes.rote=joint.dia.Link.extend({
     _.bindAll(this, 'updateBox');
     //以下の初期化文無しでは意味不明のエラーが出る。
     joint.dia.Link.prototype.initialize.apply(this, arguments);
+    //this.$box = $(_.template(this.template)());
     //db_roteに追加
     db_rote.data[this.id]={action_code:'',action:'',pre_status:'',post_status:''};
     //下部編集ゾーンに追加
     var toappend='<tbody class='+this.id+'>'+
-      '<td><input class="action_code" value=""></input></td>'+
-      '<td><input class="action" value=""></input></td>'+
+      '<td><input class="action_code" value="'+this.prop(['.action_code'])+'"></input></td>'+
+      '<td><input class="action" value="'+this.prop(['.action'])+'"></input></td>'+
       '<td><label class="pre_status" value=""></p></td>'+
       '<td><label class="post_status" value=""></p></td>'+
       '</tbody>';
@@ -172,19 +188,29 @@ joint.shapes.rote=joint.dia.Link.extend({
       });
     };
     update_action(this);
-
     //action_code
     var update_action_code=function(t){
       $('#view_action .'+t.id+' .action_code').on('keyup',function(){
         //box内のデータを更新
         t.prop(['.action_code'],$(this).val());
         //データベース内のデータを更新
+        //バリデーション.アルゴリズムは後でメモ付きに改良すること
+        $('#view_action .action_code').removeClass('bg-danger');
+        for(i in db_rote.data){
+          for(j in db_rote.data){
+            if(i!=j&&db_rote.data[i].action_code==db_rote.data[j].action_code){
+              $('#view_action .'+i+' .action_code').addClass('bg-danger');
+            }
+          }
+        }
       });
     };
     update_action_code(this);
 
+
     // Update the box position whenever the underlying model changes.
     this.on('change', this.updateBox, this);
+    this.on('mouseover', this.updateBox, this);
     // Remove the box when the model gets removed from the graph.
     this.on('remove', this.removeBox, this);
     this.updateBox();
@@ -194,20 +220,37 @@ joint.shapes.rote=joint.dia.Link.extend({
     //リンクの見た目の更新
     this.prop(['labels',0,'attrs','text','text'],this.prop(['.action']));
     //action_code データベース内のデータを更新
-    db_rote.data[this.id].action_code=$('#view_action .'+this.id+' .action_code').val();
+    db_rote.data[this.id].action_code=this.prop(['.action_code']);
     //action データベース内のデータを更新
-    db_rote.data[this.id].action=$('#view_action .'+this.id+' .action').val();
+    db_rote.data[this.id].action=this.prop(['.action']);
+    var thisid=this.id;
     if(this.prop(['source']).id){
       //pre_status
-      var source_status=db_status.data[this.prop(['source']).id].status;
-      $('#view_action .'+this.id+' .pre_status').text(source_status);
-      db_rote.data[this.id].pre_status=source_status;
+      $('#view_action .'+thisid+' .pre_status').text($('#view_status .'+this.prop(['source']).id+' .status').val());
+      db_rote.data[thisid].pre_status=$('#view_status .'+this.prop(['source']).id+' .status').val();
+      $('#view_status .'+this.prop(['source']).id+' .status').off('change.pre_status'+thisid);
+      $('#view_status .'+this.prop(['source']).id+' .status').on('change.pre_status'+thisid,function(){
+        $('#view_action .'+thisid+' .pre_status').text($(this).val());
+        db_rote.data[thisid].pre_status=$(this).val();
+      });
+    }else{
+      $('#view_status .status').off('change.pre_status'+thisid);
+      $('#view_action .'+thisid+' .pre_status').text('');
+      db_rote.data[thisid].pre_status='';
     }
     if(this.prop(['target']).id){
       //post_status
-      var target_status=db_status.data[this.prop(['target']).id].status;
-      $('#view_action .'+this.id+' .post_status').text(target_status);
-      db_rote.data[this.id].post_status=target_status;
+      $('#view_action .'+thisid+' .post_status').text($('#view_status .'+this.prop(['target']).id+' .status').val());
+      db_rote.data[thisid].post_status=$('#view_status .'+this.prop(['target']).id+' .status').val();
+      $('#view_status .'+this.prop(['target']).id+' .status').off('change.post_status'+thisid);
+      $('#view_status .'+this.prop(['target']).id+' .status').on('change.post_status'+thisid,function(){
+        $('#view_action .'+thisid+' .post_status').text($(this).val());
+        db_rote.data[thisid].post_status=$(this).val();
+      });
+    }else{
+      $('#view_status .status').off('change.post_status'+thisid);
+      $('#view_action .'+thisid+' .post_status').text('');
+      db_rote.data[thisid].post_status='';
     }
   },
   removeBox:function(){
@@ -257,6 +300,23 @@ db_DnDBox.prototype={
 */
 //sqlオブジェクト。
 sql={
+  error:{
+    get validate(){
+      for(i in db_status.data){
+        if(validate(db_status.data,'status',db_status.data[i].status,i)){
+          alert('整合性エラー:ステータスの値値は重複できません。');
+          return true;
+        }
+      }
+      for(i in db_rote.data){
+        if(validate(db_rote.data,'action_code',db_rote.data[i].action_code,i)){
+          alert('整合性エラー:アクションコードの値は重複できません。');
+          return true;
+        }
+      }
+      return false;
+    }
+  },
   insert:function(table,column,data){
     var s='';
     for(i in data){
