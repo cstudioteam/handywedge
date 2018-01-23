@@ -253,10 +253,14 @@ joint.shapes.rote=joint.dia.Link.extend({
         $('#view_action .'+thisid+' .pre_status').text($(this).val());
         db_rote.data[thisid].pre_status=$(this).val();
       });
+      //linkの見た目を変更
+      this.attr({'.marker-source': { fill: '#000000', d: 'M 0 0 A 5 5 0 0 0 0 -10 A 5 5 0 0 0 0 0' },});
     }else{
       $('#view_status .status').off('change.pre_status'+thisid);
       $('#view_action .'+thisid+' .pre_status').text('');
       db_rote.data[thisid].pre_status='';
+      //linkの見た目を変更
+      this.attr({'.marker-source': { d: '' },});
     }
     if(this.prop(['target']).id){
       //post_status
@@ -267,10 +271,18 @@ joint.shapes.rote=joint.dia.Link.extend({
         $('#view_action .'+thisid+' .post_status').text($(this).val());
         db_rote.data[thisid].post_status=$(this).val();
       });
+      //linkの見た目を変更
+      this.attr({'.marker-target': { d: 'M 10 10 L 0 15 L 10 20 z M 10 15 A 5 5 0 0 0 20 15 A 5 5 0 0 0 10 15' },});
     }else{
       $('#view_status .status').off('change.post_status'+thisid);
       $('#view_action .'+thisid+' .post_status').text('');
       db_rote.data[thisid].post_status='';
+      this.attr({'.marker-target': {
+        fill : '#000000',
+        stroke : '#000000',
+        d : 'M 10 0 L 0 5 L 10 10 z'
+      }});
+
     }
   },
   removeBox:function(){
