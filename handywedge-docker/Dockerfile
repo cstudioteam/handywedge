@@ -64,14 +64,14 @@ RUN cd /tmp && \
     mkdir install && \
     cd install && \
     curl -LO -b "oraclelicense=accept-securebackup-cookie" \
-    "http://download.oracle.com/otn-pub/java/jdk/8u152-b16/aa0333dd3019491ca4f6ddbe78cdb6d0/server-jre-8u152-linux-x64.tar.gz" && \
-    tar xzf server-jre-8u152-linux-x64.tar.gz && \
+    "http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/server-jre-8u162-linux-x64.tar.gz" && \
+    tar xzf server-jre-8u162-linux-x64.tar.gz && \
     mkdir /usr/java && \
-    mv /tmp/install/jdk1.8.0_152 /usr/java/ && \
+    mv /tmp/install/jdk1.8.0_162 /usr/java/ && \
     cd /usr/bin && \
-    ln -s /usr/java/jdk1.8.0_152/bin/java java && \
-    echo "export JAVA_HOME=/usr/java/jdk1.8.0_152" > /etc/profile.d/java.sh && \
-    echo "setenv JAVA_HOME /usr/java/jdk1.8.0_152" > /etc/profile.d/java.csh && \
+    ln -s /usr/java/jdk1.8.0_162/bin/java java && \
+    echo "export JAVA_HOME=/usr/java/jdk1.8.0_162" > /etc/profile.d/java.sh && \
+    echo "setenv JAVA_HOME /usr/java/jdk1.8.0_162" > /etc/profile.d/java.csh && \
     exec -l $SHELL
 
 # tomcat
@@ -86,7 +86,7 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
     echo "[Unit]" > /etc/systemd/system/tomcat.service && \
     cd /etc/systemd/system && \
     echo "Description=Apache Tomcat 8" >> tomcat.service && \
-    echo "After=network.target" >> tomcat.service && \
+    echo "After=network.target postgresql.service" >> tomcat.service && \
     echo "" >> tomcat.service && \
     echo "[Service]" >> tomcat.service && \
     echo "User=tomcat" >> tomcat.service && \
@@ -97,11 +97,10 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
     echo "" >> tomcat.service && \
     echo "ExecStart=/opt/tomcat/bin/startup.sh" >> tomcat.service && \
     echo "ExecStop=/opt/tomcat/bin/shutdown.sh" >> tomcat.service && \
-    echo "ExecReStart=/opt/tomcat/bin/shutdown.sh;/opt/tomcat/bin/startup.sh" >> tomcat.service && \
+    echo "ExecReload=/opt/tomcat/bin/shutdown.sh;/opt/tomcat/bin/startup.sh" >> tomcat.service && \
     echo "" >> tomcat.service && \
     echo "[Install]" >> tomcat.service && \
     echo "WantedBy=multi-user.target" >> tomcat.service && \
-    chmod 755 tomcat.service && \
     systemctl enable tomcat
 
 # warビルド&デプロイ
