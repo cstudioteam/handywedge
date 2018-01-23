@@ -33,12 +33,15 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
 
         this.$box = $(_.template(this.template)());
         db_status.data[this.model.id]={status:this.model.prop(['.status']),status_name:''};
-        var toappend='<tbody class='+this.model.id+'>'+
-        '<td>'+
-        '<input class="status" value="'+this.model.prop(['.status'])+'"></input>'+
-        '</td>'+
-        '<td><input class="status_name" value="'+this.model.prop(['.status_name'])+'"></input></td></tbody>';
-        $('#view_status table').append(toappend);
+        if(!$('#view_status .'+this.model.id+'.status').val()){
+          var toappend='<tbody class='+this.model.id+'>'+
+          '<td>'+
+          '<input class="status" value="'+this.model.prop(['.status'])+'"></input>'+
+          '</td>'+
+          '<td><input class="status_name" value="'+this.model.prop(['.status_name'])+'"></input></td></tbody>';
+          $('#view_status table').append(toappend);
+        }
+
         //データ更新 下段->グラフ
         //status
         var upd_status=function(t){
@@ -206,7 +209,24 @@ joint.shapes.rote=joint.dia.Link.extend({
       });
     };
     update_action_code(this);
+    //pre_status,post_status初期化時にstatusが初期化されていない時の対策
 
+    if(this.prop(['source']).id&&!$('#view_status .'+this.prop(['source']).id+'.status').val()){
+      var toappend='<tbody class='+this.prop(['source']).id+'>'+
+      '<td>'+
+      '<input class="status" value="'+db_status.data[this.prop(['source']).id].status+'"></input>'+
+      '</td>'+
+      '<td><input class="status_name" value="'+db_status.data[this.prop(['source']).id].status_name+'"></input></td></tbody>';
+      $('#view_status table').append(toappend);
+    }
+    if(this.prop(['target']).id&&!$('#view_status .'+this.prop(['target']).id+'.status').val()){
+      var toappend='<tbody class='+this.prop(['target']).id+'>'+
+      '<td>'+
+      '<input class="status" value="'+db_status.data[this.prop(['target']).id].status+'"></input>'+
+      '</td>'+
+      '<td><input class="status_name" value="'+db_status.data[this.prop(['target']).id].status_name+'"></input></td></tbody>';
+      $('#view_status table').append(toappend);
+    }
 
     // Update the box position whenever the underlying model changes.
     this.on('change', this.updateBox, this);
@@ -226,9 +246,9 @@ joint.shapes.rote=joint.dia.Link.extend({
     var thisid=this.id;
     if(this.prop(['source']).id){
       //pre_status
-      $('#view_action .'+thisid+' .pre_status').text($('#view_status .'+this.prop(['source']).id+' .status').val());
-      db_rote.data[thisid].pre_status=$('#view_status .'+this.prop(['source']).id+' .status').val();
-      $('#view_status .'+this.prop(['source']).id+' .status').off('change.pre_status'+thisid);
+      $('#view_action .'+thisid+' .pre_status').text(db_status.data[this.prop(['source']).id].status);
+      db_rote.data[thisid].pre_status=db_status.data[this.prop(['source']).id].status;
+      $('#view_status  .status').off('change.pre_status'+thisid);
       $('#view_status .'+this.prop(['source']).id+' .status').on('change.pre_status'+thisid,function(){
         $('#view_action .'+thisid+' .pre_status').text($(this).val());
         db_rote.data[thisid].pre_status=$(this).val();
@@ -240,9 +260,9 @@ joint.shapes.rote=joint.dia.Link.extend({
     }
     if(this.prop(['target']).id){
       //post_status
-      $('#view_action .'+thisid+' .post_status').text($('#view_status .'+this.prop(['target']).id+' .status').val());
-      db_rote.data[thisid].post_status=$('#view_status .'+this.prop(['target']).id+' .status').val();
-      $('#view_status .'+this.prop(['target']).id+' .status').off('change.post_status'+thisid);
+      $('#view_action .'+thisid+' .post_status').text(db_status.data[this.prop(['target']).id].status);
+      db_rote.data[thisid].post_status=db_status.data[this.prop(['target']).id].status;
+      $('#view_status .status').off('change.post_status'+thisid);
       $('#view_status .'+this.prop(['target']).id+' .status').on('change.post_status'+thisid,function(){
         $('#view_action .'+thisid+' .post_status').text($(this).val());
         db_rote.data[thisid].post_status=$(this).val();
@@ -256,6 +276,8 @@ joint.shapes.rote=joint.dia.Link.extend({
   removeBox:function(){
     delete db_rote.data[this.id];
     $('#view_action .'+this.id).remove();
+    $('#view_status .status').off('change.pre_status'+this.id);
+    $('#view_status .status').off('change.post_status'+this.id);
   }
 });
 
