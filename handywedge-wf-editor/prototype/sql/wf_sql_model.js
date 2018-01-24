@@ -33,7 +33,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
 
         this.$box = $(_.template(this.template)());
         db_status.data[this.model.id]={status:this.model.prop(['.status']),status_name:''};
-        if(!$('#view_status .'+this.model.id+'.status').val()){
+        if(!$('#view_status .'+this.model.id+' .status').val()){
           var toappend='<tbody class='+this.model.id+'>'+
           '<td>'+
           '<input class="status" value="'+this.model.prop(['.status'])+'"></input>'+
@@ -272,7 +272,7 @@ joint.shapes.rote=joint.dia.Link.extend({
         db_rote.data[thisid].post_status=$(this).val();
       });
       //linkの見た目を変更
-      this.attr({'.marker-target': { d: 'M 10 10 L 0 15 L 10 20 z M 10 15 A 5 5 0 0 0 20 15 A 5 5 0 0 0 10 15' },});
+      this.attr({'.marker-target': { d: 'M0 5A3 3 0 0 0 6 5L16 10L16 0L6 5A3 3 0 0 0 0 5' },});
     }else{
       $('#view_status .status').off('change.post_status'+thisid);
       $('#view_action .'+thisid+' .post_status').text('');
