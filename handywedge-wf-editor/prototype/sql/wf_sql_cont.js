@@ -86,13 +86,13 @@ $('.head_btn.add_link').on('click', function () {
   graph.addCell(new joint.shapes.rote({
     source: { x: 300+num*10, y: 100+num*10},
     target: { x: 450+num*10, y: 70+num*10},
-    attrs: {
+    /*attrs: {
       '.connection': {
         strokeWidth: 5,
         stroke: '#34495E'
       },
       '.marker-target': { fill: '#34495E', d: 'M 10 0 L 0 5 L 10 10 z' }
-    },
+    },*/
     '.action_code':datum,
     '.action':''
   }));

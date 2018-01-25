@@ -16,14 +16,13 @@ joint.shapes.status.Element = joint.shapes.basic.Rect
 //ElementView
 joint.shapes.status.ElementView = joint.dia.ElementView.extend({
     template: [
-        '<div class="status-element unedittable">',
+        '<div class="status-element">',
+        '<span class="editable">',
+          '<button class="delete">x</button>',
+        '</span>',
         '<label class="status"/>',
+        '<br>',
         '<label class="status_name"/>',
-        '</div>',
-        '<div class="status-element editable">',
-        '<button class="delete">x</button>',
-        '<input class="status"/>',
-        '<input class="status_name"/>',
         '</div>'
     ].join(''),
 //関数、不明部分多し。
@@ -116,6 +115,103 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
       this.$box.remove();
     }
 });
+/*
+//ステータス編集ボックス
+joint.shapes.status_mod= {};
+//Element
+joint.shapes.status_mod.Element = joint.shapes.basic.Rect
+.extend({
+  defaults : joint.util.deepSupplement({
+    type : 'status_mod.Element',
+    attrs : {
+      rect : {
+        stroke : '#EEEEEE',
+        'fill-opacity' : 0
+      }
+    }
+  }, joint.shapes.basic.Rect.prototype.defaults)
+});
+//ElementView
+joint.shapes.status_mod.ElementView = joint.dia.ElementView.extend({
+  template: [
+      '<div class="status-element">',
+      '<span class="editable">',
+        '<button class="delete">x</button>',
+      '</span>',
+      '<label class="status"/>',
+      '<br>',
+      '<label class="status_name"/>',
+      '</div>'
+  ].join(''),
+});
+//ステータス一覧
+joint.shapes.status_list= {};
+//Element
+joint.shapes.status_list.Element = joint.shapes.basic.Rect
+.extend({
+  defaults : joint.util.deepSupplement({
+    type : 'status_list.Element',
+    attrs : {
+      rect : {
+        stroke : '#EEEEEE',
+        'fill-opacity' : 0
+      }
+    }
+  }, joint.shapes.basic.Rect.prototype.defaults)
+});
+//ElementView
+joint.shapes.status_mod.ElementView = joint.dia.ElementView.extend({
+  template: [
+      '<div class="status-list">',
+      '<span class="tab">',
+        '<button class="minimalize">-</button>',
+      '</span>',
+      '<hr>',
+      '<div class="list">',
+      '</div>',
+      '</div>'
+  ].join(''),
+  initialize: function() {
+    _.bindAll(this, 'updateBox');
+    joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+    this.$box = $(_.template(this.template)());
+    // This is an example of reacting on the input change and storing the input data in the cell model.
+    this.$box.find('.minimalize').on('click', _.bind(this.model.minimalize, this.model));
+    // Update the box position whenever the underlying model changes.
+    this.model.on('change', this.updateBox, this);
+    // Remove the box when the model gets removed from the graph.
+    this.model.on('remove', this.removeBox, this);
+    graph.on('add', function(cell) {
+
+    this.updateBox();
+  },
+  render: function() {
+    joint.dia.ElementView.prototype.render.apply(this, arguments);
+    this.paper.$el.prepend(this.$box);
+    this.updateBox();
+    return this;
+  },
+  updateBox: function() {
+    // Set the position and dimension of the box so that it covers the JointJS element.
+    var bbox = this.model.getBBox();
+    // Example of updating the HTML with a data stored in the cell model.
+    this.$box.find('label').text(this.model.get('label'));
+    this.$box.find('span').text(this.model.get('select'));
+    this.$box.css({
+      width: bbox.width,
+      height: bbox.height,
+      left: bbox.x,
+      top: bbox.y,
+      transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+      });
+    },
+    removeBox: function(evt) {
+      this.$box.remove();
+    }
+  });
+});
+*/
+
 
 //fw_rote リンク
 joint.shapes.rote=joint.dia.Link.extend({
@@ -149,20 +245,20 @@ joint.shapes.rote=joint.dia.Link.extend({
                 }
       } ],
       attrs : {
-                  //      '.marker-source' : {
+                        '.marker-source' : {
                   //        d : 'M 10 0 L 0 5 L 10 10 z',
-                  //        stroke : '#000000',
-                  //        fill : '#000000'
-                  //      },
+                          stroke : '#34495E',
+                          fill : '#34495E'
+                       },
                 '.marker-target' : {
-                  fill : '#000000',
-                  stroke : '#000000',
+                  fill : '#34495E',
+                  stroke : '#34495E',
                   d : 'M 10 0 L 0 5 L 10 10 z'
                 },
                 '.connection' : {
-                  stroke : '#000000',
-                  'stroke-dasharray' : '0',
-                  'stroke-width' : 1
+                  stroke : '#34495E',
+                  //'stroke-dasharray' : '0',
+                  'stroke-width' : 2
                 }
       }
     },joint.shapes.devs.Link.prototype.defaults),
@@ -209,23 +305,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       });
     };
     update_action_code(this);
-    //pre_status,post_status初期化時にstatusが初期化されていない時の対策
-    /*if(this.prop(['source']).id&&!$('#view_status .'+this.prop(['source']).id+'.status').val()){
-      var toappend='<tbody class='+this.prop(['source']).id+'>'+
-      '<td>'+
-      '<input class="status" value="'+db_status.data[this.prop(['source']).id].status+'"></input>'+
-      '</td>'+
-      '<td><input class="status_name" value="'+db_status.data[this.prop(['source']).id].status_name+'"></input></td></tbody>';
-      $('#view_status table').append(toappend);
-    }
-    if(this.prop(['target']).id&&!$('#view_status .'+this.prop(['target']).id+'.status').val()){
-      var toappend='<tbody class='+this.prop(['target']).id+'>'+
-      '<td>'+
-      '<input class="status" value="'+db_status.data[this.prop(['target']).id].status+'"></input>'+
-      '</td>'+
-      '<td><input class="status_name" value="'+db_status.data[this.prop(['target']).id].status_name+'"></input></td></tbody>';
-      $('#view_status table').append(toappend);
-    }*/
+
 
     // Update the box position whenever the underlying model changes.
     this.on('change', this.updateBox, this);
@@ -253,7 +333,7 @@ joint.shapes.rote=joint.dia.Link.extend({
         db_rote.data[thisid].pre_status=$(this).val();
       });
       //linkの見た目を変更
-      this.attr({'.marker-source': { fill: '#000000', d: 'M 0 0 A 5 5 0 0 0 0 -10 A 5 5 0 0 0 0 0' },});
+      this.attr({'.marker-source': {d: 'M 0 0A 3 3 0 0 0 0 6A 3 3 0 0 0 0 0'},});
     }else{
       $('#view_status .status').off('change.pre_status'+thisid);
       $('#view_action .'+thisid+' .pre_status').text('');
@@ -277,8 +357,6 @@ joint.shapes.rote=joint.dia.Link.extend({
       $('#view_action .'+thisid+' .post_status').text('');
       db_rote.data[thisid].post_status='';
       this.attr({'.marker-target': {
-        fill : '#000000',
-        stroke : '#000000',
         d : 'M 10 0 L 0 5 L 10 10 z'
       }});
 
@@ -291,6 +369,7 @@ joint.shapes.rote=joint.dia.Link.extend({
     $('#view_status .status').off('change.post_status'+this.id);
   }
 });
+
 
 //データベースへの情報を保持するオブジェクトを生成
 function db_model(table_name,columns){
