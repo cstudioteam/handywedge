@@ -210,8 +210,7 @@ joint.shapes.rote=joint.dia.Link.extend({
     };
     update_action_code(this);
     //pre_status,post_status初期化時にstatusが初期化されていない時の対策
-
-    if(this.prop(['source']).id&&!$('#view_status .'+this.prop(['source']).id+'.status').val()){
+    /*if(this.prop(['source']).id&&!$('#view_status .'+this.prop(['source']).id+'.status').val()){
       var toappend='<tbody class='+this.prop(['source']).id+'>'+
       '<td>'+
       '<input class="status" value="'+db_status.data[this.prop(['source']).id].status+'"></input>'+
@@ -226,7 +225,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       '</td>'+
       '<td><input class="status_name" value="'+db_status.data[this.prop(['target']).id].status_name+'"></input></td></tbody>';
       $('#view_status table').append(toappend);
-    }
+    }*/
 
     // Update the box position whenever the underlying model changes.
     this.on('change', this.updateBox, this);

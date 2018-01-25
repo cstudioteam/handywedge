@@ -30,6 +30,15 @@ $('#file_json').on('change',function(evt){
     $('#view_action tbody').empty();
     db_status.data=loaded.wf_status_master;
     db_rote.data=loaded.fw_wf_rote;
+    //graphの読み込み時に下部にstatusノードが存在していないとlinkが正常に働かない。ので作成
+    for(t in db_status.data){
+      var toappend='<tbody class='+t+'>'+
+      '<td>'+
+      '<input class="status" value="'+db_status.data[t].status+'"></input>'+
+      '</td>'+
+      '<td><input class="status_name" value="'+db_status.data[t].status_name+'"></input></td></tbody>';
+      $('#view_status table').append(toappend);
+    }
     graph.clear();
     graph.fromJSON(loaded.graph);
     $('#view_status .status').removeClass('bg-danger');
