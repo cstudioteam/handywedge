@@ -32,6 +32,15 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>maven.handywedge</id>
+      <name>Handywedge Maven Repo</name>
+      <url>dav:https://maven.handywedge.com/</url>
+      <!-- snapshot版は常にtimestampが付与される -->
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
@@ -83,7 +92,7 @@
           <encoding>UTF-8</encoding>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
-          <bottom><![CDATA[<p class="legalCopy"><small>handywedge ver ${project.version}. Copyright (c) 2016-2017 C Studio Co.,Ltd.</small></p>]]></bottom>
+          <bottom><![CDATA[<p class="legalCopy"><small>handywedge ver ${project.version}. Copyright (c) 2016-2018 C Studio Co.,Ltd.</small></p>]]></bottom>
           <!-- <additionalDependencies> -->
           <!-- <additionalDependency> -->
           <!-- <groupId>javax.servlet</groupId> -->
@@ -134,5 +143,12 @@
         </configuration>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
   </build>
 </project>

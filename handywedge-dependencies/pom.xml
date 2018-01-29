@@ -18,4 +18,22 @@
     <module>handywedge-dependencies-reference</module>
     <module>handywedge-dependencies-mail</module>
   </modules>
+  <distributionManagement>
+    <repository>
+      <id>maven.handywedge</id>
+      <name>Handywedge Maven Repo</name>
+      <url>dav:https://maven.handywedge.com/</url>
+      <!-- snapshot版は常にtimestampが付与される -->
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
+  </build>
 </project>
