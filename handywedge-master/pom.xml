@@ -32,6 +32,15 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>maven.handywedge</id>
+      <name>Handywedge Maven Repo</name>
+      <url>dav:https://maven.handywedge.com/</url>
+      <!-- snapshot版は常にtimestampが付与される -->
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
@@ -66,7 +75,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
         <executions>
           <execution>
             <id>javadoc</id>
@@ -83,7 +91,7 @@
           <encoding>UTF-8</encoding>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
-          <bottom><![CDATA[<p class="legalCopy"><small>handywedge ver ${project.version}. Copyright (c) 2016-2017 C Studio Co.,Ltd.</small></p>]]></bottom>
+          <bottom><![CDATA[<p class="legalCopy"><small>handywedge ver ${project.version}. Copyright (c) 2016-2018 C Studio Co.,Ltd.</small></p>]]></bottom>
           <!-- <additionalDependencies> -->
           <!-- <additionalDependency> -->
           <!-- <groupId>javax.servlet</groupId> -->
@@ -133,6 +141,49 @@
           <!-- </additionalDependencies> -->
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
   </build>
 </project>

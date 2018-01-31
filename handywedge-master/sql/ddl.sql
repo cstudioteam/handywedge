@@ -259,9 +259,9 @@ CREATE TABLE fw_wf_rote
     -- アクション名
     action varchar(256),
     -- アクション前ステータス
-    pre_status varchar(256),
+    pre_status varchar(16),
     -- アクション後ステータス
-    post_status varchar(256),
+    post_status varchar(16),
     -- 作成日時
     create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
