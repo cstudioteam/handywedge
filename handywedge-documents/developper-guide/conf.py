@@ -205,18 +205,13 @@ epub_exclude_files = ['search.html']
 # Enabled extensions
 
 # Fontpath for seqdiag (truetype font)
-# seqdiag_fontpath = 'C:/font/IPAfont00303/ipagp.ttf'
-# seqdiag_fontpath = 'c:/windows/fonts/msgothic.ttc'
-# blockdiag_fontpath = 'c:/windows/fonts/msgothic.ttc'
-# actdiag_fontpath = 'c:/windows/fonts/msgothic.ttc'
-
 seqdiag_fontpath = 'font/ipagp.ttf'
 blockdiag_fontpath = 'font/ipagp.ttf'
 actdiag_fontpath = 'font/ipagp.ttf'
 
-extensions += ['sphinxcontrib.plantuml']
-plantuml = ['java', '-jar', 'C:/plantuml/plantuml.jar']
+# extensions += ['sphinxcontrib.plantuml']
+# plantuml = ['java', '-jar', 'C:/plantuml/plantuml.jar']
 
 # extensions += ['sphinxjp.shibukawa']
-extensions += ['sphinxcontrib.textstyle']
+# extensions += ['sphinxcontrib.textstyle']
 

@@ -13,6 +13,7 @@
    authentication
    logging
    workflow
-..   binarystore
    library
+
+..   binarystore
 

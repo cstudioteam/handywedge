@@ -52,11 +52,11 @@ FWPDFReportWriterにFWPDFReportと出力先のOutputStreamを指定しPDFを作�
       span_height = 10;
               業務プログラム; Map; List; OutputStream; FWPDFReport; FWPDFReportWriter;
 
-              業務プログラム => FWPDFReport [label="new()", rightnote="インスタンス生成"];
               業務プログラム => Map [label="put(key, value)", rightnote="レイアウトファイルにマッピングするデータを登録"];
               業務プログラム => List [label="add()", rightnote="明細行などはListで登録"];
               業務プログラム => Map [label="put(key, List)"];
               業務プログラム => OutputStream [label="new()"];
+              業務プログラム => FWPDFReport [label="new()", rightnote="インスタンス生成"];
               業務プログラム => FWPDFReport [label="setParameters(Map)", rightnote="Mapをセット"];
               業務プログラム => FWPDFReportWriter [label="addReport（FWPDFReport）", rightnote="PDFレポートをセット"];
               業務プログラム => FWPDFReportWriter => OutputStream [label="print（OutputStream）", rightnote="PDF生成"];
