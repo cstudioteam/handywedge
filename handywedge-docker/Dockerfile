@@ -80,6 +80,8 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
     tar xzf apache-tomcat-8.0.47.tar.gz && \
     ln -s apache-tomcat-8.0.47 tomcat && \
     rm -rf tomcat/webapps/* && \
+    echo "export LANG=ja_JP.UTF-8" > tomcat/bin/setenv.sh && \
+    chmod +x tomcat/bin/setenv.sh && \
     useradd -r -s /sbin/nologin tomcat && \
     chown -R tomcat:tomcat apache-tomcat-8.0.47 && \
     rm apache-tomcat-8.0.47.tar.gz && \
