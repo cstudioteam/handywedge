@@ -9,6 +9,11 @@ package com.handywedge.workflow;
 
 import java.util.List;
 
+/**
+ *
+ * @since0.5.0
+ *
+ */
 public interface FWWFManager {
 
   /**
