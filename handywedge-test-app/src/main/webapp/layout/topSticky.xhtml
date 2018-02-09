@@ -9,20 +9,17 @@
 >
   <p:toolbar id="tb">
     <f:facet name="left">
-      <h:outputLink value="http://www.cstudio.jp/">
+      <h:outputLink value="https://www.handywedge.com/">
         <h:graphicImage
-          url="/images/cstudio.png"
+          url="/images/hw_icon_nega.png"
           height="17"
         />
       </h:outputLink>
       <h:outputLink
         value="#{fwContext.contextPath}/"
-        style="text-decoration: none;"
+        style="text-decoration: none; margin-left: 5px;"
       >
-        <span
-          jsf:id="appTitle"
-          style="margin-left: 2px;"
-        >#{fwMsgResources.get("app.title")}</span>
+        <span jsf:id="appTitle">#{fwMsgResources.get("app.title")}</span>
       </h:outputLink>
     </f:facet>
     <f:facet
