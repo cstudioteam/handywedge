@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+  <Resource
+    name="jdbc/ds_handywedge"
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="net.sf.log4jdbc.DriverSpy"
+    url="jdbc:log4jdbc:postgresql://172.20.0.2:5432/handywedge_test_app"
+    username="handywedge-app"
+    password="handywedge-app"
+    initialSize="2"
+    maxWaitMillis="10000" />
+  <Resource
+    name="jdbc/fw"
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="net.sf.log4jdbc.DriverSpy"
+    url="jdbc:log4jdbc:postgresql://172.20.0.2:5432/handywedge_test_app"
+    username="handywedge"
+    password="handywedge"
+    initialSize="2"
+    maxWaitMillis="10000" />
+  <Resource
+    name="BeanManager"
+    auth="Container"
+    type="javax.enterprise.inject.spi.BeanManager"
+    factory="org.jboss.weld.resources.ManagerObjectFactory" />
+</Context>

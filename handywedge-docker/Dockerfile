@@ -80,6 +80,7 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
     tar xzf apache-tomcat-8.0.47.tar.gz && \
     ln -s apache-tomcat-8.0.47 tomcat && \
     rm -rf tomcat/webapps/* && \
+    mkdir -p tomcat/conf/Catalina/localhost && \
     echo "export LANG=ja_JP.UTF-8" > tomcat/bin/setenv.sh && \
     chmod +x tomcat/bin/setenv.sh && \
     useradd -r -s /sbin/nologin tomcat && \
@@ -109,15 +110,12 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
 WORKDIR /tmp/install
 RUN curl -O http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
     tar xzf apache-maven-3.5.2-bin.tar.gz && \
-    curl -o iTextAsian.jar https://sourceforge.net/p/itext/code/HEAD/tree/tags/iText_2_1_7/lib/iTextAsian.jar?format=raw && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn install:install-file -Dfile=iTextAsian.jar \
-    -DgroupId=com.lowagie -DartifactId=iTextAsian -Dversion=2.1.7 -Dpackaging=jar && \
     cd /tmp/git/handywedge/handywedge-dependencies/ && \
     /tmp/install/apache-maven-3.5.2/bin/mvn install && \
     cd /tmp/git/handywedge/handywedge-master/ && \
     /tmp/install/apache-maven-3.5.2/bin/mvn -Dmaven.javadoc.skip=true install && \
     cd /tmp/git/handywedge/handywedge-test-app/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn install && \
+    /tmp/install/apache-maven-3.5.2/bin/mvn package && \
     cp /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war /opt/tomcat/webapps/ && \
     chown tomcat:tomcat /opt/tomcat/webapps/handywedge-test-app.war
 

@@ -38,3 +38,9 @@ sudo docker import -c "CMD /usr/sbin/init" -c "ENV LANG=ja_JP.UTF-8" https://s3-
 
 sudo docker run --privileged -d -i -p 8080:8080 -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name [コンテナ名(任意)] [タグ]
 ```
+
+# ネットワーク作成とIP固定
+```
+sudo docker network create --subnet 172.20.0.0/16 handywedge-network
+sudo docker run --net handywedge-network --ip 172.20.0.2 ・・・
+```
