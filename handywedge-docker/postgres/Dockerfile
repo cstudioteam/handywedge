@@ -19,7 +19,8 @@ ADD --chown=postgres:postgres \
     /tmp/
 
 # コンテナ作成時に初期化用SQLを流し込むためのシェル
-ADD https://raw.githubusercontent.com/cstudioteam/handywedge/master/handywedge-docker/postgres/01_create_db.sh \
+ADD --chown=postgres:postgres \
+    https://raw.githubusercontent.com/cstudioteam/handywedge/master/handywedge-docker/postgres/01_create_db.sh \
     https://raw.githubusercontent.com/cstudioteam/handywedge/master/handywedge-docker/postgres/02_create_user.sh \
     https://raw.githubusercontent.com/cstudioteam/handywedge/master/handywedge-docker/postgres/03_create_schema.sh \
     https://raw.githubusercontent.com/cstudioteam/handywedge/master/handywedge-docker/postgres/04_create_table.sh \
