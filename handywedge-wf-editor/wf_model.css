@@ -59,6 +59,7 @@
     margin: 0;
     cursor: pointer;
 }
+
 .status-element .status_name {
   border: none;
   color: #000000;
@@ -113,4 +114,17 @@
 .editbox-element input{
   height:25px;
   width:100%;
+}
+.linker-element{
+  pointer-events: auto;
+    position:absolute;
+    color: blue;
+    border:none;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: middle;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
 }

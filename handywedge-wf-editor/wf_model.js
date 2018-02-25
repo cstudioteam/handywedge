@@ -85,7 +85,7 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
     var output='';
     graph[currenttab].getCells().forEach(
       function(i){
-        if(i.get('status')&&i.get('status_name')){
+        if(i.get('type')=='status.Element'){
           output+='INSERT INTO '+table+'(';
           output+='status,status_name';
           output+=') VALUES(';
@@ -306,7 +306,8 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
     template: [
         '<div class="status-element">',
         '<span>',
-          '<div class="delete editable"><i class="fas fa-times"></div>',
+          '<div class="delete editable"><i class="fas fa-times"/></div>',
+          //'<div class="linker editable"><i class="fas fa-arrow-right"/></div>',
         '</span>',
         '<div class="status"/>',
         '<div class="status_name"/>',
@@ -322,6 +323,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         });*/
         paper[currenttab].on('blank:pointerclick',_.bind(this.closeeditbox,this));
         this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        //this.$box.find('.linker').on('mousedown', _.bind(this.addlink, this));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateBox, this);
         // Remove the box when the model gets removed from the graph.
@@ -355,6 +357,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
     },
     openeditbox:function(evt){
       this.$box.find('.editable').css('visibility',' visible');
+      if(this.model.getEmbeddedCells().length>0)return 0;
       var edit=new joint.shapes.editbox.Element({
         status:this.$box.find('.status').text(),
         status_name:this.$box.find('.status_name').text(),
@@ -377,11 +380,48 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.updateBox();
         this.closeeditbox();
       });
+      var linkbox=new joint.shapes.linker.Element({
+        position: { x: this.model.get('position').x+150,
+                    y: this.model.get('position').y-10},
+        size: { width: 15, height: 15 }
+      });
+      graph[currenttab].addCell(linkbox);
+      this.model.embed(linkbox);
+      paper[currenttab].on('cell:pointerup', _.bind(function(cellView, evt, x, y) {
+       // Find the first element below that is not a link nor the dragged element itself.
+       var elementBelow = graph[currenttab].get('cells').find(function(cell) {
+           if (cell instanceof joint.dia.Link) return false; // Not interested in links.
+           if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+           if (cell.getBBox().containsPoint(g.point(x, y))) {
+               return true;
+           }
+           return false;
+       });
+       // If the two elements are connected already, don't
+       // connect them again (this is application specific though).
+       if (elementBelow && !_.contains(graph[currenttab].getNeighbors(elementBelow), cellView.model)) {
+           graph[currenttab].addCell(new joint.dia.Link({
+               source: { id: this.model.id }, target: { id: elementBelow.id },
+               attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+           }));
+           // Move the element a bit to the side.
+           cellView.removeBox();
+           cellView.remove();
+       }
+   },this));
     },
     closeeditbox:function(){
       this.$box.find('.editable').css('visibility','hidden');
       graph[currenttab].removeCells(this.model.getEmbeddedCells());
-    }
+    },
+    /*addlink:function(e){
+      var toadd=new joint.dia.Link({
+        source: { id: this.model.id },
+        target: { x:e.clientX,y:e.clientY}
+      });
+    graph[currenttab].addCell(toadd);
+    toadd.on
+  }*/
 });
 
 //編集ボックス
@@ -438,6 +478,53 @@ joint.shapes.editbox.ElementView = joint.dia.ElementView.extend({
     this.model.on('change', this.updateBox, this);
     this.$box.find('.btn').on('click', _.bind(this.model.remove, this.model));
     // Remove the box when the model gets removed from the graph.
+    this.model.on('remove', this.removeBox, this);
+    this.updateBox();
+  },
+  render: function() {
+    joint.dia.ElementView.prototype.render.apply(this, arguments);
+    this.paper.$el.prepend(this.$box);
+    this.updateBox();
+    return this;
+  },
+  updateBox: function() {
+    // Set the position and dimension of the box so that it covers the JointJS element.
+    var bbox = this.model.getBBox();
+    // Example of updating the HTML with a data stored in the cell model.
+    this.$box.css({
+      width: bbox.width,
+      height: bbox.height,
+      left: bbox.x,
+      top: bbox.y,
+      transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+    });
+  },
+  removeBox: function(evt) {
+    this.$box.remove();
+  }
+});
+joint.shapes.linker = {};
+joint.shapes.linker.Element = joint.shapes.basic.Rect.extend({
+  defaults: joint.util.deepSupplement({
+    type: 'linker.Element',
+      attrs: {
+        rect: { stroke: 'none', 'fill-opacity': 0 }
+      }
+    },joint.shapes.basic.Rect.prototype.defaults),
+});
+
+joint.shapes.linker.ElementView = joint.dia.ElementView.extend({
+  template: [
+    '<div class="linker-element">',
+      '<i class="fas fa-arrow-right"/>',
+    '</div>'
+  ].join(''),
+  initialize: function() {
+    _.bindAll(this, 'updateBox');
+    joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+    this.$box = $(_.template(this.template)());
+      // Update the box position whenever the underlying model changes.
+    this.model.on('change', this.updateBox, this);
     this.model.on('remove', this.removeBox, this);
     this.updateBox();
   },
