@@ -143,14 +143,14 @@ joint.shapes.status_mod.ElementView = joint.dia.ElementView.extend({
       '<label class="status_name"/>',
       '</div>'
   ].join(''),
-});
-//ステータス一覧
-joint.shapes.status_list= {};
+});*/
+//一覧
+joint.shapes.list_parent= {};
 //Element
-joint.shapes.status_list.Element = joint.shapes.basic.Rect
+joint.shapes.list_parent.Element = joint.shapes.basic.Rect
 .extend({
   defaults : joint.util.deepSupplement({
-    type : 'status_list.Element',
+    type : 'list_parent.Element',
     attrs : {
       rect : {
         stroke : '#EEEEEE',
@@ -160,29 +160,35 @@ joint.shapes.status_list.Element = joint.shapes.basic.Rect
   }, joint.shapes.basic.Rect.prototype.defaults)
 });
 //ElementView
-joint.shapes.status_mod.ElementView = joint.dia.ElementView.extend({
+joint.shapes.list_parent.ElementView = joint.dia.ElementView.extend({
   template: [
-      '<div class="status-list">',
+      '<div class="list_parent-element">',
       '<span class="tab">',
-        '<button class="minimalize">-</button>',
+        '<label class="minimalize">–</label>',
+        '<label class="title">item list</label>',
       '</span>',
-      '<hr>',
-      '<div class="list">',
-      '</div>',
       '</div>'
   ].join(''),
   initialize: function() {
     _.bindAll(this, 'updateBox');
     joint.dia.ElementView.prototype.initialize.apply(this, arguments);
     this.$box = $(_.template(this.template)());
+    // Prevent paper from handling pointerdown.
+    this.$box.find('.minimalize').on('mousedown click', function(evt) {
+        evt.stopPropagation();
+    });
     // This is an example of reacting on the input change and storing the input data in the cell model.
-    this.$box.find('.minimalize').on('click', _.bind(this.model.minimalize, this.model));
+    //this.$box.find('.minimalize').on('click', _.bind(this.model.minimalize, this.model));
     // Update the box position whenever the underlying model changes.
     this.model.on('change', this.updateBox, this);
     // Remove the box when the model gets removed from the graph.
     this.model.on('remove', this.removeBox, this);
-    graph.on('add', function(cell) {
+    graph[tab].on('add', function(cell) {
+      $('.status_list-element .list').append('<div>'+cell.prop('.status')+cell.prop('.status_name')+'</div>');
 
+    });
+    //言語の変更
+    $('.list_parent-element .tab .title').text(lang[lang.selected]['.list_parent-element .tab .title']);
     this.updateBox();
   },
   render: function() {
@@ -192,25 +198,23 @@ joint.shapes.status_mod.ElementView = joint.dia.ElementView.extend({
     return this;
   },
   updateBox: function() {
+    //言語の変更
+    $('.list_parent-element .tab .title').text(lang[lang.selected]['.list_parent-element .tab .title']);
     // Set the position and dimension of the box so that it covers the JointJS element.
     var bbox = this.model.getBBox();
     // Example of updating the HTML with a data stored in the cell model.
-    this.$box.find('label').text(this.model.get('label'));
-    this.$box.find('span').text(this.model.get('select'));
     this.$box.css({
       width: bbox.width,
       height: bbox.height,
       left: bbox.x,
       top: bbox.y,
       transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
-      });
+    });
     },
     removeBox: function(evt) {
       this.$box.remove();
     }
   });
-});
-*/
 
 
 //fw_rote リンク
@@ -243,7 +247,16 @@ joint.shapes.rote=joint.dia.Link.extend({
                       'font-size': 16,
                     }
                 }
-      } ],
+      },
+      {
+        markup: '<g><rect/><text class="action_code"></text></g>',
+        position: 0.5,
+        attrs: {
+          text: {text:'R0', fill: 'white', /*'font-family': 'sans-serif'*/ },
+          rect: { stroke: '#34495E', 'stroke-width':15,rx:5,ry:5 }
+        }
+      },
+     ],
       attrs : {
                         '.marker-source' : {
                   //        d : 'M 10 0 L 0 5 L 10 10 z',

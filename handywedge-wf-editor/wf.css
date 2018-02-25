@@ -1,0 +1,63 @@
+
+
+#zone_tab{
+  position: absolute;
+  bottom:0px;
+  left: 0%;
+  width: 100%;
+  background-color: #010104;
+  height:30px;
+  filter:alpha(opacity=80);
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  z-index: 1024;
+}
+.tab_home{
+  height: 27px;
+  background-color: initial;
+  color: #AAA;
+  font-size:20px;
+}
+.tab_home:hover{
+  color: #EEE;
+}
+.tab{
+  /*width: 120px;*/
+  height: 27px;
+  margin: 0px 3px 0px 0px;
+  /*border-left: solid 2px #333;*/
+  background-color: #26272A;
+  display:inline-block;
+  vertical-align: top;
+  /*cursor: pointer;*/
+}
+.tab .name{
+  font-size:12px;
+  color:#EEE;
+  vertical-align: center;
+}
+.tab .tabclose{
+  float:right;
+  color:#DDD;
+}
+.tab.plus{
+  background-color: initial;
+  color: #AAA;
+  font-size:20px;
+}
+.tab.plus:hover{
+  color: #EEE;
+}
+#zone_paper{
+  position:absolute;
+  top:0px;
+  width:100vw;
+  height:calc(100vh - 30px);
+  overflow:hidden;
+}
+.paperframe{
+  width:100vw;
+  height:calc(100vh - 30px);
+
+  overflow:scroll;
+}

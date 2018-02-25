@@ -1,6 +1,29 @@
+#tabbar{
+  position:fixed;
+  top:0px;
+  left: 0%;
+  width: 100%;
+  background-color: white;
+  height:22px;
+  filter:alpha(opacity=80);
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  z-index: 1024;
+}
+.tab{
+  /*width: 100px;*/
+  padding-left: 10px;
+  padding-right:10px;
+  height:25px;
+  font-size:20px;
+  background-color: lightgray;
+  display:inline-block;
+  text-align: center;
+  cursor: pointer;
+}
 #headbar{
   position: fixed;
-  top:0%;
+  top:25px;
   left: 0%;
   width: 100%;
   background-color: white;
@@ -137,4 +160,19 @@
   right:3px;
   color: #0000CC;
   text-shadow: 1px 0 0 lightgray;
+}
+.list_parent-element {
+    position: absolute;
+    /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
+    pointer-events: none;
+    -webkit-user-select: none;
+    border-radius: 2px
+    /*border: 1px solid #000000;*/
+    background-color: white;
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 2;
+}
+.list_parent-element .tab{
+  border-bottom: 1px solid #000000;
 }

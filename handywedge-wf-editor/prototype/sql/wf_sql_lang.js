@@ -1,6 +1,14 @@
+//言語セット
+var lang={
+  selected:'Japanese',
+'Japanese':{
+  '.list_parent-element .tab .title':'アイテム一覧'
+}
+};
 //言語トグル
-function lang_change(lang){
-  if(lang=='Japanese'){
+function lang_change(l_selected){
+  if(l_selected=='Japanese'){
+    lang.selected=l_selected;
     //モーダル部分
     $('.load_json .modal-title').text('ファイル読み込み');
     //上部バー
@@ -24,7 +32,6 @@ function lang_change(lang){
     $('#view_action .table th.action').text('アクション');
     $('#view_action .table th.pre_status').text('直前のステータス');
     $('#view_action .table th.post_status').text('直後のステータス');
-
 
   }
 }

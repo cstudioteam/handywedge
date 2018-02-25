@@ -39,8 +39,8 @@ $('#file_json').on('change',function(evt){
       '<td><input class="status_name" value="'+db_status.data[t].status_name+'"></input></td></tbody>';
       $('#view_status table').append(toappend);
     }
-    graph.clear();
-    graph.fromJSON(loaded.graph);
+    graph[tab].clear();
+    graph[tab].fromJSON(loaded.graph);
     $('#view_status .status').removeClass('bg-danger');
     for(i in db_status.data){
       for(j in db_status.data){
@@ -69,7 +69,7 @@ $('.head_btn.add_box').on('click', function () {
     num++;
   }
   var datum='S'+num;
-  graph.addCell(new joint.shapes.status.Element({
+  graph[tab].addCell(new joint.shapes.status.Element({
     '.status':datum,
     '.status_name':'',
     position: { x: 50-Math.floor(num/20)*475+num*25, y: 50-Math.floor(num/20)*500+num*25},
@@ -83,7 +83,7 @@ $('.head_btn.add_link').on('click', function () {
     num++;
   }
   var datum='R'+num;
-  graph.addCell(new joint.shapes.rote({
+  graph[tab].addCell(new joint.shapes.rote({
     source: { x: 300+num*10, y: 100+num*10},
     target: { x: 450+num*10, y: 70+num*10},
     /*attrs: {
@@ -122,7 +122,7 @@ $('.head_btn.save_json').on('click',function(){
   output+=',"fw_wf_rote":';
   output+=JSON.stringify(db_rote.data);
   output+=',"graph":'
-  output+=JSON.stringify(graph.toJSON());
+  output+=JSON.stringify(graph[tab].toJSON());
   output+='}'
   //console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
