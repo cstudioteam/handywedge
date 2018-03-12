@@ -32,9 +32,6 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
       'ツールボックス',
       '</div>',
       '<div class="content">',
-      'ファイル名<br>',
-      '<input class="filename"/>',
-      '<hr>',
       '<button class="save">個別にJSONで保存</button>',
       '<button class="sql">個別にSQLで出力</button>',
       '<hr>',
@@ -375,10 +372,15 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.closeeditbox();
       },this));
       this.listenTo(edit,'editbox-update',function(e){
-        this.model.prop('status',e[0]);
-        this.model.prop('status_name',e[1]);
-        this.updateBox();
-        this.closeeditbox();
+        var val=validate('status',e[0]);
+        if(val.length==0){
+          this.model.prop('status',e[0]);
+          this.model.prop('status_name',e[1]);
+          this.updateBox();
+          this.closeeditbox();
+        }else{
+          alert('エラー:ステータス要素のなかに重複したものがあります。');
+        }
       });
       var linkbox=new joint.shapes.linker.Element({
         position: { x: this.model.get('position').x+150,
@@ -387,29 +389,31 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
       });
       graph[currenttab].addCell(linkbox);
       this.model.embed(linkbox);
+
       paper[currenttab].on('cell:pointerup', _.bind(function(cellView, evt, x, y) {
        // Find the first element below that is not a link nor the dragged element itself.
        var elementBelow = graph[currenttab].get('cells').find(function(cell) {
-           if (cell instanceof joint.dia.Link) return false; // Not interested in links.
-           if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
-           if (cell.getBBox().containsPoint(g.point(x, y))) {
-               return true;
-           }
-           return false;
+         if(cellView.model.get('type')!='linker.Element') return false;
+         if (cell instanceof joint.shapes.status.Element) return true; // Not interested in links.
+         if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+         if (cell.getBBox().containsPoint(g.point(x, y))) {
+           return true;
+         }
+         return false;
        });
-       // If the two elements are connected already, don't
-       // connect them again (this is application specific though).
-       if (elementBelow && !_.contains(graph[currenttab].getNeighbors(elementBelow), cellView.model)) {
+       if (elementBelow) {
            graph[currenttab].addCell(new joint.dia.Link({
                source: { id: this.model.id }, target: { id: elementBelow.id },
-               attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+               attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' } }
            }));
            // Move the element a bit to the side.
            cellView.removeBox();
            cellView.remove();
        }
+       paper[currenttab].off('cell:pointerup');
+       this.closeeditbox();
    },this));
-    },
+ },
     closeeditbox:function(){
       this.$box.find('.editable').css('visibility','hidden');
       graph[currenttab].removeCells(this.model.getEmbeddedCells());
@@ -503,6 +507,7 @@ joint.shapes.editbox.ElementView = joint.dia.ElementView.extend({
     this.$box.remove();
   }
 });
+//リンカーオブジェクト
 joint.shapes.linker = {};
 joint.shapes.linker.Element = joint.shapes.basic.Rect.extend({
   defaults: joint.util.deepSupplement({
@@ -549,4 +554,91 @@ joint.shapes.linker.ElementView = joint.dia.ElementView.extend({
   removeBox: function(evt) {
     this.$box.remove();
   }
+});
+//一覧
+
+
+joint.shapes.basic.Generic.define('listbox', {
+    attrs: {
+        rect: { 'width': 200 },
+
+        '.listbox-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#3498db' },
+        '.listbox-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#2980b9' },
+        '.listbox-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#2980b9' },
+
+        '.listbox-name-text': {
+            'ref': '.listbox-name-rect',
+            'ref-y': .5,
+            'ref-x': .5,
+            'text-anchor': 'middle',
+            'y-alignment': 'middle',
+            'font-weight': 'bold',
+            'fill': 'black',
+            'font-size': 12,
+            'font-family': 'Times New Roman'
+        },
+        '.listbox-attrs-text': {
+            'ref': '.listbox-attrs-rect', 'ref-y': 5, 'ref-x': 5,
+            'fill': 'black', 'font-size': 12, 'font-family': 'Times New Roman'
+        },
+        '.listbox-methods-text': {
+            'ref': '.listbox-methods-rect', 'ref-y': 5, 'ref-x': 5,
+            'fill': 'black', 'font-size': 12, 'font-family': 'Times New Roman'
+        }
+    },
+
+    name: [],
+    attributes: [],
+    methods: []
+}, {
+    markup: [
+        '<g class="rotatable">',
+        '<g class="scalable">',
+        '<rect class="listbox-name-rect"/><rect class="listbox-attrs-rect"/><rect class="listbox-methods-rect"/>',
+        '</g>',
+        '<text class="listbox-name-text"/><text class="listbox-attrs-text"/><text class="listbox-methods-text"/>',
+        '</g>'
+    ].join(''),
+
+    initialize: function() {
+
+        this.on('change:name change:attributes change:methods', function() {
+            this.updateRectangles();
+            this.trigger('uml-update');
+        }, this);
+
+        this.updateRectangles();
+
+        joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
+    },
+
+    getClassName: function() {
+        return this.get('name');
+    },
+
+    updateRectangles: function() {
+
+        var attrs = this.get('attrs');
+
+        var rects = [
+            { type: 'name', text: this.getClassName() },
+            { type: 'attrs', text: this.get('attributes') },
+            { type: 'methods', text: this.get('methods') }
+        ];
+
+        var offsetY = 0;
+
+        rects.forEach(function(rect) {
+
+            var lines = Array.isArray(rect.text) ? rect.text : [rect.text];
+            var rectHeight = lines.length * 20 + 20;
+
+            attrs['.listbox-' + rect.type + '-text'].text = lines.join('\n');
+            attrs['.listbox-' + rect.type + '-rect'].height = rectHeight;
+            attrs['.listbox-' + rect.type + '-rect'].transform = 'translate(0,' + offsetY + ')';
+
+            offsetY += rectHeight;
+        });
+    }
+
 });

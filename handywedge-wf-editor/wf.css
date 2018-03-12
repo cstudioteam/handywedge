@@ -1,16 +1,60 @@
-
+#zone_menu{
+  position: absolute;
+  top:0px;
+  left: 0%;
+  width: 100vw;
+  background-color: #303030;
+  height:20px;
+  z-index: 1028;
+  user-select: none;
+}
+#zone_menu span{
+  display: inline-block;
+  color:#ABABAB;
+  width:120px;
+  padding: 0px 0px 0px 3px;
+}
+#zone_menu span:hover{
+  color:#EDEDED;
+}
+#zone_menu .menu_content {
+  display: none;
+	position: absolute;
+}
+#zone_menu .menu_content.tab{
+  left:120px;
+}
+#zone_menu .menu_content div {
+  width:120px;
+	color: #fff;
+  background-color: #303030;
+  overflow: hidden;
+}
+#zone_menu .menu_content div div{
+}
+#zone_menu .menu_content div>div>div{
+  height:30px;
+  width: 100%;
+}
+#zone_menu .menu_content div:hover {
+	background: #808080;
+	text-decoration:none;
+}
 
 #zone_tab{
   position: absolute;
-  bottom:0px;
+  top:20px;
   left: 0%;
-  width: 100%;
-  background-color: #010104;
+  width: 100vw;
+  background-color: #202020;
   height:30px;
-  filter:alpha(opacity=80);
-  -moz-opacity: 0.8;
-  opacity: 0.8;
-  z-index: 1024;
+  /*z-index: 1024;*/
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: none;
+}
+#zone_tab::-webkit-scrollbar{
+  display: none;
 }
 .tab_home{
   height: 27px;
@@ -22,11 +66,11 @@
   color: #EEE;
 }
 .tab{
-  /*width: 120px;*/
-  height: 27px;
-  margin: 0px 3px 0px 0px;
+  width: 120px;
+  height: 30px;
+  margin: 0px 0px 0px 2px;
   /*border-left: solid 2px #333;*/
-  background-color: #26272A;
+  background-color: #46543C;
   display:inline-block;
   vertical-align: top;
   /*cursor: pointer;*/
@@ -44,15 +88,16 @@
   background-color: initial;
   color: #AAA;
   font-size:20px;
+  width:auto;
 }
 .tab.plus:hover{
   color: #EEE;
 }
 #zone_paper{
   position:absolute;
-  top:0px;
+  top:50px;
   width:100vw;
-  height:calc(100vh - 30px);
+  height:calc(100vh - 50px);
   overflow:hidden;
 }
 .paperframe{
