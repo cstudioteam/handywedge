@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+  <Properties>
+    <!-- Eclipseでフォーマット改行させないためにCDATAセクションに -->
+    <Property name="pattern"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[%mdc{logName}]\t%mdc{requestId}\t%c{2}\t[%mdc{method}]\t%m%n]]></Property>
+    <Property name="catalina_home">${env:CATALINA_HOME}</Property>
+    <Property name="app_id">BinaryStoreService</Property>
+    <Property name="log_level">${env:LOG_LEVEL}</Property>
+  </Properties>
+  <Appenders>
+    <Console
+      name="console"
+      target="SYSTEM_OUT"
+    >
+      <PatternLayout pattern="${pattern}" />
+    </Console>
+    <RollingFile
+      name="${app_id}"
+      fileName="${catalina_home}/logs/${app_id}.log"
+      filePattern="${catalina_home}/logs/archive/${app_id}_%d{yyyy-MM-dd}.gz"
+    >
+      <PatternLayout
+        pattern="${pattern}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+    <RollingFile
+      name="error"
+      fileName="${catalina_home}/logs/${app_id}_error.log"
+      filePattern="${catalina_home}/logs/archive/${app_id}_error_%d{yyyy-MM-dd}.gz"
+    >
+      <PatternLayout
+        pattern="${pattern}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger
+      name="com.handywedge.binarystore"
+      level="${log_level}"
+    >
+      <AppenderRef ref="${app_id}" />
+      <AppenderRef
+        ref="error"
+        level="warn" />
+    </Logger>
+    <Root level="${log_level}">
+      <AppenderRef ref="console" />
+    </Root>
+  </Loggers>
+</Configuration>
