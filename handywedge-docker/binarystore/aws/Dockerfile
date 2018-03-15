@@ -25,9 +25,9 @@ RUN rm -rf /usr/local/tomcat/webapps/* && \
     export JAVA_HOME=/tmp/install/jdk1.8.0_162 && \
     wget http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
     tar xzf apache-maven-3.5.2-bin.tar.gz && \
-    cd handywedge-binarystore && \
+    cd  handywedge-master/handywedge-binarystore && \
     /tmp/install/apache-maven-3.5.2/bin/mvn package && \
-    cp /tmp/install/handywedge-binarystore/target/handywedge-binarystore.war /usr/local/tomcat/webapps/
+    cp /tmp/install/handywedge-master/handywedge-binarystore/target/handywedge-binarystore.war /usr/local/tomcat/webapps/
 
 # インストーラー等削除
 WORKDIR /root
