@@ -51,7 +51,7 @@
 エラー時のシーケンスを次に示す。
 
 .. seqdiag::
-   :name: seq-transaction
+   :name: seq-transaction-error
 
    seqdiag {
       span_height = 10;
@@ -118,5 +118,3 @@
    public AppData find(String key) {
          　// ・・・
    }
-
-
