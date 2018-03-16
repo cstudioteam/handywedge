@@ -25,6 +25,7 @@ public class BinaryStoreServiceResourceConfig extends Application {
     classes.add(BinaryStoreServiceController.class);
     classes.add(JacksonFeature.class);
     classes.add(MultiPartFeature.class);
+    classes.add(BinaryStoreServiceCrossFilter.class);
     return classes;
   }
 }
