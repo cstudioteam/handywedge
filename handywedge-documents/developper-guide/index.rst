@@ -10,6 +10,7 @@
    architecture/index
    execution/index
    commonlib/index
+   commonservice/index
    restservice/index
 
 
