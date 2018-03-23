@@ -7,12 +7,22 @@ fontawesome
 */
 
 //バリデーション,同じものがあると同じものの含まれるグラフとidを返す
-function validate(target,toadd){//toadd:追加される要素
+function validate(target,toadd,addid){//toadd:追加される要素
   var doubled=[];
+  var targettype;
+  for(i in graph){
+    if(graph[i].getCell(addid)){
+      targettype=graph[i].getCell(addid).prop('type');}
+  }
   for(i in graph){
     for(j in graph[i].getCells()){
       if(toadd==graph[i].getCells()[j].prop(target)){
-        doubled.push({graph:i,id:graph[i].getCells()[j].prop('id')});
+        //console.log(toadd,graph[i].getCells()[j].prop(target));
+        if(addid!=graph[i].getCells()[j].prop('id')
+          &&targettype==graph[i].getCells()[j].prop('type')
+        ){
+          doubled.push({graph:i,id:graph[i].getCells()[j].prop('id')});
+        }
       }
     }
   }
@@ -24,7 +34,7 @@ function validate(target,toadd){//toadd:追加される要素
 function Graph_Init(tab_in){
   var toolbox=new joint.shapes.toolbox.Element({
     position: { x: 0, y: 150},
-    size: { width: 170, height: 300 }
+    size: { width: 170, height: 100 }
   });
   var statusbox=new joint.shapes.status.Element({
     /*name:'ステータスノード',
@@ -32,6 +42,32 @@ function Graph_Init(tab_in){
     'ペーパー上のステータスノードをクリックすると編集できます'],
     */position: { x: 250, y: 200},
     size: { width: 150, height: 100 }
+  });
+
+  //ホームの一覧に書き込み
+  graph[tab_in].on('change add remove',function(){
+    $('#list_status tbody').empty();
+    $('#list_link tbody').empty();
+  graph.forEach(function(gr){
+      gr.getCells().forEach(function(j){
+        if(j.get('type')=='status.Element'&&j.get('status')!=''){
+          $('#list_status tbody').append(
+            '<tr class="'+j.get('id')+'">'+
+            '<td>'+j.get('status')+'</td>'+
+            '<td>'+j.get('status_name')+'</td></tr>'
+          );
+        }else if(j.get('type')=='rote'&&j.get('source').id&&j.get('target').id){
+          $('#list_link tbody').append(
+            '<tr class="'+j.get('id')+'">'+
+            '<td>'+j.prop('labels/0/attrs/text/text/0')+'</td>'+
+            '<td>'+j.prop('labels/0/attrs/text/text/1')+'</td>'+
+            '<td>'+gr.getCell(j.get('source').id).get('status')+'</td>'+
+            '<td>'+gr.getCell(j.get('target').id).get('status')+'</td>'+
+            '</tr>'
+          );
+        }
+      });
+    });
   });
   graph[tab_in].addCells([toolbox,statusbox]);
   paper[tab_in].on('cell:pointerclick',function(cellView,x,y){
@@ -75,7 +111,7 @@ function Tab_Add(){
     restrictTranslate : true, // 領域外の移動制限
     drawGrid : true,
     background: {
-     color: '#fffafa'
+     color: config.color.paper
   }
   }));
   //スクロールバーを初期化
@@ -144,8 +180,9 @@ $("#zone_menu span").hover(function(){
   });
 
 //セーブ関係（個別セーブはmodelのツールボックスの中にある）
-//全体ロード
-$('#modal_load_json #file_json').on('change',function(evt){
+//全体ロード（json）
+$('#modal_load_json #file_json').on('change',load_json);
+function load_json(evt){
   var input=evt.target.files[0];
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -162,7 +199,7 @@ $('#modal_load_json #file_json').on('change',function(evt){
     console.log(loaded);
   };
   reader.readAsText(input,'UTF-8');
-});
+}
 //全体セーブ
 $('#m_c_json').on('click',function(){
   var output='{';
@@ -184,15 +221,15 @@ $('#m_c_json').on('click',function(){
 });
 $('#m_c_csv').on('click',function(){
   var output='';
-  output+='ステータス\n';
-  output+='タブ,コード,ステータス名\n';
+  output+='"ステータス"\n';
+  output+='"コード","ステータス名"\n';
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
-        if(i.get('type')=='status.Element'){
-          output+=$('#tabs .tab:eq('+t+') .name').text()+',';
-          output+=i.get('status')+',';
-          output+=i.get('status_name')+'\n';
+        if(i.get('type')=='status.Element'&&i.get('status')!=''){
+          //output+=$('#tabs .tab:eq('+t+') .name').text()+',';
+          output+='"'+i.get('status')+'",';
+          output+='"'+i.get('status_name')+'"\n';
         }
       });
   }
@@ -201,16 +238,12 @@ $('#m_c_csv').on('click',function(){
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
-        if(i.get('action')&&
-           i.get('action_code')&&
-           i.get('pre_status')&&
-           i.get('post_status')
-         ){
+        if(i.get('type')=='rote'){
           output+=$('#tabs .tab:eq('+t+') .name').text()+',';
-          output+=i.get('action')+',';
-          output+=i.get('action_code')+',';
-          output+=i.get('pre_status')+',';
-          output+=i.get('post_status')+'\n';
+          output+=i.prop('labels/0/attrs/text/text/0')+',';
+          output+=i.prop('labels/0/attrs/text/text/1')+',';
+          output+=i.get('source').id+',';
+          output+=i.get('target').id+'\n';
         }
       }
     );

@@ -2,6 +2,20 @@ var currenttab=0;
 var graph =[];
 var paper =[];
 
+var config={
+  color:{
+    paper:'#fffafa',
+    toolbox:'#FFFFFF',
+    status:{
+      rect:{
+        fill:'#EFE',
+        stroke:'#CDC',
+      }
+    },
+    rote:{}
+  }
+};
+
 function blob_buffer(output,name){
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
@@ -20,7 +34,11 @@ joint.shapes.toolbox.Element = joint.shapes.basic.Rect.extend({
   defaults: joint.util.deepSupplement({
     type: 'toolbox.Element',
       attrs: {
-        rect: { stroke: 'none', 'fill-opacity': 0 }
+        rect: {
+          stroke: 'none',
+        //'fill-opacity': 0,
+          fill:config.color.toolbox
+       }
       }
     },joint.shapes.basic.Rect.prototype.defaults),
 });
@@ -32,9 +50,9 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
       'ツールボックス',
       '</div>',
       '<div class="content">',
-      '<button class="save">個別にJSONで保存</button>',
+      /*'<button class="save">個別にJSONで保存</button>',
       '<button class="sql">個別にSQLで出力</button>',
-      '<hr>',
+      '<hr>',*/
       '<button class="add_box">ステータスノードを追加</button>',
     '</div></div>'
   ].join(''),
@@ -313,6 +331,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
 //関数、不明部分多し。
     initialize: function() {
         _.bindAll(this, 'updateBox');
+        _.bindAll(this,'initstatus');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
         this.$box = $(_.template(this.template)());
         /*this.$box.find('.status-element').on('mousedown click', function(evt) {
@@ -322,11 +341,19 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
         //this.$box.find('.linker').on('mousedown', _.bind(this.addlink, this));
         // Update the box position whenever the underlying model changes.
-        this.model.on('change', this.updateBox, this);
+        this.model.on('change',this.updateBox, this);
         // Remove the box when the model gets removed from the graph.
         this.model.on('remove', this.removeBox, this);
-
+        this.initstatus();
         this.updateBox();
+    },
+    initstatus:function(){
+      //採番
+      var i=1;
+      while(validate('status',"S"+i,this.model.get('id')).length!=0){
+        i++;
+      }
+      this.model.prop('status',"S"+i);
     },
     render: function() {
         joint.dia.ElementView.prototype.render.apply(this, arguments);
@@ -360,7 +387,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         status_name:this.$box.find('.status_name').text(),
         position: { x: this.model.get('position').x+150,
                     y: this.model.get('position').y+100},
-        size: { width: 200, height: 150 }
+        size: { width: 200, height: 180 }
       });
       graph[currenttab].addCell(edit);
       graph[currenttab].addCell(new joint.dia.Link({
@@ -371,8 +398,10 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
       this.listenTo(edit,'editbox-cancelled',_.bind(function(){
         this.closeeditbox();
       },this));
+
       this.listenTo(edit,'editbox-update',function(e){
-        var val=validate('status',e[0]);
+        var val=validate('status',e[0],this.model.get('id'));
+        console.log(val);
         if(val.length==0){
           this.model.prop('status',e[0]);
           this.model.prop('status_name',e[1]);
@@ -382,53 +411,28 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
           alert('エラー:ステータス要素のなかに重複したものがあります。');
         }
       });
-      var linkbox=new joint.shapes.linker.Element({
-        position: { x: this.model.get('position').x+150,
-                    y: this.model.get('position').y-10},
-        size: { width: 15, height: 15 }
+      var rote=new joint.shapes.rote({
+        source: { id: this.model.get('id')},
+        target: {
+          x: this.model.get('position').x+this.model.get('size').width+100,
+          y: this.model.get('position').y+this.model.get('size').height/2
+        }
       });
-      graph[currenttab].addCell(linkbox);
-      this.model.embed(linkbox);
+      graph[currenttab].addCell(rote);
+      this.model.embed(rote);
+      this.listenTo(rote,'change:target:id',function(e){
+        this.model.unembed(rote);
+        this.closeeditbox();
+      });
 
-      paper[currenttab].on('cell:pointerup', _.bind(function(cellView, evt, x, y) {
-       // Find the first element below that is not a link nor the dragged element itself.
-       var elementBelow = graph[currenttab].get('cells').find(function(cell) {
-         if(cellView.model.get('type')!='linker.Element') return false;
-         if (cell instanceof joint.shapes.status.Element) return true; // Not interested in links.
-         if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
-         if (cell.getBBox().containsPoint(g.point(x, y))) {
-           return true;
-         }
-         return false;
-       });
-       if (elementBelow) {
-           graph[currenttab].addCell(new joint.dia.Link({
-               source: { id: this.model.id }, target: { id: elementBelow.id },
-               attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' } }
-           }));
-           // Move the element a bit to the side.
-           cellView.removeBox();
-           cellView.remove();
-       }
-       paper[currenttab].off('cell:pointerup');
-       this.closeeditbox();
-   },this));
  },
     closeeditbox:function(){
       this.$box.find('.editable').css('visibility','hidden');
       graph[currenttab].removeCells(this.model.getEmbeddedCells());
     },
-    /*addlink:function(e){
-      var toadd=new joint.dia.Link({
-        source: { id: this.model.id },
-        target: { x:e.clientX,y:e.clientY}
-      });
-    graph[currenttab].addCell(toadd);
-    toadd.on
-  }*/
 });
 
-//編集ボックス
+//ステータス編集ボックス
 joint.shapes.editbox = {};
 joint.shapes.editbox.Element = joint.shapes.basic.Rect.extend({
   defaults: joint.util.deepSupplement({
@@ -443,7 +447,7 @@ joint.shapes.editbox.ElementView = joint.dia.ElementView.extend({
   template: [
     '<div class="editbox-element">',
       '<div class="bar">',
-      '編集',
+      'ステータス編集',
       '</div>',
       '<div class="content">',
       '<label>ステータスコード</label>',
@@ -507,30 +511,232 @@ joint.shapes.editbox.ElementView = joint.dia.ElementView.extend({
     this.$box.remove();
   }
 });
-//リンカーオブジェクト
-joint.shapes.linker = {};
-joint.shapes.linker.Element = joint.shapes.basic.Rect.extend({
+
+
+//fw_rote リンク
+joint.shapes.rote=joint.dia.Link.extend({
+  defaults : _
+    .defaultsDeep({
+      type : 'rote',
+      toolMarkup : [
+                '<g class="link-tool">',
+                '<g class="tool-remove" event="remove">',
+                '<circle r="11" class="tool-remove" />',
+                '<path class="tool-remove" transform="scale(.8) translate(-16, -16)" d="M24.778,21.419 19.276,15.917 24.777,10.415 21.949,7.585 16.447,13.087 10.945,7.585 8.117,10.415 13.618,15.917 8.116,21.419 10.946,24.248 16.447,18.746 21.948,24.248z" />',
+                '<title>Remove link.</title>',
+                '</g>',
+                '<g class="link-edit btn-link-edit" event="link:edit">',
+                '<circle r="11" class="link-edit" transform="translate(22, 0)"/>',
+                '<path class="link-edit" fill="#FFFFFF" transform="scale(.7) translate(12,-20)" d="M 10 10 L 10 30 L 30 30 L 30 10 z M 15 15 L 25 15 L 25 25 L 15 25 L 15 15 z"/>',
+                '<title>リンクを編集</title>',
+                '</g>',
+                '</g>' ].join(''),
+      router : {
+                name : 'normal'
+      },
+      connector : {
+                name : 'normal'
+      },
+      labels : [
+        {
+          position: 0.4,
+          attrs: {
+            text: {
+              text: [],
+              fill: 'blue',
+              //'font-family': 'sans-serif'
+            },
+            rect: {
+              stroke: '#31d0c6',
+              'stroke-width': 20,
+              //rx: 5, ry: 5
+            }
+          }
+        }
+     ],
+      attrs : {
+                '.marker-source' : {
+                  //        d : 'M 10 0 L 0 5 L 10 10 z',
+                          stroke : '#34495E',
+                          fill : '#34495E'
+                       },
+                '.marker-target' : {
+                  fill : '#34495E',
+                  stroke : '#34495E',
+                  d : 'M 10 0 L 0 5 L 10 10 z'
+                },
+                '.connection' : {
+                  stroke : '#34495E',
+                  //'stroke-dasharray' : '0',
+                  'stroke-width' : 2,
+                }
+      },
+      action:'',
+      action_code:''
+    },joint.shapes.devs.Link.prototype.defaults),
+  initialize: function() {
+    _.bindAll(this, 'updateBox');
+    _.bindAll(this, 'initcode');
+    //以下の初期化文無しでは意味不明のエラーが出る。
+    joint.dia.Link.prototype.initialize.apply(this, arguments);
+    // Update the box position whenever the underlying model changes.
+    this.on('change', this.updateBox, this);
+    this.on('mouseover', this.updateBox, this);
+    // Remove the box when the model gets removed from the graph.
+    this.on('remove', this.removeBox, this);
+    this.listenTo(paper[currenttab],'link:edit',_.bind(function(cellView){
+      if(cellView.model.id==this.id){
+        this.openedit();
+      }
+    },this));
+    this.initcode();
+    this.updateBox();
+  },
+  initcode:function(){
+    //採番
+    var i=1;
+    while(true){
+      let valid=true;
+      graph[currenttab].getCells().forEach(function(e){
+        if(e.get('type')=='rote'&&e.get('action_code')=="L"+i){
+          valid=false;
+        }
+      });
+      if(valid){
+        break;
+      }else{
+        i++;
+      }
+    }
+    this.prop('action_code','L'+i);
+  },
+  updateBox:function(){
+    this.prop('labels/0/attrs/text/text/0',this.get('action_code'));
+    this.prop('labels/0/attrs/text/text/1',this.get('action'));
+    if(this.get('source').id){
+      this.attr({'.marker-source': {d: 'M 0 0A 3 3 0 0 0 0 6A 3 3 0 0 0 0 0'},});
+    }
+    if(this.get('target').id){
+      this.trigger('change:target:id');
+      this.attr({'.marker-target': { d: 'M0 5A3 3 0 0 0 6 5L16 10L16 0L6 5A3 3 0 0 0 0 5' },});
+    }
+  },
+  openedit:function(){
+    let pos={};
+    if(this.get('source').id){
+      pos.sid=graph[currenttab].getCell(this.get('source').id);
+      pos.sx=pos.sid.get('position').x;
+      pos.sy=pos.sid.get('position').y;
+    }else{
+      pos.sx=this.get('source').x;
+      pos.sy=this.get('source').y;
+    }
+    if(this.get('target').id){
+      pos.tid=graph[currenttab].getCell(this.get('target').id);
+      pos.tx=pos.sid.get('position').x;
+      pos.ty=pos.sid.get('position').y;
+    }else{
+      pos.tx=this.get('target').x;
+      pos.ty=this.get('target').y;
+    }
+    //this.$box.find('.editable').css('visibility',' visible');
+    if(this.getEmbeddedCells().length>0)return 0;
+    var edit=new joint.shapes.editlink.Element({
+      action_code:this.get('action_code'),
+      action:this.get('action'),
+      position: {
+        x: (pos.sx+pos.tx)/2+150,
+        y: (pos.sy+pos.ty)/2+50
+      },
+      size: {
+         width: 200,
+         height: 180
+        }
+    });
+    graph[currenttab].addCell(edit);
+    /*graph[currenttab].addCell(new joint.dia.Link({
+      source: { id: this.get('id')},
+      target: { id: edit.get('id')}
+    }));*/
+    //this.embed(edit);
+    this.listenTo(edit,'editlink-cancelled',_.bind(function(){
+      this.closeeditbox();
+    },this));
+
+    this.listenTo(edit,'editlink-update',function(e){
+      var val=validate('action_code',e[0],this.get('id'));
+      //console.log(e);
+      if(val.length==0){
+        this.prop('action_code',e[0]);
+        this.prop('action',e[1]);
+        this.updateBox();
+        this.closeeditbox();
+      }else{
+        alert('エラー:ステータス要素のなかに重複したものがあります。');
+      }
+    });
+  },
+  closeeditbox:function(){
+    //this.$box.find('.editable').css('visibility','hidden');
+    //graph[currenttab].removeCells(this.getEmbeddedCells());
+  },
+  removeBox:function(){
+    this.closeeditbox();
+  }
+});
+
+//リンク編集ボックス
+joint.shapes.editlink = {};
+joint.shapes.editlink.Element = joint.shapes.basic.Rect.extend({
   defaults: joint.util.deepSupplement({
-    type: 'linker.Element',
+    type: 'editlink.Element',
       attrs: {
         rect: { stroke: 'none', 'fill-opacity': 0 }
       }
     },joint.shapes.basic.Rect.prototype.defaults),
 });
 
-joint.shapes.linker.ElementView = joint.dia.ElementView.extend({
+joint.shapes.editlink.ElementView = joint.dia.ElementView.extend({
   template: [
-    '<div class="linker-element">',
-      '<i class="fas fa-arrow-right"/>',
-    '</div>'
+    '<div class="editlink-element">',
+      '<div class="bar">',
+      'リンク編集',
+      '</div>',
+      '<div class="content">',
+      '<label>アクションコード</label>',
+      '<input class="editlink-action_code"/>',
+      '<label>アクション</label>',
+      '<input class="editlink-action"/>',
+      '<button class="btn btn-secondary btn-sm">Cancel</button>',
+      '<button class="btn btn-primary btn-sm">OK</button>',
+    '</div></div>'
   ].join(''),
   initialize: function() {
     _.bindAll(this, 'updateBox');
     joint.dia.ElementView.prototype.initialize.apply(this, arguments);
     this.$box = $(_.template(this.template)());
-      // Update the box position whenever the underlying model changes.
+    this.$box.find('.bar').append(' -'+this.model.get('action_code'));
+    this.$box.find('.editlink-action_code').val(this.model.get('action_code'));
+    this.$box.find('.editlink-action').val(this.model.get('action'));
+    // Prevent paper from handling pointerdown.
+    this.$box.find('input').on('change', function(evt) {
+      evt.stopPropagation();
+    });
+    this.$box.find('.btn-primary').on('click',_.bind(function(evt) {
+      this.model.trigger('editlink-update',
+      [this.$box.find('.editlink-action_code').val(),
+        this.$box.find('.editlink-action').val(),
+      ]);
+    },this));
+    this.$box.find('.btn-secondary').on('click',_.bind(function(evt) {
+      this.model.trigger('editlink-cancelled');
+    },this));
+    // Update the box position whenever the underlying model changes.
     this.model.on('change', this.updateBox, this);
+    this.$box.find('.btn').on('click', _.bind(this.model.remove, this.model));
+    // Remove the box when the model gets removed from the graph.
     this.model.on('remove', this.removeBox, this);
+    this.listenTo(paper[currenttab],'blank:pointerclick',this.removeBox);
     this.updateBox();
   },
   render: function() {
@@ -557,7 +763,7 @@ joint.shapes.linker.ElementView = joint.dia.ElementView.extend({
 });
 //一覧
 
-
+/*
 joint.shapes.basic.Generic.define('listbox', {
     attrs: {
         rect: { 'width': 200 },
@@ -608,7 +814,7 @@ joint.shapes.basic.Generic.define('listbox', {
         }, this);
 
         this.updateRectangles();
-
+        this.model.on('transition:start',function(){alert()});
         joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
     },
 
@@ -642,3 +848,4 @@ joint.shapes.basic.Generic.define('listbox', {
     }
 
 });
+*/

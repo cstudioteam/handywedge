@@ -238,7 +238,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       },
       labels : [
         {
-                  markup: '<g><rect /><text class="action"/></g>',
+                  markup: '<g><rect /><text class="action" val="aaa"/></g>',
                   position : 0.5,
                   attrs : {
                     text : {
