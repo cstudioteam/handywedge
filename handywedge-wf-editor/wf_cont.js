@@ -28,6 +28,32 @@ function validate(target,toadd,addid){//toadd:追加される要素
   }
   return doubled;
 }
+
+//ステータス、リンク一覧
+function listUpdate() {
+  $('#list_status tbody').empty();
+  $('#list_link tbody').empty();
+  graph.forEach(function(gr){
+    gr.getCells().forEach(function(j){
+      if(j.get('type')=='status.Element'&&j.get('status')!=''){
+        $('#list_status tbody').append(
+          '<tr class="'+j.get('id')+'">'+
+          '<td>'+j.get('status')+'</td>'+
+          '<td>'+j.get('status_name')+'</td></tr>'
+        );
+      }else if(j.get('type')=='rote'&&j.get('source').id&&j.get('target').id){
+        $('#list_link tbody').append(
+          '<tr class="'+j.get('id')+'">'+
+          '<td>'+j.prop('labels/0/attrs/text/text/0')+'</td>'+
+          '<td>'+j.prop('labels/0/attrs/text/text/1')+'</td>'+
+          '<td>'+gr.getCell(j.get('source').id).get('status')+'</td>'+
+          '<td>'+gr.getCell(j.get('target').id).get('status')+'</td>'+
+          '</tr>'
+        );
+      }
+    });
+  });
+}
 /*イベント*/
 //>>初期化関連
 //ペーパー初期化
@@ -46,28 +72,7 @@ function Graph_Init(tab_in){
 
   //ホームの一覧に書き込み
   graph[tab_in].on('change add remove',function(){
-    $('#list_status tbody').empty();
-    $('#list_link tbody').empty();
-  graph.forEach(function(gr){
-      gr.getCells().forEach(function(j){
-        if(j.get('type')=='status.Element'&&j.get('status')!=''){
-          $('#list_status tbody').append(
-            '<tr class="'+j.get('id')+'">'+
-            '<td>'+j.get('status')+'</td>'+
-            '<td>'+j.get('status_name')+'</td></tr>'
-          );
-        }else if(j.get('type')=='rote'&&j.get('source').id&&j.get('target').id){
-          $('#list_link tbody').append(
-            '<tr class="'+j.get('id')+'">'+
-            '<td>'+j.prop('labels/0/attrs/text/text/0')+'</td>'+
-            '<td>'+j.prop('labels/0/attrs/text/text/1')+'</td>'+
-            '<td>'+gr.getCell(j.get('source').id).get('status')+'</td>'+
-            '<td>'+gr.getCell(j.get('target').id).get('status')+'</td>'+
-            '</tr>'
-          );
-        }
-      });
-    });
+    listUpdate();
   });
   graph[tab_in].addCells([toolbox,statusbox]);
   paper[tab_in].on('cell:pointerclick',function(cellView,x,y){
@@ -82,6 +87,7 @@ $('#tabs').on('click','.tab',function(){Tab_Change($(this).index());});
 $('#tabs').on('click','.tab .tabclose',function(e){
    e.stopPropagation();
   Tab_Close($(this).parent().index());
+  listUpdate();
 });
 //プラスボタンを押した際のイベント
 $('.tab.plus').on('click',function(){
@@ -221,29 +227,31 @@ $('#m_c_json').on('click',function(){
 });
 $('#m_c_csv').on('click',function(){
   var output='';
-  output+='"ステータス"\n';
-  output+='"コード","ステータス名"\n';
+  //output+='"ステータス"\n';
+  //output+='"コード","ステータス名"\n';
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
         if(i.get('type')=='status.Element'&&i.get('status')!=''){
           //output+=$('#tabs .tab:eq('+t+') .name').text()+',';
           output+='"'+i.get('status')+'",';
-          output+='"'+i.get('status_name')+'"\n';
+          output+='"'+i.get('status_name')+'",';
+          output+=',,,\n';
         }
       });
   }
-  output+='リンク\n';
-  output+='タブ,コード,アクション,アクション前ステータス,アクション後ステータス\n';
+  //output+='リンク\n';
+  //output+='タブ,コード,アクション,アクション前ステータス,アクション後ステータス\n';
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
         if(i.get('type')=='rote'){
-          output+=$('#tabs .tab:eq('+t+') .name').text()+',';
-          output+=i.prop('labels/0/attrs/text/text/0')+',';
-          output+=i.prop('labels/0/attrs/text/text/1')+',';
-          output+=i.get('source').id+',';
-          output+=i.get('target').id+'\n';
+          //output+=$('#tabs .tab:eq('+t+') .name').text()+',';
+          output+=',,';
+          output+='"'+i.get('action_code')+'",';
+          output+='"'+i.get('action')+'",';
+          output+='"'+i.get('source').id+'",';
+          output+='"'+i.get('target').id+'"\n';
         }
       }
     );

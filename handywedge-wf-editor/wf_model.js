@@ -589,6 +589,7 @@ joint.shapes.rote=joint.dia.Link.extend({
         this.openedit();
       }
     },this));
+
     this.initcode();
     this.updateBox();
   },
@@ -596,13 +597,15 @@ joint.shapes.rote=joint.dia.Link.extend({
     //採番
     var i=1;
     while(true){
-      let valid=true;
-      graph[currenttab].getCells().forEach(function(e){
-        if(e.get('type')=='rote'&&e.get('action_code')=="L"+i){
-          valid=false;
-        }
+      let valid=0;
+      graph.forEach(function(gr){
+        gr.getCells().forEach(function(e){
+          if(e.get('type')=='rote'&&e.get('action_code')=="L"+i){
+            valid++;
+          }
+        });
       });
-      if(valid){
+      if(valid==0){
         break;
       }else{
         i++;
