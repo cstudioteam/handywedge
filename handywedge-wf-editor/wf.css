@@ -15,8 +15,13 @@
   padding: 0px 0px 0px 3px;
 }
 #zone_menu span:hover{
-  color:#EDEDED;
+  background-color: #707070;
 }
+#zone_menu a{
+   color:#ABABAB;
+   text-decoration: none;
+}
+
 #zone_menu .menu_content {
   display: none;
 	position: absolute;

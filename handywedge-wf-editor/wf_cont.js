@@ -1,9 +1,6 @@
 /*handywedge Workflow Editor
-//ライセンス関係をかく。後で
-This ware depends on
-jquery
-Bootstrap
-fontawesome
+version ß2.2
+2017-2018 Cstudio Co.,Ltd. www.cstudio.jp
 */
 
 //バリデーション,同じものがあると同じものの含まれるグラフとidを返す
@@ -89,6 +86,13 @@ $('#tabs').on('click','.tab .tabclose',function(e){
   Tab_Close($(this).parent().index());
   listUpdate();
 });
+//タブダブルクリックでタブ設定モーダル表示
+$('#tabs').on('dblclick','.tab',function(e){
+   e.stopPropagation();
+   $('#modal_tabconf').modal();
+   $('#modal_tabconf .name').val(
+     $('#tabs .tab:eq('+currenttab+') .name').text());
+});
 //プラスボタンを押した際のイベント
 $('.tab.plus').on('click',function(){
   Tab_Add();
@@ -173,6 +177,7 @@ $("#zone_menu span").hover(function(){
   //プロジェクトメニュー
   $("#m_c_open").click(function(){
     $('#modal_load_json').modal();
+    $('#modal_load_json #file_json').val('');
   });
   //タブメニュー
   $("#m_c_newtab").click(function(){
@@ -187,9 +192,9 @@ $("#zone_menu span").hover(function(){
 
 //セーブ関係（個別セーブはmodelのツールボックスの中にある）
 //全体ロード（json）
-$('#modal_load_json #file_json').on('change',load_json);
-function load_json(evt){
-  var input=evt.target.files[0];
+$('#modal_load_json .btn-primary').on('click',load_json);
+function load_json(){
+  var input=document.getElementById('file_json').files[0];
   var reader = new FileReader();
   reader.onload = function(e) {
     var loaded=JSON.parse(e.target.result);
@@ -197,10 +202,10 @@ function load_json(evt){
     $('#tabs').empty();
     graph=[];
     paper=[];
-    for(i in loaded){
+    for(key in loaded){
       Tab_Add();
-      $('#tabs .tab:eq('+currenttab+') .name').text(i);
-      graph[graph.length-1].fromJSON(loaded[i]);
+      $('#tabs .tab:eq('+currenttab+') .name').text(key);
+      graph[i].fromJSON(loaded[key]);
     }
     console.log(loaded);
   };

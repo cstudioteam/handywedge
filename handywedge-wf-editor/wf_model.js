@@ -589,7 +589,6 @@ joint.shapes.rote=joint.dia.Link.extend({
         this.openedit();
       }
     },this));
-
     this.initcode();
     this.updateBox();
   },
@@ -663,7 +662,7 @@ joint.shapes.rote=joint.dia.Link.extend({
     }));*/
     //this.embed(edit);
     this.listenTo(edit,'editlink-cancelled',_.bind(function(){
-      this.closeeditbox();
+      graph[currenttab].removeCells(edit);
     },this));
 
     this.listenTo(edit,'editlink-update',function(e){
@@ -673,18 +672,16 @@ joint.shapes.rote=joint.dia.Link.extend({
         this.prop('action_code',e[0]);
         this.prop('action',e[1]);
         this.updateBox();
-        this.closeeditbox();
+        graph[currenttab].removeCells(edit);
       }else{
         alert('エラー:ステータス要素のなかに重複したものがあります。');
       }
     });
-  },
-  closeeditbox:function(){
-    //this.$box.find('.editable').css('visibility','hidden');
-    //graph[currenttab].removeCells(this.getEmbeddedCells());
+    edit.listenTo(paper[currenttab],'blank:pointerclick',function(e){
+      graph[currenttab].removeCells(edit);
+    });
   },
   removeBox:function(){
-    this.closeeditbox();
   }
 });
 
@@ -739,7 +736,9 @@ joint.shapes.editlink.ElementView = joint.dia.ElementView.extend({
     this.$box.find('.btn').on('click', _.bind(this.model.remove, this.model));
     // Remove the box when the model gets removed from the graph.
     this.model.on('remove', this.removeBox, this);
-    this.listenTo(paper[currenttab],'blank:pointerclick',this.removeBox);
+    this.listenTo(paper[currenttab],'blank:pointerclick',function(){
+      //this.removeBox();
+    });
     this.updateBox();
   },
   render: function() {
