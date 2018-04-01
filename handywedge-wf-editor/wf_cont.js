@@ -14,7 +14,6 @@ function validate(target,toadd,addid){//toadd:追加される要素
   for(i in graph){
     for(j in graph[i].getCells()){
       if(toadd==graph[i].getCells()[j].prop(target)){
-        //console.log(toadd,graph[i].getCells()[j].prop(target));
         if(addid!=graph[i].getCells()[j].prop('id')
           &&targettype==graph[i].getCells()[j].prop('type')
         ){
@@ -66,16 +65,7 @@ function Graph_Init(tab_in){
     */position: { x: 250, y: 200},
     size: { width: 150, height: 100 }
   });
-
-  //ホームの一覧に書き込み
-  graph[tab_in].on('change add remove',function(){
-    listUpdate();
-  });
   graph[tab_in].addCells([toolbox,statusbox]);
-  paper[tab_in].on('cell:pointerclick',function(cellView,x,y){
-    if(cellView.model.get('type')=="status.Element")
-    cellView.openeditbox();
-  });
 }
 //>>タブ関連
 //タブを押した際のイベント
@@ -96,6 +86,7 @@ $('#tabs').on('dblclick','.tab',function(e){
 //プラスボタンを押した際のイベント
 $('.tab.plus').on('click',function(){
   Tab_Add();
+  Graph_Init(currenttab);
   $('#modal_tabconf').modal();
 });
 //ホームボタンを押した際のイベント
@@ -124,9 +115,17 @@ function Tab_Add(){
      color: config.color.paper
   }
   }));
+  //ホームの一覧に書き込み
+  graph[addtab].on('change add remove',function(){
+    listUpdate();
+  });
+  paper[addtab].on('cell:pointerclick',function(cellView,x,y){
+    if(cellView.model.get('type')=="status.Element")
+    cellView.openeditbox();
+  });
   //スクロールバーを初期化
   Tab_Change(addtab);
-  Graph_Init(addtab);
+  //Graph_Init(addtab);
 };
 //タブを変更する
 function Tab_Change(to){
@@ -182,6 +181,7 @@ $("#zone_menu span").hover(function(){
   //タブメニュー
   $("#m_c_newtab").click(function(){
     Tab_Add();
+    Graph_Init(currenttab);
     $('#modal_tabconf').modal();
   });
   $("#m_c_conftab").click(function(){
@@ -205,9 +205,9 @@ function load_json(){
     for(key in loaded){
       Tab_Add();
       $('#tabs .tab:eq('+currenttab+') .name').text(key);
-      graph[i].fromJSON(loaded[key]);
+      graph[graph.length-1].fromJSON(loaded[key]);
+      listUpdate();
     }
-    console.log(loaded);
   };
   reader.readAsText(input,'UTF-8');
 }
@@ -216,12 +216,11 @@ $('#m_c_json').on('click',function(){
   var output='{';
   for(var t=0;t<graph.length;t++){
     output+='"'+$('#tabs .tab:eq('+t+') .name').text()+'":';
-    output+=JSON.stringify(graph[t].toJSON());
+    output+=JSON.stringify(graph[t]);
     output+=','
   }
   output=output.slice(0,-1);
   output+='}';
-  console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
   $("#save_json").attr("href", window.URL.createObjectURL(blob));
@@ -233,11 +232,11 @@ $('#m_c_json').on('click',function(){
 $('#m_c_csv').on('click',function(){
   var output='';
   //output+='"ステータス"\n';
-  //output+='"コード","ステータス名"\n';
+  output+='"status","status_name","action_code","action","pre_status","post_status"\n';
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
-        if(i.get('type')=='status.Element'&&i.get('status')!=''){
+        if(i.get('type')=='status'&&i.get('status')!=''){
           //output+=$('#tabs .tab:eq('+t+') .name').text()+',';
           output+='"'+i.get('status')+'",';
           output+='"'+i.get('status_name')+'",';
@@ -255,13 +254,12 @@ $('#m_c_csv').on('click',function(){
           output+=',,';
           output+='"'+i.get('action_code')+'",';
           output+='"'+i.get('action')+'",';
-          output+='"'+i.get('source').id+'",';
-          output+='"'+i.get('target').id+'"\n';
+          output+='"'+graph[t].getCell(i.get('source').id).get('status')+'",';
+          output+='"'+graph[t].getCell(i.get('target').id).get('status')+'"\n';
         }
       }
     );
   }
-  console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
   $("#m_c_csv").attr("href", window.URL.createObjectURL(blob));
@@ -301,7 +299,6 @@ graph[t].getCells().forEach(
     }
   }
   output+='}';
-  console.log(output);
   var blob = new Blob([ output ], { "type" : "text/plain" });
   window.URL = window.URL || window.webkitURL;
   $("#save_json").attr("href", window.URL.createObjectURL(blob));

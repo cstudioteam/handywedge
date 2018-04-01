@@ -10,6 +10,10 @@ var config={
       rect:{
         fill:'#EFE',
         stroke:'#CDC',
+      },
+      text:{
+        status:'blue',
+        status_name:'black'
       }
     },
     rote:{}
@@ -100,7 +104,7 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
     var output='';
     graph[currenttab].getCells().forEach(
       function(i){
-        if(i.get('type')=='status.Element'){
+        if(i.get('type')=='status'){
           output+='INSERT INTO '+table+'(';
           output+='status,status_name';
           output+=') VALUES(';
@@ -202,14 +206,19 @@ joint.shapes.toolbox.View = joint.dia.ElementView.extend({}, {
             this.resize();
         });
     }
-});
-//statusノード
-/*joint.shapes.basic.Generic.define('status', {
+});*/
+/*statusノード
+joint.shapes.basic.Generic.define('status', {
     attrs: {
         rect: { 'width': 200 , 'height':150},
-        '.status-status-rect': { 'stroke': 'black', 'stroke-width': 1, 'fill': '#DDD','rx':50 },
+        '.status-status-rect': {
+          'stroke': config.color.status.rect.stroke,
+          'stroke-width': 1,
+          'fill': config.color.status.rect.fill,
+          'rx':40,
+         },
         //'.status-name-rect': { 'stroke': 'black', 'stroke-width': 1, 'fill': '#3498db','rx':20,'ry':20 },
-        '.status-name-text': {
+        '.status-status-text': {
             'ref': '.status-status-rect',
             'ref-y': .1,
             'ref-x': .5,
@@ -217,24 +226,24 @@ joint.shapes.toolbox.View = joint.dia.ElementView.extend({}, {
             'y-alignment': 'middle',
             'text-align':"justify",
             'font-weight': 'bold',
-            'fill': 'black',
-            'font-size': 12
+            'fill': config.color.status.text.status,
+            'font-size': 15
             //'font-family': 'Times New Roman'
         },
-        '.status-status-text': {
+        '.status-status_name-text': {
             'ref': '.status-status-rect',
             'ref-y': .5,
             'ref-x': .5,
             'text-anchor': 'middle',
             'y-alignment': 'middle',
             //'font-weight': '',
-            'fill': 'black',
-            'font-size': 12
+            'fill': config.color.status.text.status_name,
+            'font-size': 15
             //'font-family': 'Times New Roman'
         }
     },
     status:'',
-    name: ''
+    status_name: ''
 },{
     markup: [
         '<g class="rotatable">',
@@ -243,51 +252,111 @@ joint.shapes.toolbox.View = joint.dia.ElementView.extend({}, {
         //'<rect class="status-name-rect"/>',
         '</g>',
         '<text class="status-status-text"/>',
-        '<text class="status-name-text"/>',
+        '<text class="status-status_name-text"/>',
         '</g>'
     ].join(''),
 
     initialize: function() {
       _.bindAll(this,'openeditbox');
-        /*this.on('change:status change:name', function() {
+      _.bindAll(this,'initstatus');
+        this.on('change:status change:status_name', function() {
             this.updateRectangles();
-            this.trigger('status-update');
         }, this);
         this.updateRectangles();
         joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
+        this.initstatus();
     },
     updateRectangles: function() {
         var attrs = this.get('attrs');
         var rects = [
-            { type: 'name', text: this.get('name') },
-            { type: 'status', text: this.get('status') }
+            { type: 'status', text: this.get('status') },
+            { type: 'status_name', text: this.get('status_name') }
         ];
-        var offsetY = 0;
+        /*var offsetY = 0;
         rects.forEach(function(rect) {
-            var lines = Array.isArray(rect.text) ? rect.text : [rect.text];
-            var rectHeight = lines.length * 20 + 20;
+            //var lines = Array.isArray(rect.text) ? rect.text : [rect.text];
+            //var rectHeight = lines.length * 20 + 20;
             attrs['.status-' + rect.type + '-text'].text = lines.join('\n');
             offsetY += rectHeight;
         });
+        rects.forEach(_.bind(function(rect) {
+          this.attr('.status-' + rect.type + '-text/text',rect.text);
+          //attrs['.status-' + rect.type + '-text'].text =rect.text;
+        },this));
+        this.trigger('status-update');
+    },
+    initstatus:function(){
+      //採番
+      var i=1;
+      while(true){
+        let valid=0;
+        graph.forEach(function(gr){
+          gr.getCells().forEach(function(e){
+            if(e.get('type')=='status'&&e.get('status')=="S"+i){
+              valid++;
+            }
+          });
+        });
+        if(valid==0){
+          break;
+        }else{
+          i++;
+        }
+      }
+      this.prop('status',"S"+i);
     },
     openeditbox:function(evt){
+      if(this.getEmbeddedCells().length>0)return 0;
       var edit=new joint.shapes.editbox.Element({
+        status:this.get('status'),
+        status_name:this.get('status_name'),
         position: { x: this.get('position').x+150,
                     y: this.get('position').y+100},
-        size: { width: 200, height: 150 }
+        size: { width: 200, height: 180 }
       });
       graph[currenttab].addCell(edit);
       graph[currenttab].addCell(new joint.dia.Link({
         source: { id: this.get('id')},
         target: { id: edit.get('id')}
       }));
+      this.embed(edit);
+      this.listenTo(edit,'editbox-cancelled',_.bind(function(){
+        this.closeeditbox();
+      },this));
+
       this.listenTo(edit,'editbox-update',function(e){
-        this.prop('status',e[1]);
-        this.prop('name',e[0]);
-        this.updateRectangles();
+        var val=validate('status',e[0],this.get('id'));
+        if(val.length==0){
+          this.prop('status',e[0]);
+          this.prop('status_name',e[1]);
+          //this.trigger('change:status');
+          this.closeeditbox();
+        }else{
+          alert('エラー:ステータス要素のなかに重複したものがあります。');
+        }
       });
-    }
+      this.listenTo(paper[currenttab],'blank:pointerclick',function(e){
+        this.closeeditbox();
+      });
+      var rote=new joint.shapes.rote({
+        source: { id: this.get('id')},
+        target: {
+          x: this.get('position').x+this.get('size').width+100,
+          y: this.get('position').y+this.get('size').height/2
+        }
+      });
+      graph[currenttab].addCell(rote);
+      this.embed(rote);
+      this.listenTo(rote,'change:target:id',function(e){
+        this.unembed(rote);
+        this.closeeditbox();
+      });
+    },
+    closeeditbox:function(){
+      graph[currenttab].removeCells(this.getEmbeddedCells());
+    },
 });
+
 joint.shapes.status.View = joint.dia.ElementView.extend({
   initialize: function() {
     joint.dia.ElementView.prototype.initialize.apply(this, arguments);
@@ -296,8 +365,8 @@ joint.shapes.status.View = joint.dia.ElementView.extend({
       this.resize();
     });
   },
-});
-*/
+});*/
+
 //statusノード
 joint.shapes.status = {};
 //Element
@@ -307,8 +376,8 @@ joint.shapes.status.Element = joint.shapes.basic.Rect
     type : 'status.Element',
     attrs : {
       rect : {
-        /*stroke : '#EEEEEE',
-        'fill-opacity' : 0*/
+        //stroke : '#EEEEEE',
+        //'fill-opacity' : 0
         'stroke': '#CDC', 'stroke-width': 3, 'fill': '#EFE','rx':20
       }
     },
@@ -334,10 +403,11 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         _.bindAll(this,'initstatus');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
         this.$box = $(_.template(this.template)());
-        /*this.$box.find('.status-element').on('mousedown click', function(evt) {
-          evt.stopPropagation();
-        });*/
-        paper[currenttab].on('blank:pointerclick',_.bind(this.closeeditbox,this));
+        //this.$box.find('.status-element').on('mousedown click', function(evt) {
+        //  evt.stopPropagation();
+        //});
+        this.listenTo(paper[currenttab],'blank:pointerclick',_.bind(this.closeeditbox,this));
+        //paper[currenttab].on('blank:pointerclick',_.bind(this.closeeditbox,this));
         this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
         //this.$box.find('.linker').on('mousedown', _.bind(this.addlink, this));
         // Update the box position whenever the underlying model changes.
@@ -401,7 +471,6 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
 
       this.listenTo(edit,'editbox-update',function(e){
         var val=validate('status',e[0],this.model.get('id'));
-        console.log(val);
         if(val.length==0){
           this.model.prop('status',e[0]);
           this.model.prop('status_name',e[1]);
@@ -667,7 +736,6 @@ joint.shapes.rote=joint.dia.Link.extend({
 
     this.listenTo(edit,'editlink-update',function(e){
       var val=validate('action_code',e[0],this.get('id'));
-      //console.log(e);
       if(val.length==0){
         this.prop('action_code',e[0]);
         this.prop('action',e[1]);
