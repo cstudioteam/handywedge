@@ -139,12 +139,11 @@ function Tab_Change(to){
 }
 //タブを閉じる
 function Tab_Close(i){
-  let trigger_changetab=0;
   if($('#tabs .tab:eq('+i+')').css('background-color')=='rgb(136, 136, 136)')trigger_changetab=1;
   $('#tabs .tab:eq('+i+')').remove();
   $('#zone_paper .paperframe:eq('+i+')').remove();
-  paper.shift(i);
-  graph.shift(i);
+  paper.splice(i,1);
+  graph.splice(i,1);
   Tab_Change(i==0?0:i-1);
   if($('#tabs .tab').size()==0) Tab_Home();
 }
@@ -236,7 +235,7 @@ $('#m_c_csv').on('click',function(){
   for(var t=0;t<graph.length;t++){
     graph[t].getCells().forEach(
       function(i){
-        if(i.get('type')=='status'&&i.get('status')!=''){
+        if(i.get('type')=='status.Element'&&i.get('status')!=''){
           //output+=$('#tabs .tab:eq('+t+') .name').text()+',';
           output+='"'+i.get('status')+'",';
           output+='"'+i.get('status_name')+'",';

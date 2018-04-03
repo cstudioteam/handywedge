@@ -96,13 +96,13 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
   },
   //ボタン関係
   save:function(){
-    var output=JSON.stringify(graph[currenttab].toJSON());
+    var output=JSON.stringify(this.model.graph.toJSON());
     blob_buffer(output,this.$box.find('.filename').val()+'.json');
   },
   sql:function(){
     var table=this.$box.find('.filename').val();
     var output='';
-    graph[currenttab].getCells().forEach(
+    this.model.graph.getCells().forEach(
       function(i){
         if(i.get('type')=='status'){
           output+='INSERT INTO '+table+'(';
@@ -128,11 +128,14 @@ joint.shapes.toolbox.ElementView = joint.dia.ElementView.extend({
     blob_buffer(output,table+'.sql');
   },
   addBox:function(){
-    var statusbox=new joint.shapes.status.Element({
+    /*var statusbox=new joint.shapes.status.Element({
       position: { x: this.model.get('position').x+200, y: this.model.get('position').y+50},
       size: { width: 150, height: 100 }
-    });
-    graph[currenttab].addCell(statusbox);
+    });*/
+    this.model.graph.addCell(new joint.shapes.status.Element({
+      position: { x: this.model.get('position').x+200, y: this.model.get('position').y+50},
+      size: { width: 150, height: 100 }
+    }));
   },
   removeBox: function(evt) {
     this.$box.remove();
@@ -189,7 +192,7 @@ joint.shapes.basic.Generic.define('toolbox', {
           position: { x: 50, y: 200},
           size: { width: 150, height: 100 }
         });
-        graph[currenttab].addCell(statusbox);
+        this.model.graph.addCell(statusbox);
       });
       this.$box.find('.toolbox-statusbox-rect').on('mousedown',function(evt){
         evt.stopPropagation();
@@ -314,8 +317,8 @@ joint.shapes.basic.Generic.define('status', {
                     y: this.get('position').y+100},
         size: { width: 200, height: 180 }
       });
-      graph[currenttab].addCell(edit);
-      graph[currenttab].addCell(new joint.dia.Link({
+      this.model.graph.addCell(edit);
+      this.model.graph.addCell(new joint.dia.Link({
         source: { id: this.get('id')},
         target: { id: edit.get('id')}
       }));
@@ -345,7 +348,7 @@ joint.shapes.basic.Generic.define('status', {
           y: this.get('position').y+this.get('size').height/2
         }
       });
-      graph[currenttab].addCell(rote);
+      this.model.graph.addCell(rote);
       this.embed(rote);
       this.listenTo(rote,'change:target:id',function(e){
         this.unembed(rote);
@@ -353,7 +356,7 @@ joint.shapes.basic.Generic.define('status', {
       });
     },
     closeeditbox:function(){
-      graph[currenttab].removeCells(this.getEmbeddedCells());
+      this.model.graph.removeCells(this.getEmbeddedCells());
     },
 });
 
@@ -418,12 +421,14 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
         this.updateBox();
     },
     initstatus:function(){
-      //採番
-      var i=1;
-      while(validate('status',"S"+i,this.model.get('id')).length!=0){
-        i++;
+      if(this.model.prop('status')==''){
+        //採番
+        var i=1;
+        while(validate('status',"S"+i,this.model.get('id')).length!=0){
+          i++;
+        }
+        this.model.prop('status',"S"+i);
       }
-      this.model.prop('status',"S"+i);
     },
     render: function() {
         joint.dia.ElementView.prototype.render.apply(this, arguments);
@@ -459,8 +464,8 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
                     y: this.model.get('position').y+100},
         size: { width: 200, height: 180 }
       });
-      graph[currenttab].addCell(edit);
-      graph[currenttab].addCell(new joint.dia.Link({
+      this.model.graph.addCell(edit);
+      this.model.graph.addCell(new joint.dia.Link({
         source: { id: this.model.get('id')},
         target: { id: edit.get('id')}
       }));
@@ -487,7 +492,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
           y: this.model.get('position').y+this.model.get('size').height/2
         }
       });
-      graph[currenttab].addCell(rote);
+      this.model.graph.addCell(rote);
       this.model.embed(rote);
       this.listenTo(rote,'change:target:id',function(e){
         this.model.unembed(rote);
@@ -497,7 +502,7 @@ joint.shapes.status.ElementView = joint.dia.ElementView.extend({
  },
     closeeditbox:function(){
       this.$box.find('.editable').css('visibility','hidden');
-      graph[currenttab].removeCells(this.model.getEmbeddedCells());
+      this.model.graph.removeCells(this.model.getEmbeddedCells());
     },
 });
 
@@ -662,24 +667,26 @@ joint.shapes.rote=joint.dia.Link.extend({
     this.updateBox();
   },
   initcode:function(){
-    //採番
-    var i=1;
-    while(true){
-      let valid=0;
-      graph.forEach(function(gr){
-        gr.getCells().forEach(function(e){
-          if(e.get('type')=='rote'&&e.get('action_code')=="L"+i){
-            valid++;
-          }
+    if(this.prop('action_code')==''){
+      //採番
+      var i=1;
+      while(true){
+        let valid=0;
+        graph.forEach(function(gr){
+          gr.getCells().forEach(function(e){
+            if(e.get('type')=='rote'&&e.get('action_code')=="L"+i){
+              valid++;
+            }
+          });
         });
-      });
-      if(valid==0){
-        break;
-      }else{
-        i++;
+        if(valid==0){
+          break;
+        }else{
+          i++;
+        }
       }
+      this.prop('action_code','L'+i);
     }
-    this.prop('action_code','L'+i);
   },
   updateBox:function(){
     this.prop('labels/0/attrs/text/text/0',this.get('action_code'));
@@ -695,7 +702,7 @@ joint.shapes.rote=joint.dia.Link.extend({
   openedit:function(){
     let pos={};
     if(this.get('source').id){
-      pos.sid=graph[currenttab].getCell(this.get('source').id);
+      pos.sid=this.model.graph.getCell(this.get('source').id);
       pos.sx=pos.sid.get('position').x;
       pos.sy=pos.sid.get('position').y;
     }else{
@@ -703,7 +710,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       pos.sy=this.get('source').y;
     }
     if(this.get('target').id){
-      pos.tid=graph[currenttab].getCell(this.get('target').id);
+      pos.tid=this.model.graph.getCell(this.get('target').id);
       pos.tx=pos.sid.get('position').x;
       pos.ty=pos.sid.get('position').y;
     }else{
@@ -724,14 +731,14 @@ joint.shapes.rote=joint.dia.Link.extend({
          height: 180
         }
     });
-    graph[currenttab].addCell(edit);
-    /*graph[currenttab].addCell(new joint.dia.Link({
+    this.model.graph.addCell(edit);
+    /*this.model.graph.addCell(new joint.dia.Link({
       source: { id: this.get('id')},
       target: { id: edit.get('id')}
     }));*/
     //this.embed(edit);
     this.listenTo(edit,'editlink-cancelled',_.bind(function(){
-      graph[currenttab].removeCells(edit);
+      this.model.graph.removeCells(edit);
     },this));
 
     this.listenTo(edit,'editlink-update',function(e){
@@ -740,13 +747,13 @@ joint.shapes.rote=joint.dia.Link.extend({
         this.prop('action_code',e[0]);
         this.prop('action',e[1]);
         this.updateBox();
-        graph[currenttab].removeCells(edit);
+        this.model.graph.removeCells(edit);
       }else{
         alert('エラー:ステータス要素のなかに重複したものがあります。');
       }
     });
     edit.listenTo(paper[currenttab],'blank:pointerclick',function(e){
-      graph[currenttab].removeCells(edit);
+      this.model.graph.removeCells(edit);
     });
   },
   removeBox:function(){
