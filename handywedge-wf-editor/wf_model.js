@@ -702,7 +702,7 @@ joint.shapes.rote=joint.dia.Link.extend({
   openedit:function(){
     let pos={};
     if(this.get('source').id){
-      pos.sid=this.model.graph.getCell(this.get('source').id);
+      pos.sid=this.graph.getCell(this.get('source').id);
       pos.sx=pos.sid.get('position').x;
       pos.sy=pos.sid.get('position').y;
     }else{
@@ -710,7 +710,7 @@ joint.shapes.rote=joint.dia.Link.extend({
       pos.sy=this.get('source').y;
     }
     if(this.get('target').id){
-      pos.tid=this.model.graph.getCell(this.get('target').id);
+      pos.tid=this.graph.getCell(this.get('target').id);
       pos.tx=pos.sid.get('position').x;
       pos.ty=pos.sid.get('position').y;
     }else{
@@ -731,14 +731,14 @@ joint.shapes.rote=joint.dia.Link.extend({
          height: 180
         }
     });
-    this.model.graph.addCell(edit);
-    /*this.model.graph.addCell(new joint.dia.Link({
+    this.graph.addCell(edit);
+    /*this.graph.addCell(new joint.dia.Link({
       source: { id: this.get('id')},
       target: { id: edit.get('id')}
     }));*/
     //this.embed(edit);
     this.listenTo(edit,'editlink-cancelled',_.bind(function(){
-      this.model.graph.removeCells(edit);
+      this.graph.removeCells(edit);
     },this));
 
     this.listenTo(edit,'editlink-update',function(e){
@@ -747,13 +747,13 @@ joint.shapes.rote=joint.dia.Link.extend({
         this.prop('action_code',e[0]);
         this.prop('action',e[1]);
         this.updateBox();
-        this.model.graph.removeCells(edit);
+        this.graph.removeCells(edit);
       }else{
         alert('エラー:ステータス要素のなかに重複したものがあります。');
       }
     });
     edit.listenTo(paper[currenttab],'blank:pointerclick',function(e){
-      this.model.graph.removeCells(edit);
+      graph[currenttab].removeCells(edit);
     });
   },
   removeBox:function(){
