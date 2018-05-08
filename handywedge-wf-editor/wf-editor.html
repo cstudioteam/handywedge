@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta  http-equiv="X-UA-Compatible"  content="IE=edge">
+  <meta  name="viewport"  content="width=device-width, initial-scale=1">
+  <meta  http-equiv="Pragma"  content="no-cache">
+  <meta  http-equiv="Cache-Control"  content="no-cache">
+  <meta  http-equiv="Expires"  content="0">
+
+  <title>WorkFrowEditor</title>
+  <link  rel="stylesheet"  type="text/css"  href="css/joint.min.css"/>
+  <link  rel="stylesheet"  type="text/css"  href="css/jquery-ui.css"/>
+  <link  rel="stylesheet"  type="text/css"  href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/jquery.contextMenu.min.css"/>
+  <script src="lib/jquery.js"></script>
+  <script src="lib/jquery-ui.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script src="lib/lodash.js"></script>
+  <script src="lib/backbone.js"></script>
+  <script src="lib/joint.min.js"></script>
+  <script src="lib/jquery.contextMenu.min.js"></script>
+  <script src="lib/jquery.ui.position.min.js"></script>
+  <script src="lib/fontawesome-all.min.js"></script>
+
+<link  rel="stylesheet"  type="text/css"  href="wf.css"/>
+<link  rel="stylesheet"  type="text/css"  href="wf_model.css"/>
+</head>
+<body>
+  <!--ファイル読み込みモーダル-->
+  <section class="modal fade" id="modal_load_json">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">プロジェクトファイルを読み込む</h3>
+          <a class="close" data-dismiss="modal">×</a>
+        </div>
+        <div class="modal-body">
+          <input type="file" id="file_json" name="file"/>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary btn-sm" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--新規タブモーダル-->
+  <section class="modal fade" id="modal_tabconf">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>タブの設定</h3>
+          <a class="close" data-dismiss="modal">×</a>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control name" placeholder="タブ名">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary btn-sm" data-dismiss="modal" id="m_tab_ok">OK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--メニューバー（最上部）-->
+  <section id="zone_menu">
+    <span>プロジェクト
+      <div class="menu_content project">
+        <div id="m_c_open">開く(.json)</div>
+        <div>保存する
+          <div>
+             <div id="m_c_json">|JSON形式</div>
+             <div id="m_c_csv">|CSV形式</div>
+             <!--div id="m_c_sql">|SQL形式</div-->
+         </div>
+        </div>
+      </div>
+    </span>
+    <span>タブ
+      <div class="menu_content tab"><!--
+      --><div id="m_c_newtab">新規タブ</div><!--
+      --><div id="m_c_conftab">タブの設定</div>
+      </div>
+    </span>
+    <span>
+      <a href="./usage/index.html" target="_blank">使い方</a>
+    </span>
+  </section>
+  <section id="zone_tab">
+      <span class="tab_home"><i class="fas fa-home"></i></span>
+      <span id="tabs"></span>
+      <span class="tab plus"><i class="fas fa-plus-circle"></i></span>
+  </section>
+  <section id="zone_paper">
+    <div class="home">
+      <h1>Handywedge WorkFlow-Editor</h1>
+      <h4>プロジェクト</h4>
+      <hr>
+      <div id="list_status">
+      <h3>ステータス一覧</h3>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="status">ステータスコード</th>
+            <th class="status_name">ステータス名</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div id="list_link">
+      <h3>リンク一覧</h3>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="action_code">action_code</th>
+            <th class="action">action</th>
+            <th class="pre_status">pre_status</th>
+            <th class="post_status">post_status</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </div>
+  </section>
+  <div style="position:fixed;right:0px;bottom:0px;color:#BCB;z-index:1025;">Handywedge workflow-editor ß2.2</div>
+</body>
+<script src="wf_cont.js"/></script>
+<script src="wf_model.js"/></script>
+</html>

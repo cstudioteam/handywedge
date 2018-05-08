@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta  http-equiv="X-UA-Compatible"  content="IE=edge">
+  <meta  name="viewport"  content="width=device-width, initial-scale=1">
+  <meta  http-equiv="Pragma"  content="no-cache">
+  <meta  http-equiv="Cache-Control"  content="no-cache">
+  <meta  http-equiv="Expires"  content="0">
+
+  <title>WorkFrowEditorユーザーガイド</title>
+</head>
+<body>
+  <header>
+    <h1>WorkFrowEditor　ユーザーガイド</h1>
+    <p>version 0.1</p>
+    <div style="position:relative; width:200px; border:1px solid; left:20px;">
+      目次
+      <hr>
+      <div>1.概要</div>
+      <div>2.画面説明
+        <div style="position:relative; left:20px;">ホーム画面</div>
+        <div style="position:relative; left:20px;">上部バー</div>
+        <div style="position:relative; left:20px;">タブバー</div>
+        <div style="position:relative; left:20px;">編集画面</div>
+
+      </div>
+      <div>3.ステータス</div>
+      <div>4.リンク</div>
+    </div>
+  </header>
+  <hr>
+  <article>
+    <section>
+      <h3>1.概要</h3>
+      <p>Handywedge WorkFrowEditor（以下,wfeditor)は、
+        汎用フレームワークHandywedgeのワークフロー機能で使用されるデータの一部の作成を支援するものです。<br>
+        v0.1現在、ステータス、およびリンクを直感的に作成、保存することができます。
+      </p>
+    </section>
+      <hr>
+    <section>
+      <h3>2.画面説明</h3>
+      <h5>ホーム画面</h5>
+      <img src="img/wfe_home.png" width='75%'>
+      <p>wfeditorを読み込み、最初に現れる画面です。<br>
+        この画面では、他の画面で編集したステータスやリンクの全てを一覧で表示します。
+      </p>
+      <hr style="border-top: 1px dashed #333;">
+      <h5>上部バー</h5>
+      <img src="img/upperbar.png">
+      <p>一番上側にある部分です。<br>
+        マウスを重ねると下にメニューが出てきます。
+      </p>
+      <h5>プロジェクトペイン</h5>
+      <img src="img/projectpain.png">
+      <p>上部バーの"プロジェクト"にマウスを重ねると現れます。<br>
+        "開く(.json)"を押すとロード画面に遷移し、
+        wfeditorで作成した.json形式のファイルを読み込めます。<br>
+        "保存する"の下側の"JSON形式","CSV形式"を押すと
+        それぞれの形式の保存データを作成できます。
+      </p>
+      <h5>タブペイン</h5>
+      <img src="img/tabpain.png">
+      <p>上部バーの"タブ"にマウスを重ねると現れます。<br>
+        "新規タブ"で新しいタブを作成できます。<br>
+        "タブの設定"で現在選択しているタブの設定を変更できます。
+      </p>
+      <h5>使い方</h5>
+      <p>ユーザーガイドを開きます。</p>
+      <hr style="border-top: 1px dashed #333;">
+      <h5>タブバー</h5>
+      <img src="img/tab.png">
+      <p>タブは画面上部にあります。<br>
+        一番左側の家のマークを押すとホーム画面に遷移します。<br>
+        家と＋の間の灰色の部分を"タブ"と言い、それぞれ編集画面に対応しています。<br>
+        現在開いている編集画面に対応したタブは、明るい色で表示されます。<br>
+        タブ内の情報を丸ごと削除するには、タブ右上の"x"ボタンを押してください。<br>
+        また、タブをダブルクリックすると"タブの設定"の画面が出てきます。<br>
+        一番右側の＋ボタンを押すと、タブが増えます。<br>
+      </p>
+      <hr style="border-top: 1px dashed #333;">
+      <h5>編集画面</h5>
+      <img src="img/editpage.png" width='75%'>
+      <p>編集画面では、データを編集することができます。<br>
+        編集画面は上部のタブと連携しており、何個でも作ることが可能です。<br>
+      </p>
+      <h5>ツールボックス</h5>
+      <img src="img/toolbox.png">
+      <p>ツールボックス上の"ステータスノードを追加"を押すと
+      ステータスノードの箱が編集画面に追加されます。</p>
+      <h5>タブ設定画面</h5>
+      <img src="img/tab_config.png" width='75%'>
+      <p>現在開いているタブの名称を設定できます。<br>
+      </p>
+    </section>
+    <hr>
+    <section>
+      <h3>3.ステータス</h3>
+      <img src="img/status.png">
+      <p>ステータスは、上の様な箱で、"ステータスコード"と"ステータスの内容"を登録できます。<br>
+        専ら、<b>状態を表す</b>ことに使用されます。<br>
+        "ステータスコード"は青色で上部に表示され、プロジェクト全体で重複は許されません。<br>
+        "ステータスの内容"は黒色で中央に表示され、重複は問われません。<br>
+      </p>
+      <img src="img/status_clicked.png"  width='75%'>
+      <p>ステータスをクリックすると以下の様に編集モードになります。<br>
+        編集モードでは、編集用のボックスが現れ、"ステータスコード"と"ステータスの内容"を編集できます<br>
+        ステータスの箱に紐付けされた箱の内容を変更し、"OK"を押すことで
+        ステータスの内容を変更できます。<br>
+        変更をしたくない時には"Cancel"を押してください。
+        編集の内容を破棄します。<br>
+        また、編集画面の何もない部分を押すことでも、編集モードを解除し、変更を破棄できます。<br>
+        編集モード時に右から出ているものは"リンク"で、次章で説明します。
+      </p>
+      <img src="img/statusx.png">
+      <p>編集モード時に、ステータス自体を破棄したい時には、
+        ステータス左上のこのボタンを押してください。
+      </p>
+    </section>
+    <hr>
+    <section>
+      <h3>4.リンク</h3>
+      <img src="img/link_1.png" width='75%'>
+      <p>
+        リンクは、ステータスを編集モードにした際に出てくる矢印状の線です。<br>
+        リンクの矢印の両端は自由に伸ばすことができ、
+        またステータスと重ねることで、ステータス間を繋ぐことができます。<br>
+        これにより、<b>ステータスとステータスの関係性を表現します。</b>
+      </p>
+      <p style="font-weight: bold;">注意：ステータスとステータスを繋がない状態で、
+        矢印の根元部分のステータスの編集モードを解除してしまうと、リンクも同時に消えてしまいます。<br>
+        何らかのステータスにリンクの先端をドラッグしてください。</p>
+      <p>リンクにマウスを重ねると、そのリンクに関係するボタンが出てきます。</p>
+      <img src="img/linkx.png">
+      <p>このxボタンでは、リンクを削除することができます。</p>
+      <img src="img/linkedit.png">
+      <p>このボタンを押すと、以下の右下の様なリンク編集ボックスが現れます。</p>
+      <img src="img/link_2.png" width='75%'>
+      <p>リンク編集ボックスでは、"アクション"と"アクションコード"を編集できます。<br>
+        "アクション"はリンクの文字部分の左側に表示され、プロジェクト全体で重複は許されません。<br>
+        "アクションコード"はリンクの文字部分の右側に表示され、重複は問われません。
+      </p>
+      <p>
+        リンクの箱に紐付けされた箱の内容を選択し、"OK"を押すことで
+        リンクの内容を変更できます。<br>
+        変更をしたくない時には"Cancel"を押してください。
+        編集の内容を破棄します。<br>
+        また、編集画面の何もない部分を押すことでも、編集モードを解除し、変更を破棄できます。
+      </p>
+      <img src="img/link_3.png" width='75%'>
+      <p>リンクの中間部分をドラッグすると、リンクを折り曲げることが出来ます。<br>
+        折り曲げた関節は再び動かすことも可能です。<br>
+        リンクにマウスを重ねた時にできる吹き出しのxボタンで、関節のみを消去出来ます。
+      </p>
+      <img src="img/link_4.png" width='75%'>
+      <p>リンクがステータスに繋がると、矢印の端部に黒い丸が現れます。<br>
+        この状態になると、リンクとステータスが繋がれたこととなります。
+      </p>
+    </section>
+  </article>
+  <hr>
+  <footer>
+    2017-2018 C studio Co.,Ltd. www.cstudio.jp
+  </footer>
+</body>
+</html>
