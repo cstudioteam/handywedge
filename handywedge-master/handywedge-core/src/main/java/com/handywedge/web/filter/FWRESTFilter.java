@@ -94,6 +94,11 @@ public class FWRESTFilter implements Filter {
             httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
+          } else if (!loginMgr.expirationAPIToken(token)) {
+              logger.warn("APIToken Authorization false. Authorization={}", tokenHeader);
+              httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"expired_token\"");
+              httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+              return;
           } else {
             logger.info("APIToken Authorization true. token={}", token);
           }

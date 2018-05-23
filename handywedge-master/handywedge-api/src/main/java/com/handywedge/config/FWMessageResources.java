@@ -34,12 +34,13 @@ public interface FWMessageResources {
   String RESET_PASSWD_FAIL_REDIRECT = "fw.user.register.passwd.reset.fail.redirect";
   String SERVER_ADDR = "fw.server.address";
   String IGNORE_AUTH_URL = "fw.ignore.auth.url";
+  String TOKEN_TIMEOUT_SEC = "fw.token.timeout.sec";
 
   /**
    * プロパティファイルに設定された値を取得します。<br>
    * プロパティファイルにキーが設定されていない場合はnullが返されます。<br>
    * ロケールはログインしているユーザーに設定されたロケールが使用されます。<br>
-   * 
+   *
    * @param key 取得するキー
    * @return 取得された値
    */
@@ -49,7 +50,7 @@ public interface FWMessageResources {
    * プロパティファイルに設定された値を取得します。<br>
    * プロパティファイルにキーが設定されていない場合はnullが返されます。<br>
    * ロケールは引数localeが使用されます。<br>
-   * 
+   *
    * @param key 取得するキー
    * @param locale ロケール
    * @return 取得された値
@@ -59,7 +60,7 @@ public interface FWMessageResources {
   /**
    * すべてのキーのSetを返します。<br>
    * ロケールはログインしているユーザーに設定されたロケールが使用されます。<br>
-   * 
+   *
    * @return すべてのキーのSet
    */
   Set<String> keySet();
@@ -67,7 +68,7 @@ public interface FWMessageResources {
   /**
    * すべてのキーのSetを返します。<br>
    * ロケールは引数localeが使用されます。<br>
-   * 
+   *
    * @param locale ロケール
    * @return すべてのキーのSet
    */
@@ -75,14 +76,14 @@ public interface FWMessageResources {
 
   /**
    * ログインしているユーザーで現在使用されるResourceBundleインスタンスを返します。
-   * 
+   *
    * @return ResourceBundleインスタンス
    */
   ResourceBundle getBundle();
 
   /**
    * 指定したlocaleで現在使用されるResourceBundleインスタンスを返します。
-   * 
+   *
    * @param locale ロケール
    * @return ResourceBundleインスタンス
    */
