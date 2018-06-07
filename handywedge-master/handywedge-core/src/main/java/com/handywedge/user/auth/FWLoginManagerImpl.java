@@ -275,33 +275,34 @@ public class FWLoginManagerImpl implements FWLoginManager {
     long timeout = 0L;
     try {
       timeout = Long.parseLong(msgResources.get(FWMessageResources.TOKEN_TIMEOUT_SEC)) * 1000;
-    } catch(Exception e) {
+    } catch (Exception e) {
     }
 
-    logger.info("##### expirationAPIToken token:" + token);
-    logger.info("##### expirationAPIToken timeout:" + timeout);
+    logger.debug("##### expirationAPIToken token:" + token);
+    logger.debug("##### expirationAPIToken timeout:" + timeout);
 
-    if (timeout > 0L) {   // Token Timeout 有効
+    if (timeout > 0L) { // Token Timeout 有効
       FWConnection con = cm.getConnection();
-      try (
-        FWPreparedStatement ps = con.prepareStatement("SELECT create_date FROM fw_api_token WHERE token = ?")) {
+      try (FWPreparedStatement ps =
+          con.prepareStatement("SELECT create_date FROM fw_api_token WHERE token = ?")) {
         ps.setString(1, token);
         try (FWResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-            	Timestamp ts = rs.getTimestamp("create_date");
-            	logger.info("##### expirationAPIToken timeout:" + ts);
-            	logger.info("##### expirationAPIToken check:" + (ts.getTime() + timeout < System.currentTimeMillis()));
-        	    if (ts.getTime() + timeout < System.currentTimeMillis()) {
-            	      logger.info("expired_token. token={}", token);
-            	      logger.perfEnd("authAPIToken", startTime);
-            	      return false;
-            	}
-            } else {
-      	      logger.info("invalid_token. token={}", token);
-      	      logger.perfEnd("authAPIToken", startTime);
-      	      return false;
-
+          if (rs.next()) {
+            Timestamp ts = rs.getTimestamp("create_date");
+            logger.debug("##### expirationAPIToken timeout:" + ts);
+            logger.debug("##### expirationAPIToken check:"
+                + (ts.getTime() + timeout < System.currentTimeMillis()));
+            if (ts.getTime() + timeout < System.currentTimeMillis()) {
+              logger.info("expired_token. token={}", token);
+              logger.perfEnd("authAPIToken", startTime);
+              return false;
             }
+          } else {
+            logger.info("invalid_token. token={}", token);
+            logger.perfEnd("authAPIToken", startTime);
+            return false;
+
+          }
         }
       } catch (SQLException e) {
         throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);

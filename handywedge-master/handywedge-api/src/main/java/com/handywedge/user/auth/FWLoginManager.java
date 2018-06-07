@@ -82,6 +82,8 @@ public interface FWLoginManager {
    *
    * @param token APIトークン
    * @return 有効期限内の場合はtrue
+   *
+   * @since 0.6.0
    */
   boolean expirationAPIToken(String token);
 }
