@@ -36,6 +36,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>6.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.primefaces.themes</groupId>
       <artifactId>bootstrap</artifactId>
       <version>1.0.10</version>

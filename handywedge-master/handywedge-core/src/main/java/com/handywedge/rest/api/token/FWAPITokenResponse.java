@@ -9,19 +9,32 @@ package com.handywedge.rest.api.token;
 
 import com.handywedge.rest.FWRESTResponse;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Setter
+@Getter
 public class FWAPITokenResponse extends FWRESTResponse {
 
   private String token;
+  private FWAPITokenUser user = new FWAPITokenUser();
 
   @Override
   public String toString() {
-    return "FWAPITokenResponse [token=" + token + ", getReturn_cd()=" + getReturn_cd()
-        + ", getReturn_msg()=" + getReturn_msg() + "]";
+    return "FWAPITokenResponse [token=" + token + ", user=" + user + ", getReturn_cd()="
+        + getReturn_cd() + ", getReturn_msg()=" + getReturn_msg() + "]";
+  }
+
+  @Setter
+  @Getter
+  @ToString
+  class FWAPITokenUser {
+    private String id;
+    private String name;
+    private String role;
+    private String roleName;
+    private String locale;
   }
 
 }

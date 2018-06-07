@@ -25,6 +25,8 @@ import com.handywedge.common.FWStringUtil;
 import com.handywedge.context.FWRESTContext;
 import com.handywedge.log.FWLogger;
 import com.handywedge.log.FWLoggerFactory;
+import com.handywedge.user.FWInnerUserService;
+import com.handywedge.user.FWUser;
 import com.handywedge.user.auth.FWLoginManager;
 
 @RequestScoped
@@ -34,14 +36,14 @@ import com.handywedge.user.auth.FWLoginManager;
 public class FWAPITokenPublisher {
 
   private FWLoginManager loginMrg;
-
+  private FWInnerUserService userService;
   private FWLogger logger = FWLoggerFactory.getLogger(FWAPITokenPublisher.class);
-
   private FWRESTContext restCtx;
 
   @PostConstruct
   public void init() {
     loginMrg = FWBeanManager.getBean(FWLoginManager.class);
+    userService = FWBeanManager.getBean(FWInnerUserService.class);
     restCtx = FWBeanManager.getBean(FWRESTContext.class);
   }
 
@@ -63,6 +65,11 @@ public class FWAPITokenPublisher {
           Integer multiple = request.getMultiple();
           boolean multi = (multiple != null && multiple > 0);
           String token = loginMrg.publishAPIToken(request.getId(), multi);
+          FWUser user = userService.getUserByToken(token);
+          res.getUser().setId(user.getId());
+          res.getUser().setName(user.getName());
+          res.getUser().setRole(user.getRole());
+          res.getUser().setRoleName(user.getRoleName());
           res.setReturn_cd(0);
           res.setToken(token);
         } else {
