@@ -8,7 +8,6 @@
 package com.handywedge.context;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * フレームワーク内部で使用するインターフェースです。<br>
@@ -67,7 +66,5 @@ public interface FWFullRESTContext extends FWRESTContext {
    * @param token APIトークン
    */
   void setToken(String token);
-
-  Map<String, String> getTokenMap();
 
 }

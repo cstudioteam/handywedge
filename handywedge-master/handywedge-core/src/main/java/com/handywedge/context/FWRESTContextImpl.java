@@ -9,7 +9,6 @@ package com.handywedge.context;
 
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -91,11 +90,6 @@ public class FWRESTContextImpl implements FWFullRESTContext {
   @Override
   public void setToken(String token) {
     reqCtx.setToken(token);
-  }
-
-  @Override
-  public Map<String, String> getTokenMap() {
-    return appCtx.getTokenMap();
   }
 
 }

@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -38,33 +37,9 @@ public class FWInternalUtil {
   @Inject
   private FWLogger logger;
 
-  private static final String NO_USE_API_TOKEN = "fw.no.use.api.token";
   private static final String NO_USE_ROLE_ACL = "fw.no.use.role.acl";
   private static final String NO_USE_USER_MANAGEMENT = "fw.no.use.user.management";
 
-  // @FWTransactional(dataSourceName = "jdbc/fw")
-  public void cacheAPIToken() {
-    String use = getResource(NO_USE_API_TOKEN);
-    if (FWStringUtil.isEmpty(use) || Boolean.parseBoolean(use)) {
-      long start = logger.perfStart("cacheAPIToken");
-      Map<String, String> tokens = appCtx.getTokenMap();
-
-      // Requestスコープインスタンスが注入されていない段階なので例外的に生のConnectionを操作する。
-      try (Connection con = FWInternalConnectionManager.getConnection();
-          Statement st = con.createStatement();
-          ResultSet rs = st.executeQuery("SELECT id, token FROM fw_api_token");) {
-        while (rs.next()) {
-          tokens.put(rs.getString("token"), rs.getString("id"));
-        }
-        logger.info("初期キャッシュAPIトークン数={}", tokens.size());
-        logger.perfEnd("cacheAPIToken", start);
-      } catch (SQLException e) {
-        throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
-      }
-    } else {
-      logger.info("APIトークンキャッシュをスキップします。");
-    }
-  }
 
   public void cacheRoleAcl() {
     String use = getResource(NO_USE_ROLE_ACL);
@@ -131,8 +106,8 @@ public class FWInternalUtil {
     }
   }
 
-  public static String generatePassword(int length, boolean digit, boolean upper,
-      boolean lower, boolean symbol) {
+  public static String generatePassword(int length, boolean digit, boolean upper, boolean lower,
+      boolean symbol) {
 
     // 生成処理
     StringBuilder result = new StringBuilder();

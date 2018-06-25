@@ -8,16 +8,15 @@
 package com.handywedge.context;
 
 import java.util.List;
-import java.util.Map;
 
 import com.handywedge.role.FWRoleAcl;
 
 /**
  * フレームワーク内部で使用するインターフェースです。<br>
  * アプリケーションでは使用しないで下さい。<br>
- * 
+ *
  * コンテキスト情報へのアクセスはFWContextインターフェースを使用して下さい。
- * 
+ *
  * @see FWContext
  */
 public interface FWApplicationContext {
@@ -33,8 +32,6 @@ public interface FWApplicationContext {
   String getContextPath();
 
   void setContextPath(String contextPath);
-
-  Map<String, String> getTokenMap();
 
   List<FWRoleAcl> getRoleAcl();
 

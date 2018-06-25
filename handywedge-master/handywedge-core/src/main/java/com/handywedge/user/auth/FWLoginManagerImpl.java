@@ -9,13 +9,7 @@ package com.handywedge.user.auth;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -34,6 +28,7 @@ import com.handywedge.db.FWResultSet;
 import com.handywedge.db.FWTransactional;
 import com.handywedge.log.FWLogger;
 import com.handywedge.user.FWFullUser;
+import com.handywedge.user.FWInnerUserService;
 import com.handywedge.user.FWUser;
 import com.handywedge.user.FWUserImpl;
 import com.handywedge.util.FWInternalUtil;
@@ -59,6 +54,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
   @Inject
   private FWFullRESTContext restCtx;
+
+  @Inject
+  private FWInnerUserService userService;
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
@@ -186,9 +184,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
           ps.setString(1, id);
           ps.executeUpdate();
         }
-        List<String> userId = new ArrayList<>();
-        userId.add(id);
-        appCtx.getTokenMap().values().removeAll(userId);
       }
       logger.debug("token insert.");
       try (FWPreparedStatement ps =
@@ -197,7 +192,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
         ps.setString(2, token);
         ps.executeUpdate();
       }
-      appCtx.getTokenMap().put(token, id);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
@@ -217,7 +211,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
         FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE token = ?")) {
       ps.setString(1, token);
       ps.executeUpdate();
-      appCtx.getTokenMap().remove(token);
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
@@ -229,26 +222,20 @@ public class FWLoginManagerImpl implements FWLoginManager {
   public boolean authAPIToken(String token) {
     long startTime = logger.perfStart("authAPIToken");
 
-    Map<String, String> tokenMap = appCtx.getTokenMap();
-    Set<Entry<String, String>> entrySet = tokenMap.entrySet();
-    Iterator<Entry<String, String>> it = entrySet.iterator();
-
-    String id = null;
-    while (it.hasNext()) {
-      Entry<String, String> e = it.next();
-      if (e.getKey().equals(token)) {
-        id = e.getValue();
-        break;
-      }
+    FWUser u = null;
+    try {
+      u = userService.getUserByToken(token);
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
-
-    if (FWStringUtil.isEmpty(id)) {
+    if (u == null) {
       logger.info("invalid_token. token={}", token);
       logger.perfEnd("authAPIToken", startTime);
       return false;
     }
 
-    FWUser innerUser = getUser(id);
+    // やや冗長的ではあるが修正を最小限に
+    FWUser innerUser = getUser(u.getId());
     restCtx.setUserId(innerUser.getId());
     restCtx.setUserName(innerUser.getName());
     restCtx.setUserRole(innerUser.getRole());
@@ -261,7 +248,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
       restCtx.setUserLocale(innerUser.getLocale());
     }
     restCtx.setToken(token);
-    updateLoginTime(id);
+    updateLoginTime(u.getId());
     logger.debug("authAPIToken ok.");
     logger.perfEnd("authAPIToken", startTime);
     return true;

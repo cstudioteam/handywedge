@@ -9,16 +9,11 @@ package com.handywedge.context;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.handywedge.context.FWApplicationContext;
-import com.handywedge.context.FWFullContext;
-import com.handywedge.context.FWRequestContext;
-import com.handywedge.context.FWSessionContext;
 import com.handywedge.role.FWRoleAcl;
 import com.handywedge.user.FWFullUser;
 import com.handywedge.user.FWUser;
@@ -89,11 +84,6 @@ public class FWContextImpl implements FWFullContext {
   @Override
   public FWUser getUser() {
     return sessionContext.getUser();
-  }
-
-  @Override
-  public Map<String, String> getTokenMap() {
-    return applicationContext.getTokenMap();
   }
 
   @Override
