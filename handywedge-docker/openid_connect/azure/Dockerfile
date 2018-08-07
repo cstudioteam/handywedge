@@ -13,10 +13,10 @@ RUN rm -f /etc/localtime && \
 
 # warビルド&デプロイ
 WORKDIR /tmp/install
-RUN rm -rf /usr/local/tomcat/webapps/* && \
-    echo "export LANG=ja_JP.UTF-8" > /usr/local/tomcat/bin/setenv.sh && \
-    echo "export JAVA_OPTS=-Duser.timezone=JST" >> /usr/local/tomcat/bin/setenv.sh && \
-    chmod +x /usr/local/tomcat/bin/setenv.sh && \
+RUN rm -rf $CATALINA_HOME/webapps/* && \
+    echo "export LANG=ja_JP.UTF-8" > $CATALINA_HOME/bin/setenv.sh && \
+    echo "export JAVA_OPTS=-Duser.timezone=JST" >> $CATALINA_HOME/bin/setenv.sh && \
+    chmod +x $CATALINA_HOME/bin/setenv.sh && \
     curl -LO https://github.com/cstudioteam/handywedge/archive/master.zip && \
     unzip master.zip && \
     curl -LO -b "oraclelicense=accept-securebackup-cookie" \
@@ -27,11 +27,18 @@ RUN rm -rf /usr/local/tomcat/webapps/* && \
     tar xzf apache-maven-3.5.4-bin.tar.gz && \
     cd  handywedge-master/handywedge-openidconnect && \
     /tmp/install/apache-maven-3.5.4/bin/mvn package && \
-    cp /tmp/install/handywedge-master/handywedge-openidconnect/target/openidconnect.war /usr/local/tomcat/webapps/
+    cp /tmp/install/handywedge-master/handywedge-openidconnect/target/openidconnect.war $CATALINA_HOME/webapps/
+
+# 上書き可能環境変数
+ENV LOG_LEVEL=info
+ENV AZURE_TENANT_ID=
+ENV CLIENT_ID=
+ENV RELYING_PARTY_URL=
 
 # インストーラー等削除
 WORKDIR /root
-RUN rm -rf /tmp/install/
+RUN rm -rf /tmp/install/ && \
+    rm -rf .m2
 
 
-CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]
+# CMD ["$CATALINA_HOME/bin/catalina.sh", "run"]

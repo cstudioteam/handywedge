@@ -2,7 +2,7 @@ package com.handywedge.openidconnect;
 
 /**
  * OpenId Connect関連クラスで使用する定数。
- * 
+ *
  * @author takeuchi
  */
 public class OICConst {
@@ -10,7 +10,7 @@ public class OICConst {
     /*
      * プロパティキー定数
     */
-    
+
     // Relying Party (RP)サービス情報
     static final String RP_SCHEMA = "rp.schema";
     static final String RP_HOST = "rp.host";
@@ -21,7 +21,7 @@ public class OICConst {
 
     static final String SERVICE_CLASS = "service.class";
     static final String OP_METADATA_DOC_URL = "op.metadata.doc.url";
-                                               
+
     static final String RESPONSE_TYPE = "response.type";
     static final String RESPONSE_MODE = "response.mode";
     static final String SCOPE = "scope";
@@ -29,11 +29,16 @@ public class OICConst {
 
     // Handywedge 情報
     static final String HW_SSO_LOGIN_ENDPOINT = "hw.sso.login.endpoint";
-    
+
     // Stateホルダー情報
     static final String STATE_HOLDER_REFRESH_SIZE = "state_holder_refresh_size";
     static final String STATE_HOLDER_TERM_SEC = "state.holder.term.sec";
 
     static final String TAG_NAME_ERROR = "error";
     static final String TAG_NAME_ERROR_DESCRIPTION = "error_description";
+
+    /* 環境変数キー定数 */
+    static final String ENV_AZURE_TENANT_ID = "AZURE_TENANT_ID";
+    static final String ENV_CLIENT_ID = "CLIENT_ID";
+    static final String ENV_RELYING_PARTY_URL = "RELYING_PARTY_URL";
 }
