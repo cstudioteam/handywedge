@@ -148,6 +148,7 @@ public abstract class OICService {
       }
       OICUserInfo userInfo = getUserInfo(jwt);
       String token = handywedgeLogin(userInfo);
+      String userId = userInfo.getId();
 
       String url = state.getReturnUrl();
       if (url == null || url.isEmpty()) {
@@ -155,7 +156,7 @@ public abstract class OICService {
         response.getOutputStream().print("{\n \"return_cd\": 0,\n \"token\": \"" + token + "\"\n}");
       } else {
         response.setStatus(HttpServletResponse.SC_FOUND);
-        response.setHeader("Location", url + "?" + "token=" + token);
+        response.setHeader("Location", url + "?" + "token=" + token + "&id=" + userId);
       }
 
       OICStateManager.remove(stateId);
