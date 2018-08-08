@@ -37,6 +37,9 @@ public class OICConst {
     static final String TAG_NAME_ERROR = "error";
     static final String TAG_NAME_ERROR_DESCRIPTION = "error_description";
 
+    // ログアウトパス
+    static final String OIC_LOGOUT_PATH = "oic.logout.path";
+
     /* 環境変数キー定数 */
     static final String ENV_AZURE_TENANT_ID = "AZURE_TENANT_ID";
     static final String ENV_CLIENT_ID = "CLIENT_ID";

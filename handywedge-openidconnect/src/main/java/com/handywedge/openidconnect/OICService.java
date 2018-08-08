@@ -119,6 +119,32 @@ public abstract class OICService {
     }
   }
 
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+
+    try {
+      logger.info("logout <start>");
+      // 戻り先のURLをクエリパラメータから取得。
+      String returnURL = null;
+      String str = request.getParameter("url");
+      if (str != null) {
+        returnURL = URLDecoder.decode(str, StandardCharsets.UTF_8.toString());
+      }
+
+      // OpenId プロバイダのログアウトURLへリダイレクト
+      String url = config.getEnd_session_endpoint() + "?post_logout_redirect_uri=" + returnURL;
+      response.setStatus(HttpServletResponse.SC_FOUND);
+      response.setHeader("Location", url);
+      response.setHeader("Access-Control-Allow-Origin", "*");
+
+      // HWログアウトはさせないでおく
+
+    } catch (UnsupportedEncodingException e) {
+      logger.error("logout method error.", e);
+    } finally {
+      logger.info("logout <end>");
+    }
+  }
+
   public void auth(HttpServletRequest request, HttpServletResponse response) throws OICException {
 
     logger.info("auth <start>");
