@@ -29,7 +29,7 @@ public class FWAPITokenResponse extends FWRESTResponse {
   @Setter
   @Getter
   @ToString
-  class FWAPITokenUser {
+  public class FWAPITokenUser {
     private String id;
     private String name;
     private String role;

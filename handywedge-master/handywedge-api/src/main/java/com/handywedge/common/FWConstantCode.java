@@ -175,10 +175,15 @@ public interface FWConstantCode {
    * トークンが無い。
    */
   int FW_REST_USER_TOKEN_EMPTY = -9014;
-  
+
   /**
    * ユーザーIDが無い。
    */
   int FW_REST_USER_RESET_PASSWD_ID_EMPTY = -9015;
+
+  /**
+   * OICログインに必要なパラメータが不足している。
+   */
+  int FW_REST_OIC_LOGIN_BAD_REQUEST = -9016;
 
 }

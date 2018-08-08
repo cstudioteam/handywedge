@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -147,7 +148,7 @@ public abstract class OICService {
         throw new OICException("Invalid id_token. [" + id_token + "]");
       }
       OICUserInfo userInfo = getUserInfo(jwt);
-      String token = handywedgeLogin(userInfo);
+      String token = handywedgeLogin(userInfo, System.getenv(OICConst.ENV_OPENID_PROVIDER_TYPE));
       String userId = userInfo.getId();
 
       String url = state.getReturnUrl();
@@ -273,7 +274,7 @@ public abstract class OICService {
     }
   }
 
-  protected String handywedgeLogin(OICUserInfo userInfo)
+  protected String handywedgeLogin(OICUserInfo userInfo, String provider)
       throws OICException, IOException, InvalidKeyException, SignatureException,
       CertificateException, InvalidKeySpecException, NoSuchAlgorithmException {
 
@@ -281,13 +282,26 @@ public abstract class OICService {
 
     try {
       Map map = new HashMap();
-      map.put("uid", userInfo.getId());
+      map.put("id", userInfo.getId());
       map.put("name", userInfo.getName());
-      String json = (String) invokePostAPI(OICProperties.get(OICConst.HW_SSO_LOGIN_ENDPOINT), null,
-          map, String.class);
+      map.put("mail_address", userInfo.getId());
+      map.put("provider", provider);
+      String endpoint;
+      if (System.getenv(OICConst.ENV_HW_OIC_LOGIN_ENDPOINT_CONTEXTPATH) != null) {
+        endpoint = System.getenv(OICConst.ENV_HW_OIC_LOGIN_ENDPOINT_CONTEXTPATH)
+            + "/fw/rest/api/oic/login";
+      } else {
+        endpoint = OICProperties.get(OICConst.HW_SSO_LOGIN_ENDPOINT);
+      }
+      logger.trace("HW Login url[{}]", endpoint);
+      String json = (String) invokePostAPI(endpoint, null, map, null, String.class);
 
       ObjectMapper mapper = new ObjectMapper();
       JsonNode node = mapper.readTree(json);
+      if (node.get("return_cd").asInt() != 0) {
+        throw new RuntimeException(
+            "Handywedgeログインに失敗しました。エラーコード[" + node.get("return_cd").asInt() + "]");
+      }
       token = node.get("token").asText();
     } catch (IOException e) {
       throw e;
@@ -348,24 +362,28 @@ public abstract class OICService {
   }
 
 
-  private <T> T invokePostAPI(String url, String path, Map<String, String> param, Class clazz)
-      throws OICException {
+  private <T> T invokePostAPI(String url, String path, Map<String, Object> body,
+      Map<String, String> param, Class clazz) throws OICException {
 
     ClientConfig clientConfig = new DefaultClientConfig();
     clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
     Client client = Client.create(clientConfig);
 
-    WebResource resource = client.resource(OICProperties.get(OICConst.HW_SSO_LOGIN_ENDPOINT));
-    if (path != null)
+    WebResource resource = client.resource(url);
+    if (path != null) {
       resource.path(path);
-    Iterator<String> i = param.keySet().iterator();
-    while (i.hasNext()) {
-      String key = i.next();
-      resource = resource.queryParam(key, param.get(key));
-      logger.trace("Token endpoint Parameter " + key + ":" + param.get(key));
+    }
+    if (param != null) {
+      Iterator<String> i = param.keySet().iterator();
+      while (i.hasNext()) {
+        String key = i.next();
+        resource = resource.queryParam(key, param.get(key));
+        logger.trace("Token endpoint Parameter " + key + ":" + param.get(key));
+      }
     }
     logger.info("invokePostAPI URL call : " + url);
-    ClientResponse response = resource.post(ClientResponse.class);
+    ClientResponse response =
+        resource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, body);
     logger.info("invokePostAPI URL return : " + response.getStatus());
 
     if (response.getStatus() != 200) {

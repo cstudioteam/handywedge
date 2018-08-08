@@ -35,6 +35,7 @@ public interface FWMessageResources {
   String SERVER_ADDR = "fw.server.address";
   String IGNORE_AUTH_URL = "fw.ignore.auth.url";
   String TOKEN_TIMEOUT_SEC = "fw.token.timeout.sec";
+  String OIC_SOURCE_IP = "fw.oic.source.ip";
 
   /**
    * プロパティファイルに設定された値を取得します。<br>

@@ -41,4 +41,6 @@ public class OICConst {
     static final String ENV_AZURE_TENANT_ID = "AZURE_TENANT_ID";
     static final String ENV_CLIENT_ID = "CLIENT_ID";
     static final String ENV_RELYING_PARTY_URL = "RELYING_PARTY_URL";
+    static final String ENV_HW_OIC_LOGIN_ENDPOINT_CONTEXTPATH = "HW_OIC_LOGIN_ENDPOINT_CONTEXTPATH";
+    static final String ENV_OPENID_PROVIDER_TYPE = "OPENID_PROVIDER_TYPE";
 }

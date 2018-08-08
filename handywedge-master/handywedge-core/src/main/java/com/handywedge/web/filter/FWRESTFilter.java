@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.handywedge.common.FWStringUtil;
+import com.handywedge.config.FWMessageResources;
 import com.handywedge.context.FWFullRESTContext;
 import com.handywedge.log.FWLogger;
 import com.handywedge.log.FWMDC;
@@ -40,6 +41,13 @@ public class FWRESTFilter implements Filter {
   @Inject
   private FWFullRESTContext restCtx;
 
+  @Inject
+  private FWMessageResources messageResources;
+
+  private boolean initConfig;
+
+  private String[] oicLoginSourceIp = {};
+
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
 
@@ -52,11 +60,39 @@ public class FWRESTFilter implements Filter {
     httpServletRequest.getSession(true);// REST内ではセッションへのアクセスがなくinvalidateが出来ないので念のため作って最後に廃棄
     try {
       final String requestUrl = httpServletRequest.getRequestURI();
+      if (!initConfig) { // rbがセッションスコープにアクセスするのでinitではなくこのタイミングで実施
+        initConfig = true;
+        try {
+          String ip = messageResources.get(FWMessageResources.OIC_SOURCE_IP);
+          if (!FWStringUtil.isEmpty(ip)) {
+            oicLoginSourceIp = ip.split(",");
+          }
+        } catch (Exception e) {
+        }
+      }
 
       if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
           && (requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/token/pub")
               || requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/token/pub/"))) {
         logger.info("API Token publish request.");
+      } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
+          && (requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/oic/login")
+              || requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/oic/login/"))) {
+        logger.info("OIC API Token publish request.");
+        // IP制限
+        String ip = httpServletRequest.getRemoteAddr();
+        boolean auth = false;
+        for (String source : oicLoginSourceIp) {
+          if (source.trim().equals(ip)) {
+            auth = true;
+            break;
+          }
+        }
+        if (!auth) {
+          logger.warn("OICログインを許可していない接続元のリクエストです。IP[{}]", ip);
+          httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          return;
+        }
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")
           && (requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/user")
               || requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/user/"))) {

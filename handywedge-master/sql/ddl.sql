@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS fw_wf_rote;
 
 /* Create Tables */
 
--- アクション : ワークフローのステータス遷移を定義するテーブルです。
+-- アクション : ワークフロー（旧式）のステータス遷移を定義するテーブルです。
 CREATE TABLE fw_action
 (
     -- アクションコード
@@ -145,6 +145,9 @@ CREATE TABLE fw_user
     language varchar(64),
     -- 最終ログイン日時
     last_login_date timestamp,
+    -- OIC登録 : openid connectで登録されたユーザー。
+    -- プロバイダ識別子を登録する。
+    oic_register varchar(16),
     -- 作成日時
     create_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     -- 更新日時
