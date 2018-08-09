@@ -1,39 +1,46 @@
+/*
+ * Copyright (c) 2016-2018 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.handywedge.openidconnect;
 
 /**
  * 認証要求のステータス情報を保持する。
- * 
+ *
  * @author takeuchi
  */
 public class OICState {
 
-    private final String id;
-    private final String nonce;
-    private final String returnUrl;
-    private final long createTime;
-    
-    OICState(String returnUrl) {
-        
-        id = OICUtil.getUUID();
-        nonce = OICUtil.getUUID();
-        this.returnUrl = returnUrl;
-        createTime = System.currentTimeMillis();
-    }
+  private final String id;
+  private final String nonce;
+  private final String returnUrl;
+  private final long createTime;
 
-    public String getId() {
-        return id;
-    }
+  OICState(String returnUrl) {
 
-    public String getNonce() {
-        return nonce;
-    }
+    id = OICUtil.getUUID();
+    nonce = OICUtil.getUUID();
+    this.returnUrl = returnUrl;
+    createTime = System.currentTimeMillis();
+  }
 
-    public String getReturnUrl() {
-        return returnUrl;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public long getCreateTime() {
-        return createTime;
-    }
+  public String getNonce() {
+    return nonce;
+  }
+
+  public String getReturnUrl() {
+    return returnUrl;
+  }
+
+  public long getCreateTime() {
+    return createTime;
+  }
 
 }

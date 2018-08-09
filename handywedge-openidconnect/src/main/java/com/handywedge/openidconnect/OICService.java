@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.handywedge.openidconnect;
 
 import java.io.ByteArrayInputStream;
@@ -301,13 +308,12 @@ public abstract class OICService {
   }
 
   protected String handywedgeLogin(OICUserInfo userInfo, String provider)
-      throws OICException, IOException, InvalidKeyException, SignatureException,
-      CertificateException, InvalidKeySpecException, NoSuchAlgorithmException {
+      throws OICException, IOException {
 
     String token = null;
 
     try {
-      Map map = new HashMap();
+      Map<String, Object> map = new HashMap<String, Object>();
       map.put("id", userInfo.getId());
       map.put("name", userInfo.getName());
       map.put("mail_address", userInfo.getId());
@@ -365,7 +371,7 @@ public abstract class OICService {
     }
   }
 
-  private <T> T invokeGetAPI(String url, String path, String query, Class clazz)
+  private <T> T invokeGetAPI(String url, String path, String query, Class<T> clazz)
       throws OICException {
 
     ClientConfig clientConfig = new DefaultClientConfig();
@@ -389,7 +395,7 @@ public abstract class OICService {
 
 
   private <T> T invokePostAPI(String url, String path, Map<String, Object> body,
-      Map<String, String> param, Class clazz) throws OICException {
+      Map<String, String> param, Class<T> clazz) throws OICException {
 
     ClientConfig clientConfig = new DefaultClientConfig();
     clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -422,5 +428,6 @@ public abstract class OICService {
 
   protected abstract OICUserInfo getUserInfo(OICJwt jwt) throws OICException;
 
-  protected abstract Class getConfigClass();
+  protected abstract Class<? extends OICProviderMetadata> getConfigClass();
+
 }

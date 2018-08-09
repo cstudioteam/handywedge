@@ -1,36 +1,56 @@
 <!DOCTYPE project>
 <Configuration status="off">
-
-    <Properties>
-        <Property name="format1">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-6p %c{10} %m%n</Property>
-        <Property name="logfile">${env:CATALINA_HOME}/logs/openid-connect.log</Property>
-        <Property name="logfile-archive">${env:CATALINA_HOME}/logs/openid-connect_%d{yyyy-MM-dd}-%i.log</Property>
-        <Property name="log_level">${env:LOG_LEVEL}</Property>
-    </Properties>
-
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout>
-                <pattern>${format1}</pattern>
-            </PatternLayout>
-        </Console>
-
-        <RollingFile name="logfile" append="true" fileName="${logfile}"
-                             filePattern="${logfile-archive}">
-            <PatternLayout>
-                <pattern>${format1}</pattern>
-            </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="5MB"/>
-            </Policies>
-            <DefaultRolloverStrategy max="3"/>
-        </RollingFile>
-    </Appenders>
-
-    <Loggers>
-        <Root level="${log_level}">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="logfile" />
-        </Root>
-    </Loggers>
+  <Properties>
+    <!-- Eclipseでフォーマット改行させないためにCDATAセクションに -->
+    <Property name="format1"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
+    <Property name="logfile">${env:CATALINA_HOME}/logs/openid-connect.log</Property>
+    <Property name="logfile_error">${env:CATALINA_HOME}/logs/openid-connect_error.log</Property>
+    <Property name="logfile-archive">${env:CATALINA_HOME}/logs/archive/openid-connect_%d{yyyy-MM-dd}.gz</Property>
+    <Property name="logfile-archive_error">${env:CATALINA_HOME}/logs/archive/openid-connect_error_%d{yyyy-MM-dd}.gz</Property>
+    <Property name="log_level">${env:LOG_LEVEL}</Property>
+  </Properties>
+  <Appenders>
+    <Console
+      name="Console"
+      target="SYSTEM_OUT"
+    >
+      <PatternLayout>
+        <pattern>${format1}</pattern>
+      </PatternLayout>
+    </Console>
+    <RollingFile
+      name="logfile"
+      append="true"
+      fileName="${logfile}"
+      filePattern="${logfile-archive}"
+    >
+      <PatternLayout
+        pattern="${format1}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+    <RollingFile
+      name="error"
+      fileName="${logfile_error}"
+      filePattern="${logfile-archive_error}"
+    >
+      <PatternLayout
+        pattern="${format1}"
+        charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Root level="${log_level}">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="logfile" />
+      <AppenderRef
+        ref="error"
+        level="warn" />
+    </Root>
+  </Loggers>
 </Configuration>

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016-2018 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.handywedge.openidconnect;
 
 import java.util.Base64;
@@ -5,37 +12,37 @@ import java.util.UUID;
 
 /**
  * ユーティリティークラス。
- * 
+ *
  * @author takeuchi
  */
 public class OICUtil {
 
-    public static byte[] b64UrlDecode(String coded) {
+  public static byte[] b64UrlDecode(String coded) {
 
-        byte[] bytes = null;
+    byte[] bytes = null;
 
-        if (coded != null) {
-            bytes = Base64.getUrlDecoder().decode(coded);
-        }
-
-        return bytes;
+    if (coded != null) {
+      bytes = Base64.getUrlDecoder().decode(coded);
     }
 
-    public static byte[] b64UrlEncode(String str) {
+    return bytes;
+  }
 
-        byte[] bytes = null;
-        
-        if (str != null) {
-            bytes = Base64.getUrlEncoder().encode(str.getBytes());
-        }
+  public static byte[] b64UrlEncode(String str) {
 
-        return bytes;
+    byte[] bytes = null;
+
+    if (str != null) {
+      bytes = Base64.getUrlEncoder().encode(str.getBytes());
     }
 
-    public static String getUUID() {
+    return bytes;
+  }
 
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
-    }
+  public static String getUUID() {
+
+    UUID uuid = UUID.randomUUID();
+    return uuid.toString();
+  }
 
 }

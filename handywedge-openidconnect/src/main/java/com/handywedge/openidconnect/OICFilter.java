@@ -1,9 +1,17 @@
+/*
+ * Copyright (c) 2016-2018 C Studio Co.,Ltd.
+ *
+ * This software is released under the MIT License.
+ *
+ * http://opensource.org/licenses/mit-license.php
+ */
 package com.handywedge.openidconnect;
 
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -18,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * Open ID ConnectのリクエストをハンドリングするServlet Filter
@@ -54,44 +63,48 @@ public class OICFilter implements javax.servlet.Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws ServletException, IOException {
-
+    MDC.put("requestId", UUID.randomUUID().toString());
     logger.info("doFilter <start>");
-    HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    dump(httpServletRequest);
+    try {
+      HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+      HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+      dump(httpServletRequest);
 
-    if (httpServletRequest.getMethod().equalsIgnoreCase("GET")) {
-      if (httpServletRequest.getServletPath()
-          .equalsIgnoreCase(OICProperties.get(OICConst.RP_LOGIN_PATH))) {
-        try {
-          service.login(httpServletRequest, httpServletResponse);
-        } catch (OICException e) {
-          logger.error("doFilter <end> Login error.", e);
-          throw new ServletException(e);
+      if (httpServletRequest.getMethod().equalsIgnoreCase("GET")) {
+        if (httpServletRequest.getServletPath()
+            .equalsIgnoreCase(OICProperties.get(OICConst.RP_LOGIN_PATH))) {
+          try {
+            service.login(httpServletRequest, httpServletResponse);
+          } catch (OICException e) {
+            logger.error("doFilter <end> Login error.", e);
+            throw new ServletException(e);
+          }
+        } else if (httpServletRequest.getServletPath()
+            .equalsIgnoreCase(OICProperties.get(OICConst.OIC_LOGOUT_PATH))) {
+          service.logout(httpServletRequest, httpServletResponse);
+        } else {
+          httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-      } else if (httpServletRequest.getServletPath()
-          .equalsIgnoreCase(OICProperties.get(OICConst.OIC_LOGOUT_PATH))) {
-        service.logout(httpServletRequest, httpServletResponse);
+      } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")) {
+        if (httpServletRequest.getServletPath()
+            .equalsIgnoreCase(OICProperties.get(OICConst.RP_AUTH_PATH))) {
+          try {
+            service.auth(httpServletRequest, httpServletResponse);
+          } catch (OICException e) {
+            logger.error("doFilter <end> Auth error.", e);
+            throw new ServletException(e);
+          }
+        } else {
+          httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
       } else {
         httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
       }
-    } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST")) {
-      if (httpServletRequest.getServletPath()
-          .equalsIgnoreCase(OICProperties.get(OICConst.RP_AUTH_PATH))) {
-        try {
-          service.auth(httpServletRequest, httpServletResponse);
-        } catch (OICException e) {
-          logger.error("doFilter <end> Auth error.", e);
-          throw new ServletException(e);
-        }
-      } else {
-        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      }
-    } else {
-      httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+      logger.info("doFilter <end>");
+    } finally {
+      MDC.clear();
     }
-
-    logger.info("doFilter <end>");
   }
 
   /**
