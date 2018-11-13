@@ -1,0 +1,45 @@
+{
+	"resourcePackages": [
+		"com.handywedge.o365.resource"
+	],
+	"prettyPrint": true,
+	"cacheTTL": 0,
+	"openAPI": {
+		"info": {
+			"version": "1.0",
+			"title": "handywedge-calendar REST API",
+			"description": "Exchangeサーバー連携し、会議室の利用状況と会議の予約〜終了等の操作を行うREST APIサビース",
+			"termsOfService": "https://github.com/cstudioteam/handywedge/",
+			"contact": {
+				"name": "cstudioteam",
+				"email": "cstudioteam@cstudio.jp"
+			},
+			"license": {
+				"name": "MIT",
+				"url": "https://opensource.org/licenses/MIT"
+			}
+		},
+		"servers": [
+			{
+				"url": "http://{host}:{port}/{basePath}",
+				"description": "handywedge-calendar Rest API",
+				"variables": {
+					"host": {
+						"default": "localhost",
+						"description": "localhost"
+					},
+					"port": {
+						"enum": [
+							"8080",
+							"443"
+						],
+						"default": "8080"
+					},
+					"basePath": {
+						"default": "handywedge-calendar/api"
+					}
+				}
+			}
+		]
+	}
+}
