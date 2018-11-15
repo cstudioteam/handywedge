@@ -1,0 +1,430 @@
+openapi: '3.0.2'
+
+info:
+  title: Handywedge カレンダーサービス
+  description: |
+    Office365の予定表と連携し、予定表情報の取得、予定表登録及び、予定表キャンセルを行うためのREST API機能を提供します。
+
+    * 本APIはMicrosoft Graph APIの利用においてOAuth 2.0 クライアント資格情報認証を行っています。
+      そのため、利用事前にAzureアプリ登録と、その登録内容元のAPIの設定が必要となります。
+      - [ユーザーなしでアクセスを取得](https://docs.microsoft.com/ja-jp/graph/auth-v2-service)
+
+  version: 0.0.1
+
+servers:
+- url: http://localhost:8080/dev/v1/
+  description: 'ローカル開発用 API'
+- url: http://<ST環境ホスト名>:8080/v1/
+  description: 'ST環境用 API'
+- url: http://<本番環境ホスト名>:8090/v1/
+  description: '本番環境用 API'
+
+########################################
+## ToDo: Header設計(gzip, keep-alive)
+########################################
+paths:
+  '/calendar/getSchedule':
+    post:
+      tags:
+      - Calendar
+      summary: '予定表一覧API'
+      requestBody:
+        $ref: '#/components/requestBodies/GetScheduleRequestBody'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/GetScheduleResponse'
+        default:
+          $ref: '#/components/responses/ResponseError'
+
+  '/schedule/register':
+    post:
+      tags:
+      - Schedule
+      summary: '予定表登録API'
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterScheduleRequestBody'
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/RegisterScheduleResponse'
+        default:
+          $ref: '#/components/responses/ResponseError'
+
+  '/schedule/cancel':
+    delete:
+      tags:
+      - Schedule
+      summary: '予定表取消API'
+      parameters:
+      - name: id
+        required: true
+        description: 予定表ID
+        in: query
+        schema:
+          type: string
+      # - name: email
+      #   required: true
+      #   description: 予定表登録のメールアドレス
+      #   in: query
+      #   schema:
+      #     type: string
+      #     format: email
+      #   example:  "booth01@aaa.com"
+      # - name: startTime
+      #   required: true
+      #   description: '予定表予約開始時刻'
+      #   in: query
+      #   schema:
+      #     type: string
+      #     format: date-time
+      #   example: "2019-09-20T13:30:00"
+      # - name: endTime
+      #   required: true
+      #   description: '予定表予約終了時刻'
+      #   in: query
+      #   schema:
+      #     type: string
+      #     format: date-time
+      #   example: "2019-09-20T14:30:00"
+      responses:
+        204:
+          description: "No Content"
+        default:
+          $ref: '#/components/responses/ResponseError'
+
+  '/schedule/find':
+    get:
+      tags:
+      - Schedule
+      summary: '予定表取得API'
+      parameters:
+      - name: id
+        required: true
+        description: 予定表ID
+        in: query
+        schema:
+          type: string
+      - name: email
+        required: true
+        description: 予定表登録のメールアドレス
+        in: query
+        schema:
+          type: string
+          format: email
+        example:  "booth01@aaa.com"
+      - name: startTime
+        required: true
+        description: '予定表予約開始時刻'
+        in: query
+        schema:
+          type: string
+          format: date-time
+        example: "2019-09-20T13:30:00"
+      - name: endTime
+        required: true
+        description: '予定表予約終了時刻'
+        in: query
+        schema:
+          type: string
+          format: date-time
+        example: "2019-09-20T14:30:00"
+      responses:
+        200:
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleItemDetail'
+                # $ref: '#/components/schemas/FindScheduleResponse'
+        default:
+          $ref: '#/components/responses/ResponseError'
+
+components:
+  schemas:
+    Error:
+      title: 'エラー情報'
+      description: 'エラー情報'
+      type: object
+      required:
+      - message
+      - code
+      properties:
+        message:
+          title: 'エラーメッセージ'
+          type: string
+          example: '必須項目未入力'
+        code:
+          title: 'エラースコード'
+          type: string
+          example: E0001
+        fields:
+          title: '項目'
+          type: string
+          example: from
+        exMessage:
+          title: '例外内容'
+          type: string
+          example: ''
+
+    EmailAddress:
+      title: 'メールアドレス'
+      type: string
+      format: email
+      example: 'a01@bbb.com'
+
+    FreeBusyStatus:
+      title: '予約ステータス'
+      type: string
+      enum:
+      - "free"
+      - "tentative"
+      - "busy"
+      - "oof"
+      - "workingElsewhere"
+      description: >
+        '予約ステータス':
+          * `free` - 空き時間
+          * `tentative` - 仮の予定
+          * `busy` - ビジー
+          * `oof` - 外出中
+          * `workingElsewhere` - 別の場所で作業
+      example: 'oof'
+
+    ScheduleItem:
+      title: '予約情報'
+      description: '予約情報'
+      type: object
+      properties:
+        startTime:
+          title: '予約開始時刻'
+          type: string
+          format: date-time
+          example: "2019-09-20T15:30:00"
+        endTime:
+          title: '予約終了時刻'
+          type: string
+          format: date-time
+          example: "2019-09-20T17:00:00"
+        status:
+          allOf:
+          - $ref: '#/components/schemas/FreeBusyStatus'
+
+    ScheduleItemDetail:
+      title: '予約詳細情報'
+      description: '予約詳細情報モデル'
+      allOf:
+      - $ref: '#/components/schemas/ScheduleItem'
+      - type: object
+        properties:
+          id:
+            title: '予定表ID'
+            type: string
+            example: 'xfdagfdgadfgad'
+          organizer:
+            title: '主催者'
+            type: string
+            format: email
+            example: 'organizer@ccc.com'
+          attendees:
+            title: '参加者'
+            type: array
+            items:
+              $ref: '#/components/schemas/EmailAddress'
+            format: email
+            example: ['attendee01@ccc.com', 'attendee02@ccc.com']
+          subject:
+            title: '件名'
+            type: string
+            example: '件名'
+          body:
+            title: '本文'
+            type: string
+            example: "本文"
+          location:
+            title: '会議室メールアドレス'
+            type: string
+            format: email
+            example: "room01@aaa.com"
+
+    ScheduleInformation:
+      title: '予定表情報'
+      description: '予定表情報'
+      type: object
+      properties:
+        scheduleId:
+          title: '取得対象予定表のメールアドレス'
+          type: string
+          format: email
+          example: "ca01@aaa.com"
+        hasError:
+          title: '予定表取得エラー有無フラグ'
+          type: boolean
+          example: false
+        errorCode:
+          title: 'エラーコード'
+          type: string
+          example: ""
+        scheduleItems:
+          title: '対象予定表の予約一覧情報'
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduleItem'
+
+    GetScheduleRequest:
+      title: '予定表取得　リクエスト情報'
+      description: '予定表取得API リクエストモデル'
+      type: object
+      required:
+      - emails
+      - startTime
+      - endTime
+      properties:
+        emails:
+          title: 'メールアドレス一覧'
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          example: ['a01@bbb.com', 'a02@bbb.com', 'a03@bbb.com']
+        startTime:
+          title: '取得期間開始日時'
+          description: >
+            ［`to` - `from`］の期間は最大42日まで指定可能
+          type: string
+          format: date-time
+          example: '2019-09-20T00:00:00'
+        endTime:
+          title: '取得期間終了日時'
+          description: >
+            ［`to` - `from`］の期間は最大42日まで指定可能
+          type: string
+          format: date-time
+          example: '2019-09-30T00:00:00'
+        statuses:
+          type: array
+          items:
+            type: string
+            $ref: '#/components/schemas/FreeBusyStatus'
+          example: ['busy', 'oof']
+
+    RegisterScheduleRequest:
+      title: '予定表登録　リクエスト情報'
+      description: '予定表登録 リクエストモデル'
+      type: object
+      required:
+      - organizer
+      - recipient
+      - startTime
+      - endTime
+      - subject
+      properties:
+        organizer:
+          title: '主催者'
+          type: string
+          format: email
+          example: 'organizer@ccc.com'
+        recipient:
+          title: '参加者'
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          # example: ['recipient01@ccc.com', 'recipient01@ccc.com']
+        # ccs:
+        #   title: 'CC'
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/EmailAddress'
+        #   format: email
+        #   example: ['cc01@ccc.com', 'cc01@ccc.com']
+        subject:
+          title: '件名'
+          type: string
+          example: '件名'
+        body:
+          title: '本文'
+          type: string
+          example: "本文"
+        startTime:
+          title: '予定表開始時刻'
+          type: string
+          format: date-time
+          example: "2019-09-20T15:30:00"
+        endTime:
+          title: '予定表終了時刻'
+          type: string
+          format: date-time
+          example: "2019-09-20T17:00:00"
+        location:
+          title: '会議室メールアドレス'
+          type: string
+          format: email
+          example: "room01@aaa.com"
+        status:
+          type: object
+          $ref: '#/components/schemas/FreeBusyStatus'
+
+    GetScheduleResponse:
+      title: '予定表取得　レスポンス情報'
+      description: '予定表取得レスポンスモデル'
+      type: object
+      properties:
+        scheduleInfomation:
+          title: '予定表一覧情報'
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduleInformation'
+
+    RegisterScheduleResponse:
+      title: '予定表登録　レスポンス情報'
+      description: '予定表登録レスポンスモデル'
+      type: object
+      properties:
+        id:
+          title: '予定表ID'
+          type: string
+          example: 'xfdagfdgadfgad'
+
+    # FindScheduleResponse:
+    #   title: '予定表検索　レスポンス情報'
+    #   description: '予定表取得レスポンスモデル'
+
+
+  requestBodies:
+    GetScheduleRequestBody:
+      description: '予定表取得API リクエストパラメータ'
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetScheduleRequest'
+
+    RegisterScheduleRequestBody:
+      description: '予定表登録API リクエストパラメータ'
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterScheduleRequest'
+
+  responses:
+    ResponseError:
+      description: 'レスポンスエラー'
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+
+tags:
+- name: Calendar
+  description: 'カレンダー情報取得'
+- name: Schedule
+  description: '予約表処理'
+
