@@ -29,6 +29,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -189,8 +191,10 @@ public abstract class OICService {
         response.setHeader("Content-Type", "application/json");
         response.getOutputStream().print("{\n \"return_cd\": 0,\n \"token\": \"" + token + "\"\n}");
       } else {
+        String ramdom = randomText(1000);
         response.setStatus(HttpServletResponse.SC_FOUND);
-        response.setHeader("Location", url + "?" + "token=" + token + "&id=" + userId);
+        response.setHeader("Location",
+            url + "?" + "rtxt=" + ramdom + "&id=" + userId + "&token=" + token);
       }
 
       OICStateManager.remove(stateId);
@@ -429,5 +433,19 @@ public abstract class OICService {
   protected abstract OICUserInfo getUserInfo(OICJwt jwt) throws OICException;
 
   protected abstract Class<? extends OICProviderMetadata> getConfigClass();
+
+  public static String randomText(int length) {
+    String charSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    Random rnd = new Random();
+
+    StringBuilder sb = new StringBuilder();
+
+    IntStream.range(0, length).forEach(x -> {
+      int index = rnd.nextInt(charSet.length());
+      sb.append(charSet.substring(index, index + 1));
+    });
+
+    return sb.toString();
+  }
 
 }
