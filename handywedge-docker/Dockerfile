@@ -54,9 +54,9 @@ RUN su - postgres -c "pg_ctl start -w && \
     psql -f ./handywedge-test-app/sql/create_db.sql && \
     psql -f ./handywedge-test-app/sql/create_user.sql && \
     psql -f ./handywedge-test-app/sql/create_schema.sql && \
-    psql -d handywedge_test_app -U handywedge-app -f ./handywedge-test-app/sql/create_table.sql && \
-    psql -d handywedge_test_app -U handywedge -f ./handywedge-master/sql/ddl.sql && \
-    psql -d handywedge_test_app -U handywedge -f ./handywedge-test-app/sql/dml.sql && \
+    psql -d handywedge-db -U handywedge-app -f ./handywedge-test-app/sql/create_table.sql && \
+    psql -d handywedge-db -U handywedge -f ./handywedge-master/sql/ddl.sql && \
+    psql -d handywedge-db -U handywedge -f ./handywedge-test-app/sql/dml.sql && \
     pg_ctl stop -m fast \
 "
 
