@@ -22,7 +22,7 @@ RUN yum -y update && \
     yum -y install \
     git \
     which \
-    ava-1.8.0-openjdk-devel
+    java-1.8.0-openjdk-devel
 
 # ロケール設定
 RUN localedef -v -c -i ja_JP -f UTF-8 ja_JP.UTF-8; echo "";
