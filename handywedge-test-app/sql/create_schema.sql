@@ -1,4 +1,4 @@
-GRANT ALL ON DATABASE "handywedge_test_app" TO "handywedge";
-GRANT ALL ON DATABASE "handywedge_test_app" TO "handywedge-app";
+GRANT ALL ON DATABASE "handywedge-db" TO "handywedge";
+GRANT ALL ON DATABASE "handywedge-db" TO "handywedge-app";
 CREATE SCHEMA AUTHORIZATION "handywedge";
 CREATE SCHEMA AUTHORIZATION "handywedge-app";

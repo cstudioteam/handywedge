@@ -16,7 +16,7 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 # yum updateと必要なパッケージをインストール
 # ロケール関連：glibc-common
 # postgres関連：postgresql,postgresql-server
-# アプリケーション関連：git,which
+# アプリケーション関連：git,which,jdk
 RUN yum -y update && \
     yum clean all && \
     yum -y reinstall glibc-common && \
@@ -24,7 +24,8 @@ RUN yum -y update && \
     git \
     postgresql \
     postgresql-server \
-    which
+    which \
+    java-1.8.0-openjdk-devel
 
 # ロケール設定
 RUN localedef -v -c -i ja_JP -f UTF-8 ja_JP.UTF-8; echo "";
@@ -59,36 +60,21 @@ RUN su - postgres -c "pg_ctl start -w && \
     pg_ctl stop -m fast \
 "
 
-# JDK
-RUN cd /tmp && \
-    mkdir install && \
-    cd install && \
-    curl -LO -b "oraclelicense=accept-securebackup-cookie" \
-    "http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/server-jre-8u162-linux-x64.tar.gz" && \
-    tar xzf server-jre-8u162-linux-x64.tar.gz && \
-    mkdir /usr/java && \
-    mv /tmp/install/jdk1.8.0_162 /usr/java/ && \
-    cd /usr/bin && \
-    ln -s /usr/java/jdk1.8.0_162/bin/java java && \
-    echo "export JAVA_HOME=/usr/java/jdk1.8.0_162" > /etc/profile.d/java.sh && \
-    echo "setenv JAVA_HOME /usr/java/jdk1.8.0_162" > /etc/profile.d/java.csh && \
-    exec -l $SHELL
-
 # tomcat
 WORKDIR /opt/
-RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-tomcat-8.0.47.tar.gz && \
-    tar xzf apache-tomcat-8.0.47.tar.gz && \
-    ln -s apache-tomcat-8.0.47 tomcat && \
+RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.14/bin/apache-tomcat-9.0.14.tar.gz && \
+    tar xzf apache-tomcat-9.0.14.tar.gz && \
+    ln -s apache-tomcat-9.0.14 tomcat && \
     rm -rf tomcat/webapps/* && \
     mkdir -p tomcat/conf/Catalina/localhost && \
     echo "export LANG=ja_JP.UTF-8" > tomcat/bin/setenv.sh && \
     chmod +x tomcat/bin/setenv.sh && \
     useradd -r -s /sbin/nologin tomcat && \
-    chown -R tomcat:tomcat apache-tomcat-8.0.47 && \
-    rm apache-tomcat-8.0.47.tar.gz && \
+    chown -R tomcat:tomcat apache-tomcat-9.0.14 && \
+    rm apache-tomcat-9.0.14.tar.gz && \
     echo "[Unit]" > /etc/systemd/system/tomcat.service && \
     cd /etc/systemd/system && \
-    echo "Description=Apache Tomcat 8" >> tomcat.service && \
+    echo "Description=Apache Tomcat 9" >> tomcat.service && \
     echo "After=network.target postgresql.service" >> tomcat.service && \
     echo "" >> tomcat.service && \
     echo "[Service]" >> tomcat.service && \
@@ -108,20 +94,21 @@ RUN curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.47/bin/apache-t
 
 # warビルド&デプロイ
 WORKDIR /tmp/install
-RUN curl -O http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz && \
-    tar xzf apache-maven-3.5.2-bin.tar.gz && \
+RUN curl -O https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && \
+    tar xzf apache-maven-3.5.4-bin.tar.gz && \
     cd /tmp/git/handywedge/handywedge-dependencies/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn install && \
+    /tmp/install/apache-maven-3.5.4/bin/mvn install && \
     cd /tmp/git/handywedge/handywedge-master/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn -Dmaven.javadoc.skip=true install && \
+    /tmp/install/apache-maven-3.5.4/bin/mvn -Dmaven.javadoc.skip=true install && \
     cd /tmp/git/handywedge/handywedge-test-app/ && \
-    /tmp/install/apache-maven-3.5.2/bin/mvn package && \
+    /tmp/install/apache-maven-3.5.4/bin/mvn package && \
     cp /tmp/git/handywedge/handywedge-test-app/target/handywedge-test-app.war /opt/tomcat/webapps/ && \
     chown tomcat:tomcat /opt/tomcat/webapps/handywedge-test-app.war
 
 # インストーラー等削除
 WORKDIR /root
 RUN rm -rf /tmp/git/ && \
+    rm -rf .m2 && \
     rm -rf /tmp/install/
 
 # systemd起動。常に最後に記載する
