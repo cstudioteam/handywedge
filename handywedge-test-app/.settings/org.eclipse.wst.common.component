@@ -24,13 +24,13 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="handywedge-core-0.7.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-core/handywedge-core">
+        <dependent-module archiveName="handywedge-core-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-core/handywedge-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-api-0.7.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-api/handywedge-api">
+        <dependent-module archiveName="handywedge-api-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-api/handywedge-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-openidconnect-login-0.7.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-openidconnect-login/handywedge-openidconnect-login">
+        <dependent-module archiveName="handywedge-openidconnect-login-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-openidconnect-login/handywedge-openidconnect-login">
             <dependency-type>uses</dependency-type>
         </dependent-module>
                                     
