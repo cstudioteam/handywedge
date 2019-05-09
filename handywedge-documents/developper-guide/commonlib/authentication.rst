@@ -74,7 +74,3 @@ FWLoginManagerのオブジェクトのlogoutメソッドを実行する。
    :emphasize-lines: 1
 
     loginMgr.logout();  // セッションからユーザー情報を削除
-
-
-.. _token-issue:
-
