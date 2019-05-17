@@ -26,6 +26,8 @@ public class FWInternalConnectionManager {
   public static Connection getConnection(String dsName) {
     DataSource dataSource;
     try {
+      Thread l_thread = Thread.currentThread();
+      l_thread.setContextClassLoader(FWInternalConnectionManager.class.getClassLoader());
       dataSource = (DataSource) InitialContext.doLookup("java:comp/env/" + dsName);
     } catch (NamingException e) {
       throw new FWRuntimeException(FWConstantCode.DS_LOOKUP_FAIL, e);
@@ -36,5 +38,4 @@ public class FWInternalConnectionManager {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
     }
   }
-
 }

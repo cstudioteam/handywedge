@@ -9,6 +9,8 @@ package com.csframe.web.filter;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.DriverManager;
+import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
@@ -58,6 +60,13 @@ public class FWServletContextListener implements ServletContextListener {
   }
 
   @Override
-  public void contextDestroyed(ServletContextEvent sce) {}
+  public void contextDestroyed(ServletContextEvent sce) {
+    Collections.list(DriverManager.getDrivers()).forEach(driver -> {
+      try {
+        DriverManager.deregisterDriver(driver);
+      } catch (final Exception e) {
+      }
+    });
+  }
 
 }
