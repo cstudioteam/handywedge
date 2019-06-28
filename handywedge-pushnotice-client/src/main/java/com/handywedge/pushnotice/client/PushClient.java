@@ -38,15 +38,15 @@ public class PushClient {
 
 		long start = System.currentTimeMillis();
 		logger.info("getLoginUsers <<Start>>");
-		// logger.debug("getLoginUsers target={}", target);
+		logger.debug("getLoginUsers target=" + target);
 
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(target);
 		webTarget = webTarget.path(USER_WS_PATH);
 		webTarget = webTarget.queryParam("accessKey", accessKey);
-		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+		Invocation.Builder invocationBuilder = webTarget.request();
 		String json = invocationBuilder.get(String.class); 
-		logger.trace("getLoginUsers JSON={}.", json);
+		logger.trace("getLoginUsers JSON=" +  json);
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -55,7 +55,7 @@ public class PushClient {
 			logger.error("JSONへの変換エラーです。", e);
 			throw new PushServiceException(e);
 		}
-		 logger.info("getLoginUsers <<End>> ({} ms)", System.currentTimeMillis() - start);
+		 logger.info("getLoginUsers <<End>> (" + (System.currentTimeMillis() - start)  + "{} ms)");
 		
 		return users;
 	}
@@ -64,7 +64,7 @@ public class PushClient {
 
 		long start = System.currentTimeMillis();
 		logger.info("sendMessage <<Start>>");
-		// logger.debug("sendMessage target={} userId={}", target, userId);
+		logger.debug("sendMessage target=" +  target + " userId=" + userId);
 
 		PushMessage message = new PushMessage();
 		message.setAccesskey(accessKey);
@@ -78,7 +78,7 @@ public class PushClient {
 		Response response = invocationBuilder.post(Entity.entity(message, MediaType.APPLICATION_JSON));
 
 		int status = response.getStatus();
-		logger.info("sendMessage <<End>> status={} ({} ms)", status, System.currentTimeMillis() - start);
+		logger.info("sendMessage <<End>> status=" + status + " (" + (System.currentTimeMillis() - start) + " ms)");
 		
 		if (status >= 400) {
 			throw new PushServiceException("プッシュ通知でエラーが返されました。 status=" + status);
