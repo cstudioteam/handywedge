@@ -3,8 +3,9 @@
   <Properties>
     <!-- Eclipseでフォーマット改行させないためにCDATAセクションに -->
     <Property name="pattern"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%-5level\t%-9c{2}\t%m%n]]></Property>
-    <Property name="log_home">/var/hw-pushnotice/log</Property>
     <Property name="app_id">hw-pushnotice</Property>
+    <Property name="catalina_home">/usr/local/tomcat</Property>
+    <Property name="log_home">${catalina_home}/logs/${app_id}</Property>
   </Properties>
   <Appenders>
     <Console name="console" target="SYSTEM_OUT">
@@ -36,7 +37,7 @@
     </RollingFile>
     <RollingFile
       name="error"
-      fileName="${log_home}/pluscrm_error.log"
+      fileName="${log_home}/${app_id}_error.log"
       filePattern="${log_home}/${app_id}_error_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout pattern="${pattern}" charset="UTF-8" />

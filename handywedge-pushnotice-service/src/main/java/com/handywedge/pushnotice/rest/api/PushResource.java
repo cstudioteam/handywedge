@@ -36,8 +36,8 @@ public class PushResource {
 	public void notice(PushMessage message) {
 
 		long start = System.currentTimeMillis();
-
 		if (!ACCESS_KEY.equals(message.getAccesskey())) {
+			logger.trace("ACCESS KEY=[{}]", message.getAccesskey());
 			throw new WebApplicationException("アクセスキーが正しくありません。", Response.Status.FORBIDDEN);
 		}
 		
@@ -61,7 +61,7 @@ public class PushResource {
 			}
 	
 			synchronized (session) {
-				String json = "{ NoticeCode: 0, Message: " + message.getText() + "}"; 
+				String json = "{ \"NoticeCode\": 0, \"Message\": " + message.getText() + "}"; 
 				session.getAsyncRemote().sendText(json);
 			}
 		} catch(Exception e) {

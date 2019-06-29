@@ -50,7 +50,7 @@ public class SessionManager {
 		
 		if (session != null) {
 			try {
-				String json = "{ \"NoticeCode:\" 8, \"Message\": { \"Reason\": \"同一アカウントでログインされました\"}}";
+				String json = "{ \"NoticeCode\": 8, \"Message\": { \"Reason\": \"同一アカウントでログインされました\"}}";
 				session.getAsyncRemote().sendText(json);
 				session.close();
 			} catch (IOException e) {
