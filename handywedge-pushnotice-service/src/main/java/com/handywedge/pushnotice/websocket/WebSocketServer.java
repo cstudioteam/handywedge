@@ -1,5 +1,7 @@
 package com.handywedge.pushnotice.websocket;
 
+import java.io.IOException;
+
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -26,8 +28,15 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("token") String token) {
 
     	String userId = Authorization.getUserId(token);
-    	sessionManager.add(userId, session);
-        logger.debug("onOpen sessionId={} userId={}", session.getId(), userId);
+    	if (userId != null) {
+    		sessionManager.add(userId, session);
+            logger.debug("onOpen sessionId={} userId={}", session.getId(), userId);
+    	} else {
+    		try {
+				session.close();
+			} catch (IOException e) {
+			}
+    	}
     }
 
     @OnMessage
