@@ -93,6 +93,7 @@ public class FWConnectionManagerImpl implements FWFullConnectionManager {
       }
       if (connection != null) {
         connection.close();
+        connection = null; // 二重クローズさせないようにnullにしておく
       }
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
