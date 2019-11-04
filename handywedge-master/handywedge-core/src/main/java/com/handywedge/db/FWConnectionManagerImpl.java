@@ -19,10 +19,6 @@ import javax.sql.DataSource;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWRuntimeException;
-import com.handywedge.db.FWFullConnection;
-import com.handywedge.db.FWFullConnectionManager;
-import com.handywedge.db.FWResultSet;
-import com.handywedge.db.FWStatement;
 import com.handywedge.log.FWLogger;
 
 @RequestScoped
@@ -97,6 +93,7 @@ public class FWConnectionManagerImpl implements FWFullConnectionManager {
       }
       if (connection != null) {
         connection.close();
+        connection = null;
       }
     } catch (SQLException e) {
       throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
