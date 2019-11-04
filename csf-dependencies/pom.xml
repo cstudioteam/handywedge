@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.csframe</groupId>
   <artifactId>csf-dependencies</artifactId>
-  <version>0.4.2</version>
+  <version>0.4.3</version>
   <packaging>pom</packaging>
   <modules>
     <module>csf-dependencies-api</module>
