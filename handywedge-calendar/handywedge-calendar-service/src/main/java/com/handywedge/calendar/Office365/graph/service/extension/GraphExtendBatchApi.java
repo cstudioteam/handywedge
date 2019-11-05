@@ -29,6 +29,7 @@ public class GraphExtendBatchApi extends GraphExtendBaseApi {
 
     private String getURL() {
         String requestURL = Constant.GRAPH_API_BASE_URL + String.format( BATCH_REQUEST_URI );
+        logger.debug( "Request URL: {}", requestURL );
         return requestURL;
     }
 

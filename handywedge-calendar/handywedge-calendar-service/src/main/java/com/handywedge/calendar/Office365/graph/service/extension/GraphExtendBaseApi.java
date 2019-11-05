@@ -60,6 +60,7 @@ public class GraphExtendBaseApi {
         headerMap.put( "Prefer", String.format("outlook.timezone=\"%s\"", getTimeZone()) );
 
         Headers headers = Headers.of(headerMap);
+        logger.debug( "Request Header: {}", headers );
         return headers;
     }
 

@@ -1,6 +1,7 @@
 package com.handywedge.calendar.Office365.graph.service.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.handywedge.calendar.Office365.rest.models.FreeBusyStatusEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ public class GraphExtendRegisterScheduleRequest extends BaseRequest {
     private String startTime;
     private String endTime;
     private List<String> locations = new ArrayList<String>();
+
+    private FreeBusyStatusEnum status = FreeBusyStatusEnum.busy;
 
     public String getOrganizer() {
         return organizer;
@@ -69,6 +72,14 @@ public class GraphExtendRegisterScheduleRequest extends BaseRequest {
 
     public void setAttendees(List<String> attendees) {
         this.attendees = attendees;
+    }
+
+    public FreeBusyStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(FreeBusyStatusEnum status) {
+        this.status = status;
     }
 
 }

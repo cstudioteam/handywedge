@@ -72,6 +72,7 @@ public class ScheduleApiResource {
         LocalDateTime timeStart = LocalDateTime.now();
 
         RegisterScheduleResponse response = null;
+        logger.debug( "Request: {}", gson.toJson( request ));
         try {
             apiService.registerSchedule( request, response );
         }catch (GraphApiException e) {

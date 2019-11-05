@@ -93,6 +93,7 @@ public class CalendarApiService {
         graphExtendRegisterScheduleRequest.setLocations( request.getLocations() );
         graphExtendRegisterScheduleRequest.setStartTime(request.getStartTime());
         graphExtendRegisterScheduleRequest.setEndTime( request.getEndTime());
+        graphExtendRegisterScheduleRequest.setStatus( request.getStatus() );
 
         ScheduleDetailItem scheduleDetailItem = graphService.registerSchedule( graphExtendRegisterScheduleRequest );
 

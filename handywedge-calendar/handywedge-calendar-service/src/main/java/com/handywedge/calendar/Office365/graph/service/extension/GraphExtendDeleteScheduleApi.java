@@ -36,6 +36,8 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
     private String getURL() {
         String requestURL = Constant.GRAPH_API_BASE_URL
                 + String.format( DELETE_SCHEDULE_REQUEST_URI, requestInfo.getOrganizer(), requestInfo.getId() );
+
+        logger.debug( "Request URL: {}", requestURL );
         return requestURL;
     }
 
@@ -43,6 +45,7 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
     public Headers getHeaders() {
         Map headerMap = new HashMap(  );
         Headers headers = Headers.of(headerMap);
+        logger.debug( "Request Header: {}", headers );
         return headers;
     }
 

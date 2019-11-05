@@ -1,5 +1,7 @@
 package com.handywedge.calendar.Office365.graph.service.extension;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.rest.models.ScheduleDetailItem;
@@ -16,6 +18,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -47,6 +50,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
     private String getURL() {
         String requestURL = Constant.GRAPH_API_BASE_URL
                 + String.format( REGISTER_SCHEDULE_REQUEST_URI, requestInfo.getOrganizer() );
+        logger.debug( "Request URL: {}", requestURL );
         return requestURL;
     }
 
@@ -61,7 +65,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
 
         Map<String, Object> body = new HashMap<String, Object>(){
             {
-                put("contentType", BodyType.HTML);
+                put("contentType", StringUtils.lowerCase( BodyType.HTML.toString()));
                 put("content", requestInfo.getBody());
             }
         };
@@ -70,7 +74,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         for(String attendee : requestInfo.getAttendees()) {
             Map<String, Object> attendeeMap = new HashMap<String, Object>() {
                 {
-                    put( "type", AttendeeType.REQUIRED );
+                    put( "type",StringUtils.lowerCase(AttendeeType.REQUIRED.toString()) );
                     Map<String, Object> addressMap = new HashMap<String, Object>(){
                         {put( "address", attendee );}
                     };
@@ -84,7 +88,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         for(String location : requestInfo.getLocations()) {
             Map<String, Object> locationMap = new HashMap<String, Object>() {
                 {
-                    put( "type", AttendeeType.RESOURCE );
+                    put( "type", StringUtils.lowerCase(AttendeeType.RESOURCE.toString()) );
                     Map<String, Object> addressMap = new HashMap<String, Object>(){
                         {put( "address", location );}
                     };
@@ -99,11 +103,14 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         bodyMap.put("start", startTime);
         bodyMap.put("end", endTime);
         bodyMap.put( "body", body);
+        bodyMap.put( "showAs", StringUtils.lowerCase( requestInfo.getStatus().toString()));
         bodyMap.put( "attendees", attendees );
 
 
         JSONObject bodyJson = new JSONObject(bodyMap);
+        logger.debug( "Request Body: {}", bodyJson );
         RequestBody postBody = RequestBody.create( MediaType.parse("application/json"), bodyJson.toString());
+
         return postBody;
     }
 
@@ -121,8 +128,9 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         ScheduleDetailItem scheduleDetailItem = null;
         Response response = null;
         try {
-            logger.debug( "登録処理: {}",  getRequest());
+
             Request request = getRequest();
+            logger.debug( "登録処理: {}",  request);
 
             long startTime = System.currentTimeMillis();
 

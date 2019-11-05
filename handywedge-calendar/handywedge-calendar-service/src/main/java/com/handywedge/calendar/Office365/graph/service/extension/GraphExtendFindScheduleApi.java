@@ -44,6 +44,8 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
                 + String.format( "endDateTime=%s", requestInfo.getEndTime())
                 + "&"
                 + getSelect();
+
+        logger.debug( "Request URL: {}", requestURL );
         return requestURL;
     }
 
