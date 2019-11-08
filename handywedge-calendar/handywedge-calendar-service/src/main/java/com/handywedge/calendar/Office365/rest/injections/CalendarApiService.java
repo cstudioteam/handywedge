@@ -48,7 +48,7 @@ public class CalendarApiService {
 
         List<ScheduleInformation> scheduleInformation = graphService.getScheduleByBatch( graphExtendGetScheduleRequest );
 
-        List<Object> filterScheduleInformation = scheduleInformation.stream()
+        List<ScheduleInformation> filterScheduleInformation = scheduleInformation.stream()
                 .map( si -> {
                     if (si.getHasError()) {
                         return si;
@@ -72,7 +72,7 @@ public class CalendarApiService {
                     }
                 } ).collect( Collectors.toList() );
 
-        response.getScheduleInformation().addAll( scheduleInformation );
+        response.getScheduleInformation().addAll( filterScheduleInformation );
     }
 
 
