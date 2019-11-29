@@ -99,10 +99,12 @@ public class CalendarApiConfig {
 
         graphApiInfo.setUserNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.users" )));
         graphApiInfo.setRequestNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.requests")));
+        graphApiInfo.setRequestTimeout( Integer.parseInt( properties.getProperty("graph.api.request.timeout")));
         graphApiInfo.setDelegate( properties.getProperty("graph.api.getschedule.delegate"));
 
         logger.debug( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
         logger.debug( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
+        logger.debug( "GetSchedule情報情報: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeout() );
         logger.debug( "GetSchedule情報情報: 代理者ユーザ[{}]", graphApiInfo.getDelegate() );
     }
 }

@@ -83,6 +83,7 @@ public class GraphExtendBaseApi {
                     }
                 }
             }
+<<<<<<< HEAD
 
             return builder
                     .connectTimeout(GRAPH_CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -91,6 +92,16 @@ public class GraphExtendBaseApi {
                     .addInterceptor(new TelemetryHandler())
                     .proxy( getProxy() )
                     .build();
+=======
+        }
+        logger.debug("### DEBUG ### Graphリクエスストタイムアウト={}", apiInfo.getRequestTimeout());
+        builder.connectTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS)
+                .writeTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS)
+                .readTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS);
+
+        if(apiInfo.isUseProxy()) {
+            builder.proxy( getProxy() );
+>>>>>>> 4342f5d... Graph リクエストタイムアウト値追加
         }
     }
 

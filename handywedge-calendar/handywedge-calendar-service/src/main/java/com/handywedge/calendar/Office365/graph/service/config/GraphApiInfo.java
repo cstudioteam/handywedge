@@ -36,6 +36,11 @@ public class GraphApiInfo {
     private int requestNumber = 1;
 
     /**
+     * Graph API　リクエストタイムアウト値
+     */
+    private  int requestTimeout = 15;
+
+    /**
      * getSchedule APIの代理人ユーザー
      */
     private String delegate;
@@ -94,6 +99,14 @@ public class GraphApiInfo {
 
     public void setDelegate(String delegate) {
         this.delegate = delegate;
+    }
+
+    public int getRequestTimeout() {
+        return requestTimeout;
+    }
+
+    public void setRequestTimeout(int requestTimeout) {
+        this.requestTimeout = requestTimeout;
     }
 
 
