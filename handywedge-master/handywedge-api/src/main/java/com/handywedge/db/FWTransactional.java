@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 C Studio Co.,Ltd.
+ * Copyright (c) 2019 Handywedge Co.,Ltd.
  *
  * This software is released under the MIT License.
  *

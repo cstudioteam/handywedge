@@ -100,7 +100,7 @@
           <encoding>UTF-8</encoding>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
-          <bottom><![CDATA[<p class="legalCopy"><small>Handywedge ver ${project.version}. Copyright (c) 2016-2018 C Studio Co.,Ltd.</small></p>]]></bottom>
+          <bottom><![CDATA[<p class="legalCopy"><small>Handywedge ver ${project.version}. Copyright (c) 2019 Handywedge Co.,Ltd.</small></p>]]></bottom>
           <!-- <additionalDependencies> -->
           <!-- <additionalDependency> -->
           <!-- <groupId>javax.servlet</groupId> -->
