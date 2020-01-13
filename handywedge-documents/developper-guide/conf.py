@@ -49,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Application Developer Guide'
-copyright = '2016-2019 C Studio Co.,Ltd'
-author = 'C Studio Co.,Ltd'
+copyright = '2019 Handywedge Co.,Ltd.'
+author = 'Handywedge Co.,Ltd.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
