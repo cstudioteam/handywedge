@@ -2,38 +2,38 @@ package com.handywedge.pushnotice.model;
 
 public class PushMessage {
 
-	protected String accesskey;
-	protected String userId;
-	protected String text;
-	
+  protected String accesskey;
+  protected String userId;
+  protected String text;
 
-	public String getAccesskey() {
 
-		return accesskey;
-	}
+  public String getAccesskey() {
 
-	public void setAccesskey(String accesskey) {
+    return accesskey;
+  }
 
-		this.accesskey = accesskey;
-	}
-	
-	public String getUserId() {
+  public void setAccesskey(String accesskey) {
 
-		return userId;
-	}
-	
-	public void setUserId(String userId) {
+    this.accesskey = accesskey;
+  }
 
-		this.userId = userId;
-	}
-	
-	public String getText() {
+  public String getUserId() {
 
-		return text;
-	}
-	
-	public void setText(String text) {
+    return userId;
+  }
 
-		this.text = text;
-	}
+  public void setUserId(String userId) {
+
+    this.userId = userId;
+  }
+
+  public String getText() {
+
+    return text;
+  }
+
+  public void setText(String text) {
+
+    this.text = text;
+  }
 }

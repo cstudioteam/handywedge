@@ -13,83 +13,83 @@ import org.apache.logging.log4j.Logger;
 
 public class Property {
 
-	protected static final String REGEX = "#\\{.+?\\}";
-	protected static final ResourceBundle BUNDLE = ResourceBundle.getBundle("hw-pushnotice");
+  protected static final String REGEX = "#\\{.+?\\}";
+  protected static final ResourceBundle BUNDLE = ResourceBundle.getBundle("hw-pushnotice");
 
-	protected static Logger logger = LogManager.getLogger("PushService");
+  protected static Logger logger = LogManager.getLogger("PushService");
 
-	
-	static {
-		Enumeration<String> e = BUNDLE.getKeys();
-		while(e.hasMoreElements()) {
-			String key = e.nextElement(); 
-			logger.info("[Property] " + key + ": [" + BUNDLE.getString(key) +"]");
-		}
-	}
-	
-	
-	public static String get(String key) {
 
-		String retVal = getProperty(key);
+  static {
+    Enumeration<String> e = BUNDLE.getKeys();
+    while (e.hasMoreElements()) {
+      String key = e.nextElement();
+      logger.info("[Property] " + key + ": [" + BUNDLE.getString(key) + "]");
+    }
+  }
 
-		return retVal;
-	}
 
-	public static int getInt(String key) {
+  public static String get(String key) {
 
-		int retVal = 0;
+    String retVal = getProperty(key);
 
-		String s = getProperty(key);
-		if (s != null && !s.isEmpty()) {
-			retVal = Integer.parseInt(s);
-		}
+    return retVal;
+  }
 
-		return retVal;
-	}
+  public static int getInt(String key) {
 
-	public static long getLong(String key) {
+    int retVal = 0;
 
-		long retVal = 0L;
+    String s = getProperty(key);
+    if (s != null && !s.isEmpty()) {
+      retVal = Integer.parseInt(s);
+    }
 
-		String s = getProperty(key);
-		if (s != null && !s.isEmpty()) {
-			retVal = Long.parseLong(s);
-		}
+    return retVal;
+  }
 
-		return retVal;
-	}
+  public static long getLong(String key) {
 
-	public static boolean getBool(String key) {
+    long retVal = 0L;
 
-		boolean retVal = false;
+    String s = getProperty(key);
+    if (s != null && !s.isEmpty()) {
+      retVal = Long.parseLong(s);
+    }
 
-		String s = getProperty(key);
-		if (s != null && !s.isEmpty()) {
-			retVal = Boolean.parseBoolean(s);
-		}
+    return retVal;
+  }
 
-		return retVal;
-	}
+  public static boolean getBool(String key) {
 
-	private static String getProperty(String key) {
+    boolean retVal = false;
 
-		String retVal = null;
-		
-		if (BUNDLE.containsKey(key)) {
-			retVal = BUNDLE.getString(key);
-			List<String> list = new ArrayList<>();
-			Pattern pattern = Pattern.compile(REGEX);
-			Matcher matcher = pattern.matcher(retVal);
-			while (matcher.find()) {
-				list.add(matcher.group(0));
-			}
-			for (int i = 0; i < list.size(); i++) {
-				String subKey = list.get(i);
-				subKey = subKey.substring(2, subKey.length() - 1);
-				retVal = retVal.replaceAll(Pattern.quote(list.get(i)), get(subKey));
-			}
-		}
+    String s = getProperty(key);
+    if (s != null && !s.isEmpty()) {
+      retVal = Boolean.parseBoolean(s);
+    }
 
-		return retVal;
-	}
+    return retVal;
+  }
+
+  private static String getProperty(String key) {
+
+    String retVal = null;
+
+    if (BUNDLE.containsKey(key)) {
+      retVal = BUNDLE.getString(key);
+      List<String> list = new ArrayList<>();
+      Pattern pattern = Pattern.compile(REGEX);
+      Matcher matcher = pattern.matcher(retVal);
+      while (matcher.find()) {
+        list.add(matcher.group(0));
+      }
+      for (int i = 0; i < list.size(); i++) {
+        String subKey = list.get(i);
+        subKey = subKey.substring(2, subKey.length() - 1);
+        retVal = retVal.replaceAll(Pattern.quote(list.get(i)), get(subKey));
+      }
+    }
+
+    return retVal;
+  }
 }

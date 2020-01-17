@@ -25,72 +25,74 @@ import com.handywedge.pushnotice.websocket.SessionManager;
 @Path("pushservice")
 public class PushResource {
 
-	protected static final String ACCESS_KEY = Property.get("ACCESS_KEY");
-	protected static final Logger logger = LogManager.getLogger("PushService");
+  protected static final String ACCESS_KEY = Property.get("ACCESS_KEY");
+  protected static final Logger logger = LogManager.getLogger("PushService");
 
-	protected SessionManager sessionManager = SessionManager.getSessionManager();
+  protected SessionManager sessionManager = SessionManager.getSessionManager();
 
-	@POST
-	@Path("/notice")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void notice(PushMessage message) {
+  @POST
+  @Path("/notice")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public void notice(PushMessage message) {
 
-		long start = System.currentTimeMillis();
-		if (!ACCESS_KEY.equals(message.getAccesskey())) {
-			logger.trace("ACCESS KEY=[{}]", message.getAccesskey());
-			throw new WebApplicationException("アクセスキーが正しくありません。", Response.Status.FORBIDDEN);
-		}
-		
-		String userId = message.getUserId();
-		
-		logger.debug("notice <<Start>> userId={} ({} byte)", userId, message.getText().length());
-		logger.trace("notice userId={} text=[{}]", userId, message.getText());
-		
-		try {
-			if (userId == null || userId.trim().length() == 0) {
-				throw new WebApplicationException("送信先が正しくありません。", Response.Status.BAD_REQUEST);
-			}
-			
-			Session session = sessionManager.get(userId);
-			if (session == null) {
-				throw new WebApplicationException("ユーザ [" + userId + "] はログインしていません。", Response.Status.BAD_REQUEST);
-			}
-			
-			if (!session.isOpen()) {
-				throw new WebApplicationException("セッションがクローズされています。", Response.Status.BAD_REQUEST);
-			}
-	
-			synchronized (session) {
-				String json = "{ \"NoticeCode\": 0, \"Message\": " + message.getText() + "}"; 
-				session.getAsyncRemote().sendText(json);
-			}
-		} catch(Exception e) {
-			throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
-		} finally {
-			logger.debug("notice <<End>> userId={} ({} ms)", userId, (System.currentTimeMillis() - start));
-		}
+    long start = System.currentTimeMillis();
+    if (!ACCESS_KEY.equals(message.getAccesskey())) {
+      logger.trace("ACCESS KEY=[{}]", message.getAccesskey());
+      throw new WebApplicationException("アクセスキーが正しくありません。", Response.Status.FORBIDDEN);
+    }
 
-		return;
-	}
+    String userId = message.getUserId();
 
-	@GET
-	@Path("/loginusers")
-	@Produces(MediaType.APPLICATION_JSON)
-	public LoginUsers getLoginUsers(@QueryParam("accessKey") String accessKey) {
+    logger.debug("notice <<Start>> userId={} ({} byte)", userId, message.getText().length());
+    logger.trace("notice userId={} text=[{}]", userId, message.getText());
 
-		if (!ACCESS_KEY.equals(accessKey)) {
-			throw new WebApplicationException("アクセスキーが正しくありません。", Response.Status.FORBIDDEN);
-		}
-		
-		LoginUsers users = new LoginUsers();
-		logger.debug("getLoginUsers <<Start>>");
+    try {
+      if (userId == null || userId.trim().length() == 0) {
+        throw new WebApplicationException("送信先が正しくありません。", Response.Status.BAD_REQUEST);
+      }
 
-		long start = System.currentTimeMillis();
-		List<String> list = sessionManager.getLoginUsers();
-		users.setLoginUsers(list);
+      Session session = sessionManager.get(userId);
+      if (session == null) {
+        throw new WebApplicationException("ユーザ [" + userId + "] はログインしていません。",
+            Response.Status.BAD_REQUEST);
+      }
 
-		logger.debug("getLoginUsers <<End>> ({} ms)", (System.currentTimeMillis() - start));
+      if (!session.isOpen()) {
+        throw new WebApplicationException("セッションがクローズされています。", Response.Status.BAD_REQUEST);
+      }
 
-		return users;
-	}
+      synchronized (session) {
+        String json = "{ \"NoticeCode\": 0, \"Message\": " + message.getText() + "}";
+        session.getAsyncRemote().sendText(json);
+      }
+    } catch (Exception e) {
+      throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+    } finally {
+      logger.debug("notice <<End>> userId={} ({} ms)", userId,
+          (System.currentTimeMillis() - start));
+    }
+
+    return;
+  }
+
+  @GET
+  @Path("/loginusers")
+  @Produces(MediaType.APPLICATION_JSON)
+  public LoginUsers getLoginUsers(@QueryParam("accessKey") String accessKey) {
+
+    if (!ACCESS_KEY.equals(accessKey)) {
+      throw new WebApplicationException("アクセスキーが正しくありません。", Response.Status.FORBIDDEN);
+    }
+
+    LoginUsers users = new LoginUsers();
+    logger.debug("getLoginUsers <<Start>>");
+
+    long start = System.currentTimeMillis();
+    List<String> list = sessionManager.getLoginUsers();
+    users.setLoginUsers(list);
+
+    logger.debug("getLoginUsers <<End>> ({} ms)", (System.currentTimeMillis() - start));
+
+    return users;
+  }
 }

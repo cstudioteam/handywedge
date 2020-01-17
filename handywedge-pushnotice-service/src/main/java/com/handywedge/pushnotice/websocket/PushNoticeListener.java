@@ -12,33 +12,33 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Application Lifecycle Listener implementation class PushNoticeListener
+ * 
  * @param <PingSender>
  *
  */
 public class PushNoticeListener implements ServletContextListener {
 
-	protected static final Logger logger = LogManager.getLogger("Listener");
+  protected static final Logger logger = LogManager.getLogger("Listener");
 
-	/**
-     * Default constructor. 
-     */
-    public PushNoticeListener() {
-    }
-	
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
+  /**
+   * Default constructor.
+   */
+  public PushNoticeListener() {}
 
-		logger.info("PushNoticeListener contextInitialized start.");
-    	ExecutorService exec = Executors.newCachedThreadPool();
-    	PingSender sender = new PingSender();
-		Future<String>future = exec.submit(sender);;
-		logger.info("PushNoticeListener PingSender started.");
-    }
+  @Override
+  public void contextInitialized(ServletContextEvent event) {
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
-    
+    logger.info("PushNoticeListener contextInitialized start.");
+    ExecutorService exec = Executors.newCachedThreadPool();
+    PingSender sender = new PingSender();
+    Future<String> future = exec.submit(sender);;
+    logger.info("PushNoticeListener PingSender started.");
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+    // TODO 自動生成されたメソッド・スタブ
+
+  }
+
 }
