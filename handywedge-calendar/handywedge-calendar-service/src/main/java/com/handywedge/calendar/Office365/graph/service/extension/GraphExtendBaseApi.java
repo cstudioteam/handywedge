@@ -1,20 +1,22 @@
 package com.handywedge.calendar.Office365.graph.service.extension;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.service.config.GraphProxyInfo;
 import com.handywedge.calendar.Office365.graph.auth.confidentialClient.ClientCredentialProvider;
 import com.handywedge.calendar.Office365.graph.service.interceptors.GzipRequestInterceptor;
 import com.microsoft.graph.httpcore.AuthenticationHandler;
-import com.microsoft.graph.httpcore.HttpClients;
 import com.microsoft.graph.httpcore.TelemetryHandler;
 
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.service.config.GraphAuthInfo;
+import okhttp3.ConnectionPool;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omg.CORBA.TIMEOUT;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -25,13 +27,13 @@ import java.util.concurrent.TimeUnit;
 public class GraphExtendBaseApi {
     private static final Logger logger = LogManager.getLogger( );
 
-    private static final Integer GRAPH_CONNECT_TIMEOUT = 15;
-    private static final Integer GRAPH_READ_TIMEOUT = 15;
-    private static final Integer GRAPH_WRITE_TIMEOUT = 15;
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    private static final long GRAPH_DEFAULT_TIMEOUT = 15;
 
     GraphApiInfo apiInfo = null;
-    GraphAuthInfo authInfo = null;
-    GraphProxyInfo proxyInfo = null;
+    private GraphAuthInfo authInfo = null;
+    private GraphProxyInfo proxyInfo = null;
 
     public GraphExtendBaseApi(GraphApiInfo api) {
         this.apiInfo = api;
@@ -39,7 +41,7 @@ public class GraphExtendBaseApi {
         this.proxyInfo = api.getProxyInfo();
     }
 
-    public ClientCredentialProvider getProvider(){
+    public ClientCredentialProvider getAuthenticationProvider(){
         long startTime = System.currentTimeMillis();
 
         ClientCredentialProvider clientCredentialProvider = new ClientCredentialProvider( apiInfo );
@@ -57,52 +59,61 @@ public class GraphExtendBaseApi {
     public Headers getHeaders() {
         Map headerMap = new HashMap(  );
         headerMap.put( "Content-Type", "application/json" );
-        headerMap.put( "Prefer", String.format("outlook.timezone=\"%s\"", getTimeZone()) );
+        headerMap.put( "Prefer", String.format("outlook.timezone=\"%s\";IdType=\"ImmutableId\"", getTimeZone()) );
 
         Headers headers = Headers.of(headerMap);
         logger.debug( "Request Header: {}", headers );
         return headers;
     }
 
-    public OkHttpClient getGraphClient(){
+    public OkHttpClient getGraphClient(long timeout){
 
-        AuthenticationHandler authenticationHandler = new AuthenticationHandler(getProvider());
-        Interceptor[] interceptors = {authenticationHandler, new GzipRequestInterceptor()};
-        if(true) {
-            OkHttpClient client = HttpClients.createFromInterceptors( interceptors );
-            return client;
-        } else{
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            if (interceptors != null) {
-                int interceptorNum = interceptors.length;
+        OkHttpClient client = new OkHttpClient();
 
-                for(int i = 0; i < interceptorNum; ++i) {
-                    Interceptor interceptor = interceptors[i];
-                    if (interceptor != null) {
-                        builder.addInterceptor(interceptor);
-                    }
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler( getAuthenticationProvider());
+        Interceptor[] interceptors = null;
+        if(ObjectUtils.isEmpty( getHeaders().get( "Content-Encoding" ))
+                || !getHeaders().get( "Content-Encoding" ).contains( "gzip" )){
+            interceptors = new Interceptor[]{authenticationHandler, new TelemetryHandler()};
+        }else{
+            interceptors = new Interceptor[]{authenticationHandler, new TelemetryHandler(), new GzipRequestInterceptor()};
+        }
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (interceptors != null) {
+            int interceptorNum = interceptors.length;
+
+            for(int i = 0; i < interceptorNum; ++i) {
+                Interceptor interceptor = interceptors[i];
+                if (interceptor != null) {
+                    builder.addInterceptor(interceptor);
                 }
             }
-<<<<<<< HEAD
-
-            return builder
-                    .connectTimeout(GRAPH_CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                    .writeTimeout(GRAPH_WRITE_TIMEOUT, TimeUnit.SECONDS)
-                    .readTimeout(GRAPH_READ_TIMEOUT, TimeUnit.SECONDS)
-                    .addInterceptor(new TelemetryHandler())
-                    .proxy( getProxy() )
-                    .build();
-=======
         }
-        logger.debug("### DEBUG ### Graphリクエスストタイムアウト={}", apiInfo.getRequestTimeout());
-        builder.connectTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS)
-                .writeTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS)
-                .readTimeout(apiInfo.getRequestTimeout(), TimeUnit.SECONDS);
+        logger.debug("### DEBUG ### Graphリクエスストタイムアウト={}", timeout);
+        builder.connectTimeout(timeout, TimeUnit.SECONDS)
+                .writeTimeout(timeout, TimeUnit.SECONDS)
+                .readTimeout(timeout, TimeUnit.SECONDS)
+                .connectionPool(new ConnectionPool(20, 5L, TimeUnit.MINUTES))
+                .followRedirects(false);
 
         if(apiInfo.isUseProxy()) {
             builder.proxy( getProxy() );
->>>>>>> 4342f5d... Graph リクエストタイムアウト値追加
         }
+
+        return builder.build();
+    }
+
+    public long getBatchRequestTimeout(){
+        return apiInfo.getRequestTimeoutForBatch();
+    }
+
+    public long getReadRequestTimeout(){
+        return apiInfo.getRequestTimeoutForRead();
+    }
+
+    public long getWriteRequestTimeout(){
+        return apiInfo.getRequestTimeoutForWrite();
     }
 
     /**

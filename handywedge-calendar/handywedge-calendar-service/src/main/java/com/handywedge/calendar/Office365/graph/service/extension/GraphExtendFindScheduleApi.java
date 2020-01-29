@@ -92,8 +92,10 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new GraphApiException( "", e.getMessage() );
-                // TODO: 必要か検討
+            }finally {
+                response.body().close();
             }
+
             findScheduleResponse = makeScheduleResponse(jsonResponse);
             logger.info("[検索処理完了] ユーザー：{}   件名：{} 開始時刻〜終了時刻：{}〜{}",
                     requestInfo.getOrganizer(),
@@ -123,7 +125,7 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
 
             scheduleItem.setId( jObjectScheduleItem.getString( "id" ) );
             scheduleItem.setOrganizer( jObjectScheduleItem.getJSONObject( "organizer" ).getJSONObject( "emailAddress" ).getString( "address" ) );
-            if(jObjectScheduleItem.has( "subject" )) {      // Todo: 精査
+            if(jObjectScheduleItem.has( "subject" )) {
                 scheduleItem.setSubject( jObjectScheduleItem.getString( "subject" ) );
             }
             scheduleItem.setStatus( jObjectScheduleItem.getString( "showAs" ) );

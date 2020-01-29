@@ -82,6 +82,7 @@ public class GraphExtendBatchApi extends GraphExtendBaseApi {
             responseContent = new MSBatchResponseContent(response);
         }else{
             logger.error( "バッチ処理エラー。CODE: {}; MESSAGE: {}", response.code(), response.message());
+            response.close();
         }
         return responseContent;
     }

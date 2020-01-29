@@ -85,7 +85,8 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new GraphApiException( "", e.getMessage() );
-                // TODO: 必要か検討
+            }finally {
+                response.body().close();
             }
 
             logger.debug("[削除処理完了] ユーザー：{}   ID：{}",

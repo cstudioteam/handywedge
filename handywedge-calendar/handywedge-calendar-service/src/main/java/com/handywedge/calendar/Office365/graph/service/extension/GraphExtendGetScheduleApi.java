@@ -93,7 +93,10 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
                 } catch (IOException e) {
                     e.printStackTrace();
                     throw new GraphApiException( String.valueOf(response.code()), response.message() );
+                }finally {
+                    response.body().close();
                 }
+
                 subScheduleInformation = extractGetScheduleResponse(jsonResponse);
 
                 scheduleInformation.addAll( subScheduleInformation );

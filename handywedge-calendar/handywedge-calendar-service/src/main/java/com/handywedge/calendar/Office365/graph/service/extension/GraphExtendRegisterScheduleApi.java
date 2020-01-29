@@ -155,7 +155,8 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new GraphApiException( "", e.getMessage() );
-                // TODO: 必要か検討
+            }finally {
+                response.body().close();
             }
 
             scheduleDetailItem = extractScheduleInformationResponse(jsonResponse);
@@ -168,7 +169,6 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         }else{
             logger.error( "登録処理エラー。CODE: {}; MESSAGE: {}", response.code(), response.message());
             throw new GraphApiException( String.valueOf(response.code()), response.message() );
-            // TODO: 必要か検討
         }
         return scheduleDetailItem;
     }
