@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
- <Context>
+<Context>
+  <!--クラスロードをシステム側が優先されるようにする -->
+  <Loader delegate="true" />
   <Resource
     name="jdbc/ds_handywedge"
     auth="Container"

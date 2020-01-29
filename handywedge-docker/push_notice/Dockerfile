@@ -18,7 +18,7 @@ WORKDIR /tmp/install
 RUN rm -rf $CATALINA_HOME/webapps/* && \
     mkdir -p $CATALINA_HOME/conf/Catalina/localhost/ && \
     mkdir -p $CATALINA_HOME/resources && \
-    echo "CLASSPATH=$CATALINA_HOME/resources" >> $CATALINA_HOME/bin/setenv.sh && \
+    echo "export CLASSPATH=$CATALINA_HOME/resources" >> $CATALINA_HOME/bin/setenv.sh && \
     echo "export LANG=ja_JP.UTF-8" >> $CATALINA_HOME/bin/setenv.sh && \
     echo "export JAVA_OPTS=-Duser.timezone=Asia/Tokyo" >> $CATALINA_HOME/bin/setenv.sh && \
     chmod +x $CATALINA_HOME/bin/setenv.sh && \
