@@ -20,7 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -57,11 +59,15 @@ public class GraphExtendBaseApi {
     }
 
     public Headers getHeaders() {
-        Map headerMap = new HashMap(  );
-        headerMap.put( "Content-Type", "application/json" );
-        headerMap.put( "Prefer", String.format("outlook.timezone=\"%s\";IdType=\"ImmutableId\"", getTimeZone()) );
+        String[] headerArray = new String[6];
+        headerArray[0] = "Content-Type";
+        headerArray[1] = "application/json";
+        headerArray[2] = "Prefer";
+        headerArray[3] = String.format("outlook.timezone=\"%s\"", getTimeZone());
+        headerArray[4] = "Prefer";
+        headerArray[5] = "IdType=\"ImmutableId\"";
 
-        Headers headers = Headers.of(headerMap);
+        Headers headers = Headers.of(headerArray);
         logger.debug( "Request Header: {}", headers );
         return headers;
     }
