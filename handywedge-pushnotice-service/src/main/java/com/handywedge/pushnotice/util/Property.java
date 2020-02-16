@@ -3,6 +3,7 @@ package com.handywedge.pushnotice.util;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,12 +15,18 @@ import org.apache.logging.log4j.Logger;
 public class Property {
 
   protected static final String REGEX = "#\\{.+?\\}";
-  protected static final ResourceBundle BUNDLE = ResourceBundle.getBundle("hw-pushnotice");
+  protected static final ResourceBundle BUNDLE;
 
   protected static Logger logger = LogManager.getLogger("PushService");
 
 
   static {
+    BUNDLE = ResourceBundle.getBundle("hw-pushnotice", new ResourceBundle.Control() {
+      @Override
+      public long getTimeToLive(String aBaseName, Locale aLocale) {
+        return TTL_DONT_CACHE;
+      }
+    });
     Enumeration<String> e = BUNDLE.getKeys();
     while (e.hasMoreElements()) {
       String key = e.nextElement();
