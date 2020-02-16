@@ -12,13 +12,15 @@ import javax.websocket.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.handywedge.pushnotice.util.Property;
+
 
 public class SessionManager {
 
   private static Logger logger = LogManager.getLogger("PushService");
   private static SessionManager instance = new SessionManager();
 
-  private Map<String, Session> sessions = new HashMap<>();
+  private Map<String, List<Session>> sessions = new HashMap<>();
   private Map<String, String> index = new HashMap<>();
 
 
@@ -31,32 +33,41 @@ public class SessionManager {
   public void add(String userId, Session session) {
 
     logger.trace("Session add userId={} sessionId={} ", userId, session.getId());
-
-    remove(userId);
-    sessions.put(userId, session);
+    boolean multiSession = Property.getBool("MULTI_SESSION");
+    if (!multiSession) {
+      remove(userId);
+    }
+    List<Session> userSessions = sessions.get(userId);
+    if (userSessions == null) {
+      userSessions = new ArrayList<>();
+      sessions.put(userId, userSessions);
+    }
+    sessions.get(userId).add(session);
     index.put(session.getId(), userId);
 
     logger.trace("Session add sessions={} index={} ", sessions.size(), index.size());
   }
 
-  public Session get(String userId) {
+  public List<Session> get(String userId) {
 
     return sessions.get(userId);
   }
 
   public void remove(String userId) {
 
-    Session session = get(userId);
+    List<Session> userSessions = get(userId);
 
-    if (session != null) {
+    if (userSessions != null) {
       try {
         String json = "{ \"NoticeCode\": 8, \"Message\": { \"Reason\": \"同一アカウントでログインされました\"}}";
-        session.getAsyncRemote().sendText(json);
-        session.close();
+        for (Session session : userSessions) {
+          session.getAsyncRemote().sendText(json);
+          index.remove(session.getId());
+          session.close();
+        }
       } catch (IOException e) {
       }
       sessions.remove(userId);
-      index.remove(session.getId());
     }
     logger.trace("Session remove sessions={} index={} ", sessions.size(), index.size());
   }
@@ -70,7 +81,12 @@ public class SessionManager {
         session.close();
       } catch (IOException e) {
       }
-      sessions.remove(userId);
+      List<Session> userSession = sessions.get(userId);
+      boolean remove = userSession.remove(session);
+      logger.debug("User Session remove {}.", remove);
+      if (userSession.isEmpty()) {
+        sessions.remove(userId);
+      }
       index.remove(session.getId());
     }
     logger.trace("Session remove sessions={} index={} ", sessions.size(), index.size());

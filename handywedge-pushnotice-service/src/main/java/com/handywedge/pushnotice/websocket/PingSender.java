@@ -28,15 +28,17 @@ public class PingSender implements Callable<String> {
       SessionManager manager = SessionManager.getSessionManager();
       List<String> list = manager.getLoginUsers();
       for (String userId : list) {
-        Session session = manager.get(userId);
-        try {
-          if (session.isOpen()) {
-            synchronized (session) {
-              session.getBasicRemote().sendPing(ByteBuffer.wrap("ping".getBytes()));
-              logger.trace("ping send. userId={} session={}", userId, session.getId());
+        List<Session> userSessions = manager.get(userId);
+        for (Session session : userSessions) {
+          try {
+            if (session.isOpen()) {
+              synchronized (session) {
+                session.getBasicRemote().sendPing(ByteBuffer.wrap("ping".getBytes()));
+                logger.trace("ping send. userId={} session={}", userId, session.getId());
+              }
             }
+          } catch (Exception e) {
           }
-        } catch (Exception e) {
         }
       }
       Thread.sleep(PING_INTERVAL_SEC);

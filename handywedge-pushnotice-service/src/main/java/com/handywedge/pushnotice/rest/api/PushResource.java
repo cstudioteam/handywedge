@@ -51,19 +51,21 @@ public class PushResource {
         throw new WebApplicationException("送信先が正しくありません。", Response.Status.BAD_REQUEST);
       }
 
-      Session session = sessionManager.get(userId);
-      if (session == null) {
-        throw new WebApplicationException("ユーザ [" + userId + "] はログインしていません。",
-            Response.Status.BAD_REQUEST);
-      }
+      List<Session> userSessions = sessionManager.get(userId);
+      for (Session session : userSessions) {
+        if (session == null) {
+          throw new WebApplicationException("ユーザ [" + userId + "] はログインしていません。",
+              Response.Status.BAD_REQUEST);
+        }
 
-      if (!session.isOpen()) {
-        throw new WebApplicationException("セッションがクローズされています。", Response.Status.BAD_REQUEST);
-      }
+        if (!session.isOpen()) {
+          throw new WebApplicationException("セッションがクローズされています。", Response.Status.BAD_REQUEST);
+        }
 
-      synchronized (session) {
-        String json = "{ \"NoticeCode\": 0, \"Message\": " + message.getText() + "}";
-        session.getAsyncRemote().sendText(json);
+        synchronized (session) {
+          String json = "{ \"NoticeCode\": 0, \"Message\": " + message.getText() + "}";
+          session.getAsyncRemote().sendText(json);
+        }
       }
     } catch (Exception e) {
       throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
