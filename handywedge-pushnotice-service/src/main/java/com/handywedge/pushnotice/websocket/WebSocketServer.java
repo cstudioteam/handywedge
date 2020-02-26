@@ -6,6 +6,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -22,7 +23,6 @@ public class WebSocketServer {
 
   private static Logger logger = LogManager.getLogger("PushService");
   private SessionManager sessionManager = SessionManager.getSessionManager();
-
 
   @OnOpen
   public void onOpen(Session session, @PathParam("token") String token) {
@@ -56,5 +56,11 @@ public class WebSocketServer {
 
     logger.debug("onClose ID={}", session.getId());
     sessionManager.remove(session);
+  }
+
+  @OnMessage
+  public void pongMessage(Session session, PongMessage msg) {
+    sessionManager.setPong(session.getId());
+    logger.trace("websocket pong receive sessiondId={}", session.getId());
   }
 }

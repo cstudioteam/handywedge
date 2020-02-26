@@ -1,6 +1,7 @@
 package com.handywedge.pushnotice.websocket;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ public class SessionManager {
 
   private Map<String, List<Session>> sessions = new HashMap<>();
   private Map<String, String> index = new HashMap<>();
+  private Map<String, Instant> pong = new HashMap<>();
 
 
   static public SessionManager getSessionManager() {
@@ -74,6 +76,7 @@ public class SessionManager {
 
   public void remove(Session session) {
 
+    pong.remove(session.getId());
     String userId = index.get(session.getId());
 
     if (userId != null) {
@@ -103,5 +106,13 @@ public class SessionManager {
     }
 
     return list;
+  }
+
+  public void setPong(String sessionId) {
+    pong.put(sessionId, Instant.now());
+  }
+
+  public Instant getPong(String sessionId) {
+    return pong.get(sessionId);
   }
 }

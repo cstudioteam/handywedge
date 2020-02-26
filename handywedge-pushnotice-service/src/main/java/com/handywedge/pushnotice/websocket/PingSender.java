@@ -1,8 +1,12 @@
 package com.handywedge.pushnotice.websocket;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.websocket.Session;
 
@@ -19,12 +23,15 @@ public class PingSender implements Callable<String> {
 
   protected static boolean running = (PING_INTERVAL_SEC != 0);
 
+  private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
   @Override
   public String call() throws Exception {
 
     logger.info("PingSender Interval {} sec.", PING_INTERVAL_SEC);
 
     while (running) {
+
       SessionManager manager = SessionManager.getSessionManager();
       List<String> list = manager.getLoginUsers();
       for (String userId : list) {
@@ -34,7 +41,26 @@ public class PingSender implements Callable<String> {
             if (session.isOpen()) {
               synchronized (session) {
                 session.getBasicRemote().sendPing(ByteBuffer.wrap("ping".getBytes()));
-                logger.trace("ping send. userId={} session={}", userId, session.getId());
+                logger.trace("websocket ping send sessiondId={}, userId={}", session.getId(),
+                    userId);
+                // pong応答のタイムアウト処理
+                setTimeout(() -> {
+                  Instant lastPong = manager.getPong(session.getId());
+                  if (lastPong == null
+                      || Instant.now().getEpochSecond() - lastPong.getEpochSecond() > 10) {
+                    try {
+                      logger.debug("websocket ping/pong timeout. sessionId={}", session.getId());
+                      if (session.isOpen()) {
+                        session.close();
+                      }
+                    } catch (IOException e) {
+                      logger.error(e);
+                    }
+                  } else {
+                    logger.trace("session healthy sessionId={}, lastPong={}", session.getId(),
+                        lastPong);
+                  }
+                }, 10000);
               }
             }
           } catch (Exception e) {
@@ -46,4 +72,15 @@ public class PingSender implements Callable<String> {
 
     return null;
   }
+
+  public static void setTimeout(Runnable runnable, int delay) {
+    new Thread(() -> {
+      try {
+        Thread.sleep(delay);
+        runnable.run();
+      } catch (Exception e) {
+      }
+    }).start();
+  }
+
 }
