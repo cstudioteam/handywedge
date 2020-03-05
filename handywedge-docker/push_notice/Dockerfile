@@ -1,4 +1,4 @@
-FROM tomcat:9.0.30
+FROM tomcat:9.0.31
 
 # 言語、build用JDKインストール
 RUN set -x && \
