@@ -263,7 +263,7 @@
     <profile>
       <id>dev</id>
       <properties>
-        <profile.dir>dev1</profile.dir>
+        <profile.dir>dev</profile.dir>
       </properties>
     </profile>
     <profile>
