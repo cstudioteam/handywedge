@@ -1,6 +1,9 @@
 package com.handywedge.calendar.Office365.graph.auth.confidentialClient;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.auth.BaseAuthentication;
+import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.auth.AuthConstants;
 import com.handywedge.calendar.Office365.graph.auth.ProxyConnectionClient;
@@ -9,6 +12,8 @@ import com.microsoft.graph.authentication.IAuthenticationProvider;
 import com.microsoft.graph.http.IHttpRequest;
 import com.microsoft.graph.httpcore.ICoreAuthenticationProvider;
 import okhttp3.Request;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -22,8 +27,11 @@ import java.util.List;
 
 public class ClientCredentialProvider extends BaseAuthentication implements IAuthenticationProvider, ICoreAuthenticationProvider{
 
-    private GraphApiInfo apiInfo = null;
+    private static final Logger logger = LogManager.getLogger();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     public ClientCredentialProvider(GraphApiInfo info){
+
         this(
                 info.getAuthInfo().getApplicationId(),
                 Arrays.asList(info.getAuthInfo().getScope()),
@@ -32,7 +40,7 @@ public class ClientCredentialProvider extends BaseAuthentication implements IAut
                 NationalCloud.Global,
                 info
         );
-        this.apiInfo = info;
+
     }
     /*
      * Client credential provider instance using client secret
@@ -113,8 +121,9 @@ public class ClientCredentialProvider extends BaseAuthentication implements IAut
      */
     public String getAccessTokenNewRequest(OAuthClientRequest request) throws OAuthSystemException, OAuthProblemException {
         OAuthClient oAuthClient = null;
-        if(apiInfo.isUseProxy()) {
-            oAuthClient = new OAuthClient(new ProxyConnectionClient(apiInfo.getProxyInfo()));
+        logger.debug( "apiInfo: {}", gson.toJson( getGraphApiConfigInfo() ) );
+        if(getGraphApiConfigInfo().isUseProxy()) {
+            oAuthClient = new OAuthClient(new ProxyConnectionClient(getGraphApiConfigInfo().getProxyInfo()));
         }else {
             oAuthClient = new OAuthClient( new URLConnectionClient() );
         }

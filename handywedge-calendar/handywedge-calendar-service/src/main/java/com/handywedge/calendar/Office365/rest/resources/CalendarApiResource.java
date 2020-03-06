@@ -9,6 +9,7 @@ import com.handywedge.calendar.Office365.rest.exception.CalendarApiException;
 import com.handywedge.calendar.Office365.rest.injections.CalendarApiConfig;
 import com.handywedge.calendar.Office365.rest.injections.CalendarApiService;
 import com.handywedge.calendar.Office365.rest.requests.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.process.internal.RequestScoped;
@@ -37,20 +38,26 @@ public class CalendarApiResource {
     @Path("/getSchedule")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSchedule(@Valid GetScheduleRequest request) throws Exception {
+    public Response getSchedule(@Valid GetScheduleRequest request){
         LocalDateTime startTime = LocalDateTime.now();
         logger.info( "getSchedule Start." );
         logger.debug( "Request: {}", gson.toJson( request ));
 
         GetScheduleResponse response = new GetScheduleResponse();
+
+        if(ObjectUtils.isEmpty(request.getEmails())){
+            logger.info("予定表取得の依頼件数が０件です。");
+            return Response.ok(response.getScheduleInformation()).build();
+        }
+
         try {
             apiService.getSchedule(request, response );
-        }catch (GraphApiException e) {
+        }catch (GraphApiException gae) {
+            gae.printStackTrace();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
+        }catch (Exception e){
             e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
         logger.debug( "Response: {}", gson.toJson( response ));

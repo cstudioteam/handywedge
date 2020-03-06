@@ -11,6 +11,7 @@ import com.handywedge.calendar.Office365.graph.service.requests.GraphExtendGetSc
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 
 import okhttp3.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -159,10 +160,13 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
                 ScheduleSummaryItem scheduleSummaryItem = new ScheduleSummaryItem();
                 JSONObject jObjectScheduleItem = scheduleItemJsonArray.getJSONObject( j );
 
+                if(ObjectUtils.isEmpty( jObjectScheduleItem )){
+                    scheduleSummaryItems.add( scheduleSummaryItem );
+                    continue;
+                }
+
                 if(jObjectScheduleItem.has( "subject" )) {
                     scheduleSummaryItem.setSubject( jObjectScheduleItem.getString( "subject" ) );
-                }else{
-                    scheduleSummaryItem.setSubject("");
                 }
                 scheduleSummaryItem.setStatus( jObjectScheduleItem.getString( "status" ) );
                 scheduleSummaryItem.setStartTime( jObjectScheduleItem.getJSONObject( "start").getString( "dateTime" ) );

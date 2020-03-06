@@ -44,6 +44,7 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
     @Override
     public Headers getHeaders() {
         Map headerMap = new HashMap(  );
+        headerMap.put( "Prefer", "IdType=\"ImmutableId\"" );
         Headers headers = Headers.of(headerMap);
         logger.debug( "Request Header: {}", headers );
         return headers;
@@ -66,7 +67,7 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
 
             long startTime = System.currentTimeMillis();
 
-            response = getGraphClient().newCall(request).execute();
+            response = getGraphClient(getWriteRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
             logger.info("[削除処理] 処理時間：{}ms", (endTime - startTime));

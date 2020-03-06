@@ -4,48 +4,21 @@ public class CalendarApiException extends Exception{
     /**
      * エラーコード
      */
-    private int code;
-
-    /**
-     * エラー項目
-     */
-    private String fields;
-
-    /**
-     * 拡張メッセージ
-     */
-    private String exMessage;
-
+    private int statusCode;
 
     public CalendarApiException() { }
 
     public CalendarApiException(int code, String message) {
         super(message);
-        this.code = code;
+        this.statusCode = code;
     }
 
-    public int getCode() {
-        return code;
+    public int getStatusCode() {
+        return statusCode;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getFields() {
-        return fields;
-    }
-
-    public void setFields(String fields) {
-        this.fields = fields;
-    }
-
-    public String getExMessage() {
-        return exMessage;
-    }
-
-    public void setExMessage(String exMessage) {
-        this.exMessage = exMessage;
+    public void setStatusCode(int code) {
+        this.statusCode = code;
     }
 
 }

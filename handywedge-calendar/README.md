@@ -1,11 +1,43 @@
 Handywedge カレンダーサービス
 ------------------------------------
 
-プルジェクト： 
-- handywedge-calendar
+## 事前準備
 
-サブプロジェクト：
-- handywedge-calendar-rest
-- handywedge-calendar-core
+- JDKをインストール
+    
+    [Download Amazon Corretto 8](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/patches.html) 
+    
+- Mavenをインストール
+
+    [Download Apache Maven 3.3+](http://maven.apache.org/download.cgi)
+    
+    [Installing Apache Maven](https://maven.apache.org/install.html)
+
+
+## ビルド
+
+- ローカル
+    ```
+    $ mvn clean package [-P local]
+    ```
+- 開発
+    ```
+    $ mvn clean package -P dev
+    ```
+- 検証（ステージング）
+    ```
+    $ mvn clean package -P stg
+    ```
+- 本番
+    ```
+    $ mvn clean package -P prod
+    ```
+
+## リリース
+
+　上記「ビルド」手順を完了すると、[build/libs/hw-cal.war]が作成される。
+　warファイル、リリース対象環境へ配置する。
+
+
 
 

@@ -1,5 +1,7 @@
 package com.handywedge.calendar.Office365.rest.injections;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.graph.service.GraphCalendarService;
 import com.handywedge.calendar.Office365.graph.service.requests.GraphExtendFindByIdScheduleRequest;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 
 public class CalendarApiService {
     private static final Logger logger = LogManager.getLogger();
+
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Inject
     CalendarApiConfig apiConfig;
@@ -97,6 +101,7 @@ public class CalendarApiService {
 
         ScheduleDetailItem scheduleDetailItem = graphService.registerSchedule( graphExtendRegisterScheduleRequest );
 
+        logger.debug( "ScheduleDetailItem: {}", gson.toJson( scheduleDetailItem ) );
         response.setId(scheduleDetailItem.getId());
     }
 

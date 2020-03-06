@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 public class DeleteScheduleRequest {
-  @JsonProperty("id")
+  @JsonProperty("immutableId")
   private String id = new String();
 
   @JsonProperty("organizer")

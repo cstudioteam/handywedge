@@ -1,5 +1,6 @@
 package com.handywedge.calendar.Office365.graph.auth;
 
+import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.auth.enums.NationalCloud;
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -24,7 +25,7 @@ public class BaseAuthentication {
     private String redirectUri = "https://localhost:8080";
     private OAuthJSONAccessTokenResponse response;
 
-    private GraphApiInfo apiInfo = null;
+    public GraphApiInfo apiInfo = null;
 
     public BaseAuthentication(
             List<String> scopes,
@@ -44,6 +45,10 @@ public class BaseAuthentication {
         this.tenant = tenant;
         this.clientSecret = clientSecret;
         this.apiInfo = info;
+    }
+
+    protected GraphApiInfo getGraphApiConfigInfo(){
+        return this.apiInfo;
     }
 
     protected static HashMap<String, String> CloudList = new HashMap<String, String>()
@@ -68,8 +73,7 @@ public class BaseAuthentication {
         return scopeString.toString();
     }
 
-    protected String getAccessTokenSilent()
-    {
+    protected String getAccessTokenSilent() throws GraphApiException {
         long durationPassed = System.currentTimeMillis() - startTime;
         if(this.response == null || durationPassed < 0) return null;
         try {
@@ -98,12 +102,13 @@ public class BaseAuthentication {
 
                 this.response = oAuthClient.accessToken(request);
                 return response.getAccessToken();
+            } else {
+                return response.getAccessToken();
             }
-            else return response.getAccessToken();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new GraphApiException( "OauthError" , e.getMessage() );
         }
-        return null;
     }
 
     protected String getAuthority() {

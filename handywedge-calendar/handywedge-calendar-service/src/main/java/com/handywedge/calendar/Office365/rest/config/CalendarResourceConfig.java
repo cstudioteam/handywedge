@@ -11,16 +11,14 @@ import org.glassfish.jersey.server.ServerProperties;
 
 import javax.ws.rs.ApplicationPath;
 
-@ApplicationPath("/v1")
+@ApplicationPath("/")
 public class CalendarResourceConfig extends ResourceConfig {
     public CalendarResourceConfig() {
-        // Jersey Bean Validation
         packages("com.baeldung.jersey.server");
         property( ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 
         register( JacksonJaxbJsonProvider.class);
         register( JsonParseExceptionMapper.class, 1);
-//        register( JacksonFeature.class );
 
         register( CalendarApiService.class );
         register( new AbstractBinder() {

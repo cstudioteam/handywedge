@@ -8,7 +8,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class CalendarApiExceptionMapper implements ExceptionMapper<CalendarApiException> {
     public Response toResponse(CalendarApiException ex) {
-        return Response.status( Response.Status.INTERNAL_SERVER_ERROR)
+        return Response.status( ex.getStatusCode())
                 .entity(new ApiResponseMessage( ))
                 .type(MediaType.APPLICATION_JSON)
                 .build();

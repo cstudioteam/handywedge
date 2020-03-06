@@ -1,6 +1,10 @@
 package com.handywedge.calendar.Office365.graph.auth;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.service.config.GraphProxyInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.oltu.oauth2.client.HttpClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthClientResponse;
@@ -25,7 +29,12 @@ import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 public class ProxyConnectionClient implements HttpClient {
 
-    GraphProxyInfo proxyInfo = null;
+    private static final Logger logger = LogManager.getLogger();
+
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    private GraphProxyInfo proxyInfo = null;
+
     public ProxyConnectionClient(GraphProxyInfo proxyInfo) {
         this.proxyInfo = proxyInfo;
     }
@@ -41,6 +50,7 @@ public class ProxyConnectionClient implements HttpClient {
         try {
             URL url = new URL(request.getLocationUri());
 
+            logger.debug( "ProxyConfig: {}", gson.toJson( this.proxyInfo ) );
             final Proxy proxy = new Proxy(
                     proxyInfo.getType(),
                     new InetSocketAddress( proxyInfo.getHost(), proxyInfo.getPort())

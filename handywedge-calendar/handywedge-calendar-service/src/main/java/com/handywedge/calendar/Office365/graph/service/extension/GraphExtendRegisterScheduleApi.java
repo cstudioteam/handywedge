@@ -2,22 +2,15 @@ package com.handywedge.calendar.Office365.graph.service.extension;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.rest.models.ScheduleDetailItem;
-import com.handywedge.calendar.Office365.rest.models.ScheduleInformation;
-import com.handywedge.calendar.Office365.rest.models.ScheduleSummaryItem;
-import com.microsoft.graph.models.extensions.Location;
 import com.handywedge.calendar.Office365.graph.service.utils.Constant;
 import com.handywedge.calendar.Office365.graph.service.requests.GraphExtendRegisterScheduleRequest;
 import com.handywedge.calendar.Office365.graph.service.requests.GraphExtendRegisterScheduleResponse;
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.microsoft.graph.models.generated.AttendeeType;
 import com.microsoft.graph.models.generated.BodyType;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +26,8 @@ import java.util.Map;
 public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
 
     private static final Logger logger = LogManager.getLogger( );
+
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public final static String REGISTER_SCHEDULE_REQUEST_URI = "/users/%s/calendar/events";
 
@@ -52,6 +47,11 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
                 + String.format( REGISTER_SCHEDULE_REQUEST_URI, requestInfo.getOrganizer() );
         logger.debug( "Request URL: {}", requestURL );
         return requestURL;
+    }
+
+    @Override
+    public Headers getHeaders() {
+        return super.getHeaders();
     }
 
     private RequestBody setPostBody() {
@@ -100,8 +100,8 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
 
         Map<String, Object> bodyMap = new HashMap<>( );
         bodyMap.put( "subject", requestInfo.getSubject() );
-        bodyMap.put("start", startTime);
-        bodyMap.put("end", endTime);
+        bodyMap.put( "start", startTime);
+        bodyMap.put( "end", endTime);
         bodyMap.put( "body", body);
         bodyMap.put( "showAs", StringUtils.lowerCase( requestInfo.getStatus().toString()));
         bodyMap.put( "attendees", attendees );
@@ -134,18 +134,16 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
 
             long startTime = System.currentTimeMillis();
 
-            response = getGraphClient().newCall(request).execute();
+            response = getGraphClient(getWriteRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
             logger.info("[予定表登録処理] 処理時間：{}ms", (endTime - startTime));
 
             logger.debug( "GraphExtendBatchResponse: {}",  response);
         } catch (IOException e) {
-//            logger.error( "登録処理エラー。MESSAGE: {}",  response.message());
             e.printStackTrace();
             throw new GraphApiException( "", response.message());
         }
-
 
         GraphExtendRegisterScheduleResponse registerScheduleResponse = null;
         if(response.isSuccessful()){
@@ -168,6 +166,9 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
             );
         }else{
             logger.error( "登録処理エラー。CODE: {}; MESSAGE: {}", response.code(), response.message());
+            logger.debug("### DEBUG ### リダイレクト：CODE={}", response.code());
+            logger.debug("### DEBUG ### リダイレクト：Hedaer={}", gson.toJson(response.headers()));
+            logger.debug("### DEBUG ### リダイレクト：body={}", response.body().toString());
             throw new GraphApiException( String.valueOf(response.code()), response.message() );
         }
         return scheduleDetailItem;
@@ -181,7 +182,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         scheduleDetailItem.setId( jObjectScheduleItem.getString("id" ) );
         scheduleDetailItem.setStartTime( jObjectScheduleItem.getJSONObject( "start").getString( "dateTime" ) );
         scheduleDetailItem.setEndTime( jObjectScheduleItem.getJSONObject( "end").getString( "dateTime" ) );
-        scheduleDetailItem.setStatus( jObjectScheduleItem.getString( "status" ) );
+        scheduleDetailItem.setStatus( jObjectScheduleItem.getString( "showAs" ) );
 
         if(jObjectScheduleItem.has( "subject" )) {
             scheduleDetailItem.setSubject( jObjectScheduleItem.getString( "subject" ) );
@@ -198,17 +199,27 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         if(jObjectScheduleItem.has( "attendees" )) {
             JSONArray attendees = jObjectScheduleItem.getJSONArray( "attendees" );
 
+            List<String> newLocations = new ArrayList<>(  );
+            List<String> newAttendees = new ArrayList<>(  );
+
             for (int i=0; i < attendees.length(); i++) {
                 JSONObject attendee = attendees.getJSONObject(i);
-                if(AttendeeType.RESOURCE.equals(attendee.getString( "type" ))){
-                    scheduleDetailItem.getLocations().add( attendee.getJSONObject( "emailAddress" ).getString( "address" ) );
+                String attendeeType = attendee.getString( "type" );
+                String attendeeEmail = "";
+
+                if(attendee.has( "emailAddress" ) && attendee.getJSONObject( "emailAddress" ).has( "address" )){
+                    attendeeEmail = attendee.getJSONObject( "emailAddress" ).getString( "address" );
+                }
+
+                if(AttendeeType.RESOURCE.name().equalsIgnoreCase(attendeeType)){
+                    newLocations.add( attendeeEmail );
                 }else{
-                    scheduleDetailItem.getAttendees().add( attendee.getJSONObject( "emailAddress" ).getString( "address" ) );
+                    newAttendees.add( attendeeEmail );
                 }
             }
+            scheduleDetailItem.setLocations(newLocations );
+            scheduleDetailItem.setAttendees(newAttendees );
         }
-
-
         return scheduleDetailItem;
     }
 

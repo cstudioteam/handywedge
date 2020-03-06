@@ -1,6 +1,5 @@
 package com.handywedge.calendar.Office365.graph.service.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.handywedge.calendar.Office365.rest.models.FreeBusyStatusEnum;
 
 import java.util.ArrayList;

@@ -36,7 +36,7 @@
 
   <servlet-mapping>
     <servlet-name>Handywedge CalendarService</servlet-name>
-    <url-pattern>/v1/*</url-pattern>
+    <url-pattern>/o365/*</url-pattern>
   </servlet-mapping>
 
 </web-app>

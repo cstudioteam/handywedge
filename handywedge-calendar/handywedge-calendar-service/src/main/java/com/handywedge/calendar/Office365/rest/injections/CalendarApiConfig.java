@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.service.config.GraphProxyInfo;
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.service.config.GraphAuthInfo;
+import com.handywedge.calendar.Office365.rest.exception.CalendarApiException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,12 +26,12 @@ public class CalendarApiConfig {
     private GraphApiInfo graphApiInfo;
 
     @PostConstruct
-    public void initiate() {
+    public void initiate() throws CalendarApiException {
         graphApiInfo = new GraphApiInfo();
         loadProperties();
     }
 
-    private void loadProperties() {
+    private void loadProperties() throws CalendarApiException {
         final Properties appProperties = new Properties();
         try {
             InputStream is = CalendarApiConfig.class.getResourceAsStream(PROPERTY_NAME);
@@ -39,8 +40,8 @@ public class CalendarApiConfig {
             appProperties.load( reader );
             logger.info( "{}ファイルを読み込みました。", PROPERTY_NAME );
         } catch (IOException e) {
-            logger.error( "{}の設定ファイルが読み込めません。",PROPERTY_NAME );
-            return;
+            logger.error( "{}の設定ファイルが読み込めません。", PROPERTY_NAME );
+            throw new CalendarApiException(500, String.format("%sの設定ファイルが読み込めません。", PROPERTY_NAME) );
         }
 
         setGraphProxyInfo(appProperties);
@@ -68,7 +69,7 @@ public class CalendarApiConfig {
      * プロキシ設定情報読み込み
      * @param properties
      */
-    public void setGraphProxyInfo(Properties properties){
+    public void setGraphProxyInfo(Properties properties) throws CalendarApiException {
         GraphProxyInfo proxyInfo = new GraphProxyInfo();
 
         String useProxy = properties.getProperty( "proxy.use" );
@@ -77,9 +78,23 @@ public class CalendarApiConfig {
         }else{
             graphApiInfo.setUseProxy(true);
 
-            proxyInfo.setType( Proxy.Type.valueOf(properties.getProperty("proxy.type")) );
+            if(properties.getProperty("proxy.type").equalsIgnoreCase( "HTTP" )){
+                proxyInfo.setType( Proxy.Type.HTTP);
+            }else if(properties.getProperty("proxy.type").equalsIgnoreCase( "SOCKS" )){
+                proxyInfo.setType( Proxy.Type.SOCKS);
+            }else if(properties.getProperty("proxy.type").equalsIgnoreCase( "DIRECT" )){
+                proxyInfo.setType( Proxy.Type.DIRECT);
+            }else{
+                throw new CalendarApiException(
+                        500,
+                        String.format("プロパティ指定不正。[%s=%s]", "proxy.type", properties.getProperty("proxy.type") )
+                 );
+            }
+
             proxyInfo.setHost( properties.getProperty( "proxy.host" ) );
             proxyInfo.setPort( Integer.parseInt( properties.getProperty("proxy.port")) );
+
+            graphApiInfo.setProxyInfo( proxyInfo );
         }
         logger.debug( "プロキシー利用有無: {}", useProxy );
         logger.debug( "プロキシー情報: {}", gson.toJson( proxyInfo ) );
@@ -97,14 +112,20 @@ public class CalendarApiConfig {
         graphApiInfo.setTimeZone( properties.getProperty( "graph.api.timezone" ) );
         logger.debug( "その他情報: TimeZone[{}]", graphApiInfo.getTimeZone() );
 
+        graphApiInfo.setRequestTimeoutForBatch( Integer.parseInt( properties.getProperty("graph.api.request.timeout.batch")));
+        graphApiInfo.setRequestTimeoutForRead( Integer.parseInt( properties.getProperty("graph.api.request.timeout.read")));
+        graphApiInfo.setRequestTimeoutForWrite( Integer.parseInt( properties.getProperty("graph.api.request.timeout.write")));
+
+        logger.debug( "バッチ: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForBatch() );
+        logger.debug( "参照系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForRead() );
+        logger.debug( "更新系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForWrite() );
+
         graphApiInfo.setUserNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.users" )));
         graphApiInfo.setRequestNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.requests")));
-        graphApiInfo.setRequestTimeout( Integer.parseInt( properties.getProperty("graph.api.request.timeout")));
         graphApiInfo.setDelegate( properties.getProperty("graph.api.getschedule.delegate"));
 
         logger.debug( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
         logger.debug( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
-        logger.debug( "GetSchedule情報情報: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeout() );
         logger.debug( "GetSchedule情報情報: 代理者ユーザ[{}]", graphApiInfo.getDelegate() );
     }
 }

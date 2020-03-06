@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="OFF">
   <Properties>
-    <Property name="pattern">
-      <![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
     <Property name="catalina_home">.</Property>
-    <Property name="app_id">reservation-manager-calendar</Property>
+    <Property name="app_id">hw-cal</Property>
+    <Property name="pattern">
+      <![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%-5p %t]\t[${app_id}]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
   </Properties>
   <Appenders>
     <Console
         name="console"
-        target="SYSTEM_OUT"
-    >
+        target="SYSTEM_OUT">
       <PatternLayout pattern="${pattern}"/>
     </Console>
     <RollingFile
         name="${app_id}"
         fileName="${catalina_home}/logs/${app_id}.log"
-        filePattern="${catalina_home}/logs/archive/${app_id}_%d{yyyy-MM-dd}.gz"
-    >
+        filePattern="${catalina_home}/logs/archive/${app_id}_%d{yyyy-MM-dd}.gz">
       <PatternLayout
           pattern="${pattern}"
           charset="UTF-8"/>
@@ -28,8 +26,7 @@
     <RollingFile
         name="debug"
         fileName="${catalina_home}/logs/${app_id}_error.log"
-        filePattern="${catalina_home}/logs/archive/${app_id}_error_%d{yyyy-MM-dd}.gz"
-    >
+        filePattern="${catalina_home}/logs/archive/${app_id}_error_%d{yyyy-MM-dd}.gz">
       <PatternLayout
           pattern="${pattern}"
           charset="UTF-8"/>
@@ -41,8 +38,7 @@
   <Loggers>
     <Logger
         name="com.handywedge.calendar"
-        level="debug"
-    >
+        level="debug">
       <AppenderRef ref="${app_id}"/>
       <!-- <AppenderRef ref="error" level="warn" /> -->
     </Logger>

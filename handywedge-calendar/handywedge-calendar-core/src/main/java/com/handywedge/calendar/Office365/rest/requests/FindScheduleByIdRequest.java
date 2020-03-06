@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public class FindScheduleByIdRequest {
-  @JsonProperty("id")
+  @JsonProperty("immutableId")
   private String id = new String();
 
   @JsonProperty("organizer")

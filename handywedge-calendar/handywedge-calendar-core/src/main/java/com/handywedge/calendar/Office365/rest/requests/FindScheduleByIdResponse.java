@@ -14,6 +14,9 @@ import java.util.List;
 
 public class FindScheduleByIdResponse extends BaseResponse {
 
+  @JsonProperty("immutableId")
+  private String id;
+
   @JsonProperty("scheduleInformation")
   private ScheduleInformation scheduleInformation;
 

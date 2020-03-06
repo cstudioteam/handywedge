@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class RegisterScheduleResponse {
 
-  @JsonProperty("id")
+  @JsonProperty("immutableId")
   private String id;
 
   public String getId() {

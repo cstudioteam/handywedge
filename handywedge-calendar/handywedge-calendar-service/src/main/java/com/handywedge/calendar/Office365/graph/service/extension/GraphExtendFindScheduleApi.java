@@ -73,7 +73,7 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
 
             long startTime = System.currentTimeMillis();
 
-            response = getGraphClient().newCall(request).execute();
+            response = getGraphClient(getReadRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
             logger.info("[検索処理] 処理時間：{}ms", (endTime - startTime));

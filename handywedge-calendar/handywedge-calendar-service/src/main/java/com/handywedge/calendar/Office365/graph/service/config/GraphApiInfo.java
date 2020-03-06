@@ -36,9 +36,19 @@ public class GraphApiInfo {
     private int requestNumber = 1;
 
     /**
-     * Graph API　リクエストタイムアウト値
+     * Graph API　バッチリクエストタイムアウト値(秒)
      */
-    private  int requestTimeout = 15;
+    private  int requestTimeoutForBatch = 15;
+
+    /**
+     * Graph API　参照系リクエストタイムアウト値(秒)
+     */
+    private  int requestTimeoutForRead = 3;
+
+    /**
+     * Graph API　更新系リクエストタイムアウト値(秒)
+     */
+    private  int requestTimeoutForWrite = 5;
 
     /**
      * getSchedule APIの代理人ユーザー
@@ -101,13 +111,27 @@ public class GraphApiInfo {
         this.delegate = delegate;
     }
 
-    public int getRequestTimeout() {
-        return requestTimeout;
+    public int getRequestTimeoutForBatch() {
+        return requestTimeoutForBatch;
     }
 
-    public void setRequestTimeout(int requestTimeout) {
-        this.requestTimeout = requestTimeout;
+    public void setRequestTimeoutForBatch(int requestTimeoutForBatch) {
+        this.requestTimeoutForBatch = requestTimeoutForBatch;
     }
 
+    public int getRequestTimeoutForRead() {
+        return requestTimeoutForRead;
+    }
 
+    public void setRequestTimeoutForRead(int requestTimeoutForRead) {
+        this.requestTimeoutForRead = requestTimeoutForRead;
+    }
+
+    public int getRequestTimeoutForWrite() {
+        return requestTimeoutForWrite;
+    }
+
+    public void setRequestTimeoutForWrite(int requestTimeoutForWrite) {
+        this.requestTimeoutForWrite = requestTimeoutForWrite;
+    }
 }

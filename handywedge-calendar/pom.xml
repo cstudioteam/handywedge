@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.handywedge.calendar</groupId>
@@ -162,54 +163,9 @@
 
 
   <build>
+    <finalName>handywedge-calendar</finalName>
+
     <plugins>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat8-maven-plugin</artifactId>
-        <version>3.0-r1655215</version>
-
-        <configuration>
-          <url>http://localhost:8080/manager/text</url>
-          <server>tomcat-localhost</server>
-          <path>/dev</path>
-          <charset>UTF-8</charset>
-        </configuration>
-        <executions>
-        <execution>
-        <id>clean-undeploy</id>
-        <phase>clean</phase>
-        <goals>
-        <goal>undeploy</goal>
-        </goals>
-        </execution>
-        <execution>
-        <id>package-deploy</id>
-        <phase>package</phase>
-        <goals>
-        <goal>redeploy</goal>
-        </goals>
-        </execution>
-        </executions>
-      </plugin>
-
-      <!--<plugin>-->
-        <!--<groupId>org.eclipse.jetty</groupId>-->
-        <!--<artifactId>jetty-maven-plugin</artifactId>-->
-        <!--<version>${jetty.version}</version>-->
-        <!--<configuration>-->
-          <!--<scanIntervalSeconds>2</scanIntervalSeconds>-->
-          <!--<contextHandlers>-->
-            <!--<contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">-->
-              <!--<war>${project.artifactId}/target/${project.artifactId}-${project.version}.war</war>-->
-              <!--<contextPath>/requests</contextPath>-->
-            <!--</contextHandler>-->
-            <!--&lt;!&ndash;<contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">&ndash;&gt;-->
-              <!--&lt;!&ndash;<war>${project.artifactId}-rest/target/${project.artifactId}-rest-${project.version}.war</war>&ndash;&gt;-->
-              <!--&lt;!&ndash;<contextPath>/rest</contextPath>&ndash;&gt;-->
-            <!--&lt;!&ndash;</contextHandler>&ndash;&gt;-->
-          <!--</contextHandlers>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -232,6 +188,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>${maven-jar-plugin.version}</version>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -240,35 +197,14 @@
     </plugins>
   </build>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>alfresco-public</id>
-      <url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>alfresco-public-snapshots</id>
-      <url>https://artifacts.alfresco.com/nexus/content/groups/public-snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>beardedgeeks-releases</id>
-      <url>http://beardedgeeks.googlecode.com/svn/repository/releases</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
     <profile>
-      <id>dev</id>
+      <id>local</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-<<<<<<< HEAD
-        <build.profile.id>dev</build.profile.id>
-=======
         <profile.dir>local</profile.dir>
       </properties>
       <build>
@@ -282,7 +218,7 @@
             <server>TomcatServer</server>
             <username>admin</username>
             <password>password</password>
-            <path>/dev</path>
+            <path>/hw-cal</path>
             <charset>UTF-8</charset>
           </configuration>
           <executions>
@@ -327,20 +263,19 @@
     <profile>
       <id>dev</id>
       <properties>
-        <profile.dir>dev</profile.dir>
->>>>>>> 4342f5d... Graph リクエストタイムアウト値追加
+        <profile.dir>dev1</profile.dir>
       </properties>
     </profile>
     <profile>
       <id>stg</id>
       <properties>
-        <build.profile.id>stg</build.profile.id>
+        <profile.dir>stg</profile.dir>
       </properties>
     </profile>
     <profile>
       <id>prod</id>
       <properties>
-        <build.profile.id>prd</build.profile.id>
+        <profile.dir>prd</profile.dir>
       </properties>
     </profile>
   </profiles>

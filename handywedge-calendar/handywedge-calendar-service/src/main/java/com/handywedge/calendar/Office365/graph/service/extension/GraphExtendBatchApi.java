@@ -39,6 +39,7 @@ public class GraphExtendBatchApi extends GraphExtendBaseApi {
         headerMap.put( "Content-Type", "application/json" );
         headerMap.put( "Content-Encoding", "gzip, deflate" );
         headerMap.put( "Connection", "Keep-Alive");
+        headerMap.put( "Prefer", "IdType=\"ImmutableId\"" );
 
         Headers headers = Headers.of(headerMap);
         return headers;
@@ -67,7 +68,7 @@ public class GraphExtendBatchApi extends GraphExtendBaseApi {
             Request request = getRequest();
             long startTime = System.currentTimeMillis();
 
-            response = getGraphClient().newCall(request).execute();
+            response = getGraphClient(getBatchRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
             logger.info("[バッチ処理] 処理時間：{}ms", (endTime - startTime));

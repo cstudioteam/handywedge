@@ -35,24 +35,24 @@ public class ScheduleApiResource {
     @Path("/cancel")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSchedule(
-            @NotEmpty(message = "id must not be null") @QueryParam("id") String id,
+            @NotEmpty(message = "immutableId must not be null") @QueryParam("immutableId") String immutableId,
             @NotEmpty(message = "email must not be null") @QueryParam("email") String email
     ) throws CalendarApiException {
         LocalDateTime timeStart = LocalDateTime.now();
 
         DeleteScheduleResponse response = null;
         DeleteScheduleRequest request = new DeleteScheduleRequest();
-        request.setId( id );
+        request.setId( immutableId );
         request.setOrganizer( email );
 
         try {
             apiService.deleteSchedule( request, response );
-        }catch (GraphApiException e) {
+        }catch (GraphApiException gae) {
+            gae.printStackTrace();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
+        }catch (Exception e){
             e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( e.getMessage() ).build();
         }
 
         logger.debug( "Response: {}", gson.toJson( response ));
@@ -71,16 +71,16 @@ public class ScheduleApiResource {
     ) throws CalendarApiException {
         LocalDateTime timeStart = LocalDateTime.now();
 
-        RegisterScheduleResponse response = null;
+        RegisterScheduleResponse response = new RegisterScheduleResponse();
         logger.debug( "Request: {}", gson.toJson( request ));
         try {
             apiService.registerSchedule( request, response );
-        }catch (GraphApiException e) {
+        }catch (GraphApiException gae) {
+            gae.printStackTrace();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
+        }catch (Exception e){
             e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
         logger.debug( "Response: {}", gson.toJson( response ));
@@ -93,23 +93,23 @@ public class ScheduleApiResource {
     @Path("/findById")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findSchedule(
-            @NotEmpty(message = "id must not be null") @QueryParam("id") String id,
+            @NotEmpty(message = "immutableId must not be null") @QueryParam("immutableId") String immutableId,
             @NotEmpty(message = "email must not be null") @QueryParam("email") String email
     ) throws CalendarApiException {
         LocalDateTime timeStart = LocalDateTime.now();
 
-        FindScheduleByIdResponse response = null;
+        FindScheduleByIdResponse response = new FindScheduleByIdResponse();
         FindScheduleByIdRequest request = new FindScheduleByIdRequest();
-        request.setId( id );
+        request.setId( immutableId );
         request.setOrganizer( email );
         try {
             apiService.findSchedule( request, response );
-        }catch (GraphApiException e) {
+        }catch (GraphApiException gae) {
+            gae.printStackTrace();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
+        }catch (Exception e){
             e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
         logger.debug( "Response: {}", gson.toJson( response ));
@@ -137,12 +137,12 @@ public class ScheduleApiResource {
         request.setStatus( FreeBusyStatusEnum.fromValue( status ) );
         try {
             apiService.findSchedule( request, response );
-        }catch (GraphApiException e) {
+        }catch (GraphApiException gae) {
+            gae.printStackTrace();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
+        } catch (Exception e){
             e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return Response.status( Response.Status.BAD_REQUEST ).entity( new ErrorResponse() ).build();
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
         logger.debug( "Response: {}", gson.toJson( response ));
