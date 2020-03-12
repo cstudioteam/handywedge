@@ -38,7 +38,7 @@ public class CalendarApiConfig {
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader reader = new BufferedReader(isr);
             appProperties.load( reader );
-            logger.info( "{}ファイルを読み込みました。", PROPERTY_NAME );
+            logger.debug( "{}ファイルを読み込みました。", PROPERTY_NAME );
         } catch (IOException e) {
             logger.error( "{}の設定ファイルが読み込めません。", PROPERTY_NAME );
             throw new CalendarApiException(500, String.format("%sの設定ファイルが読み込めません。", PROPERTY_NAME) );

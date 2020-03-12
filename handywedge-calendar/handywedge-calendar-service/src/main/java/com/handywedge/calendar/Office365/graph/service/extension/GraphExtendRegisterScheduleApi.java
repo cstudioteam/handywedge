@@ -3,6 +3,7 @@ package com.handywedge.calendar.Office365.graph.service.extension;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
+import com.handywedge.calendar.Office365.graph.exceptions.GraphRequestTimeoutException;
 import com.handywedge.calendar.Office365.rest.models.ScheduleDetailItem;
 import com.handywedge.calendar.Office365.graph.service.utils.Constant;
 import com.handywedge.calendar.Office365.graph.service.requests.GraphExtendRegisterScheduleRequest;
@@ -18,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,18 +132,21 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
         try {
 
             Request request = getRequest();
-            logger.debug( "登録処理: {}",  request);
+            logger.debug("登録処理: {}", request);
 
             long startTime = System.currentTimeMillis();
 
             response = getGraphClient(getWriteRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
-            logger.info("[予定表登録処理] 処理時間：{}ms", (endTime - startTime));
+            logger.debug("[予定表登録処理] 処理時間：{}ms", (endTime - startTime));
 
-            logger.debug( "GraphExtendBatchResponse: {}",  response);
+            logger.debug("GraphExtendBatchResponse: {}", response);
+        }catch(InterruptedIOException iie){
+            logger.warn(iie.getMessage(), iie);
+            throw new GraphRequestTimeoutException("登録処理タイムアウト");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             throw new GraphApiException( "", response.message());
         }
 
@@ -158,7 +163,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
             }
 
             scheduleDetailItem = extractScheduleInformationResponse(jsonResponse);
-            logger.info("[登録処理完了] ユーザー：{}   ID：{} 開始時刻〜終了時刻：{}〜{}",
+            logger.debug("[登録処理完了] ユーザー：{}   ID：{} 開始時刻〜終了時刻：{}〜{}",
                     requestInfo.getOrganizer(),
                     scheduleDetailItem.getId(),
                     requestInfo.getStartTime(),

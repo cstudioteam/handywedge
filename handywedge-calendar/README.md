@@ -22,22 +22,42 @@ Handywedge カレンダーサービス
     ```
 - 開発
     ```
-    $ mvn clean package -P dev
+    $ mvn clean package -P dev [--offline package -Dmaven.repo.local=repository -Dmaven.legacyLocalRepo=true]
     ```
+    ※オフラインでビルドを行う際は、[]の部分まで指定してください。
+    
+    ローカルリポジトリ作成については[ローカルリポジトリ作成](ローカルリポジトリ作成)を参照してください。
+    
+
 - 検証（ステージング）
     ```
-    $ mvn clean package -P stg
+    $ mvn clean package -P stg [--offline package -Dmaven.repo.local=repository -Dmaven.legacyLocalRepo=true]
     ```
+    ※オフラインでビルドを行う際は、[]の部分まで指定してください。
+    
+    ローカルリポジトリ作成については[ローカルリポジトリ作成](ローカルリポジトリ作成)を参照してください。
+ 
 - 本番
     ```
-    $ mvn clean package -P prod
+    $ mvn clean package -P prd [--offline package -Dmaven.repo.local=repository -Dmaven.legacyLocalRepo=true]
     ```
+    ※オフラインでビルドを行う際は、[]の部分まで指定してください。
+    
+    ローカルリポジトリ作成については[ローカルリポジトリ作成](ローカルリポジトリ作成)を参照してください。
+ 
 
 ## リリース
 
 　上記「ビルド」手順を完了すると、[build/libs/hw-cal.war]が作成される。
 　warファイル、リリース対象環境へ配置する。
 
+# ローカルリポジトリ作成
+　CI/CDのビルドにおいて、Publicリポジトリへのアクセスができないため、ローカル環境から必要な
+　すべてのライブラリを事前用意しておく必要があります。
 
-
+    ```
+    $ cd [プロジェクトルート]
+    $ rm -rf repository/*
+    $ mvn dependency:go-offline -Dmaven.repo.local=repository clean package -P dev
+    ```
 

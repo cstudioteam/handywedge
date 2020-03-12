@@ -48,11 +48,11 @@ public class GraphCalendarService {
 
         int processCount = 0;
         for(GraphExtendFindScheduleRequest scheduleRequest: requests) {
-            logger.info( "予定表検索処理 [{}回目]", ++processCount );
+            logger.debug( "予定表検索処理 [{}回目]", ++processCount );
             GraphExtendFindScheduleApi scheduleApi = new GraphExtendFindScheduleApi( apiInfo, scheduleRequest );
             GraphExtendFindScheduleResponse tempFindScheduleResponse = scheduleApi.getResponse();
 
-            logger.info( "予定表検索処理結果 [{}回目]: {}", processCount, tempFindScheduleResponse.getScheduleItems().size());
+            logger.debug( "予定表検索処理結果 [{}回目]: {}", processCount, tempFindScheduleResponse.getScheduleItems().size());
             logger.debug( "予定表検索処理結果 [{}回目]: {}", processCount, gson.toJson( tempFindScheduleResponse ));
 
             if(null == findScheduleResponse.getScheduleItems()){
@@ -96,7 +96,7 @@ public class GraphCalendarService {
         for(List<List<String>> requestList: newRequestList){
             GraphExtendGetScheduleApi scheduleApi = new GraphExtendGetScheduleApi( apiInfo );
 
-            logger.info( "予定表取得バッチ処理 [{}回目]", ++processCount );
+            logger.debug( "予定表取得バッチ処理 [{}回目]", ++processCount );
             for(List<String> userList: requestList){
                 GraphExtendGetScheduleRequest scheduleRequest = new GraphExtendGetScheduleRequest();
                 scheduleRequest.setAvailabilityViewInterval( request.getAvailabilityViewInterval() );
@@ -114,7 +114,7 @@ public class GraphCalendarService {
             MSBatchResponseContent responseContent = batchApi.getResponseContent();
 
             List<ScheduleInformation> scheduleInformation = scheduleApi.extractScheduleInformation(responseContent);
-            logger.info( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, scheduleInformation.size());
+            logger.debug( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, scheduleInformation.size());
 
             resultScheduleInformation.addAll( scheduleInformation );
         }

@@ -76,7 +76,7 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
             response = getGraphClient(getReadRequestTimeout()).newCall(request).execute();
 
             long endTime = System.currentTimeMillis();
-            logger.info("[検索処理] 処理時間：{}ms", (endTime - startTime));
+            logger.debug("[検索処理] 処理時間：{}ms", (endTime - startTime));
 
         } catch (IOException e) {
             logger.error( "検索処理エラー。MESSAGE: {}",  response.message());
@@ -97,7 +97,7 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
             }
 
             findScheduleResponse = makeScheduleResponse(jsonResponse);
-            logger.info("[検索処理完了] ユーザー：{}   件名：{} 開始時刻〜終了時刻：{}〜{}",
+            logger.debug("[検索処理完了] ユーザー：{}   件名：{} 開始時刻〜終了時刻：{}〜{}",
                     requestInfo.getOrganizer(),
                     requestInfo.getSubject(),
                     requestInfo.getStartTime(),

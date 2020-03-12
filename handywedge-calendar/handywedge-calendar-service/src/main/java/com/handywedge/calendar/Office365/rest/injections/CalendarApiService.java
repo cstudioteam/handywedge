@@ -135,9 +135,6 @@ public class CalendarApiService {
         graphExtendFindByIdScheduleRequest.setOrganizer( request.getOrganizer() );
 
         // ToDo:
-//        GraphExtendFindByIdScheduleReponse  graphExtendFindByIdScheduleReponse = graphService.deleteSchedule( graphExtendFindByIdScheduleRequest );
-//
-//        response.getScheduleInformation();
     }
 
     /**
@@ -148,6 +145,5 @@ public class CalendarApiService {
      */
     public void findSchedule(FindScheduleByPeriodRequest request, FindScheduleByPeriodResponse response) throws GraphApiException {
         //TODO:
-
     }
 }

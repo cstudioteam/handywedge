@@ -49,7 +49,7 @@ public class GraphExtendBaseApi {
         ClientCredentialProvider clientCredentialProvider = new ClientCredentialProvider( apiInfo );
 
         long endTime = System.currentTimeMillis();
-        logger.info("[AzureAD認証処理] 処理時間：{}ms", (endTime - startTime));
+        logger.debug("[AzureAD認証処理] 処理時間：{}ms", (endTime - startTime));
 
         return clientCredentialProvider;
     }

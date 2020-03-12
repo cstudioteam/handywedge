@@ -177,7 +177,7 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
             subScheduleInformation.setScheduleSummaryItems( scheduleSummaryItems );
             scheduleInformation.add( subScheduleInformation );
 
-            logger.info( "ユーザー: {}  予約件数：{}",
+            logger.debug( "ユーザー: {}  予約件数：{}",
                     subScheduleInformation.getScheduleId(),
                     subScheduleInformation.getScheduleSummaryItems().size());
         }

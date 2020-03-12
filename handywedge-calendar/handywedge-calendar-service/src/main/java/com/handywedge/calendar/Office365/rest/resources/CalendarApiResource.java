@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 
-@Path("/calendar")
+@Path("/o365/calendar")
 @RequestScoped
 public class CalendarApiResource {
 
@@ -62,7 +62,7 @@ public class CalendarApiResource {
 
         logger.debug( "Response: {}", gson.toJson( response ));
         LocalDateTime endTime = LocalDateTime.now();
-        logger.info("{} 処理時間：{}ms","[予定表取得処理]", ChronoUnit.MILLIS.between(startTime, endTime));
+        logger.debug("{} 処理時間：{}ms","[予定表取得処理]", ChronoUnit.MILLIS.between(startTime, endTime));
         return Response.ok(response.getScheduleInformation()).build();
     }
 

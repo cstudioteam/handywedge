@@ -47,6 +47,7 @@
     <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     <jersey2.version>2.29.1</jersey2.version>
     <jackson.version>2.9.8</jackson.version>
+    <javax.ws.rs.version>2.1</javax.ws.rs.version>
 
     <!-- maven plugins -->
     <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
@@ -79,14 +80,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>${maven-war-plugin.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.glassfish.jersey</groupId>
-        <artifactId>jersey-bom</artifactId>
-        <version>${jersey2.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
       </dependency>
 
       <dependency>
@@ -273,7 +266,7 @@
       </properties>
     </profile>
     <profile>
-      <id>prod</id>
+      <id>prd</id>
       <properties>
         <profile.dir>prd</profile.dir>
       </properties>
