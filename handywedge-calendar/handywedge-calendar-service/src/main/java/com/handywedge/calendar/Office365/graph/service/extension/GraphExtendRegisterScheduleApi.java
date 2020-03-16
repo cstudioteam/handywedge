@@ -156,7 +156,7 @@ public class GraphExtendRegisterScheduleApi extends GraphExtendBaseApi {
             try {
                 jsonResponse = response.body().string();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warn(e.getMessage(), e);
                 throw new GraphApiException( "", e.getMessage() );
             }finally {
                 response.body().close();

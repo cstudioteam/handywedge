@@ -79,8 +79,8 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
             logger.debug("[検索処理] 処理時間：{}ms", (endTime - startTime));
 
         } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
             logger.error( "検索処理エラー。MESSAGE: {}",  response.message());
-            e.printStackTrace();
             throw new GraphApiException( String.valueOf(response.code()), response.message() );
         }
 
@@ -90,7 +90,7 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
             try {
                 jsonResponse = response.body().string();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warn(e.getMessage(), e);
                 throw new GraphApiException( "", e.getMessage() );
             }finally {
                 response.body().close();
@@ -115,7 +115,6 @@ public class GraphExtendFindScheduleApi extends GraphExtendBaseApi {
 
         List<ScheduleDetailItem> scheduleItems = new ArrayList<ScheduleDetailItem>();
 
-        // Todo: nextLink
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONArray jObjectScheduleItems = jsonObject.getJSONArray("value");
         for (int i=0; i < jObjectScheduleItems.length(); i++) {

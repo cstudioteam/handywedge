@@ -90,7 +90,7 @@ public class ClientCredentialProvider extends BaseAuthentication implements IAut
                 accessToken = getAccessTokenNewRequest(authRequest);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
         }
         return accessToken;
     }

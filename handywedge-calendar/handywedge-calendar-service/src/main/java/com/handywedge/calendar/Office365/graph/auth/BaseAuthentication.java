@@ -3,6 +3,8 @@ package com.handywedge.calendar.Office365.graph.auth;
 import com.handywedge.calendar.Office365.graph.exceptions.GraphApiException;
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.auth.enums.NationalCloud;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -25,6 +27,7 @@ public class BaseAuthentication {
     private String redirectUri = "https://localhost:8080";
     private OAuthJSONAccessTokenResponse response;
 
+    private static final Logger logger = LogManager.getLogger();
     public GraphApiInfo apiInfo = null;
 
     public BaseAuthentication(
@@ -106,7 +109,7 @@ public class BaseAuthentication {
                 return response.getAccessToken();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             throw new GraphApiException( "OauthError" , e.getMessage() );
         }
     }

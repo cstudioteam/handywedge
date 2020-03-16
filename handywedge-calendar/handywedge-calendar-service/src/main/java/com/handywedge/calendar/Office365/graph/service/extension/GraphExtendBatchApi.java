@@ -74,8 +74,8 @@ public class GraphExtendBatchApi extends GraphExtendBaseApi {
             logger.info("[バッチ処理] 処理時間：{}ms", (endTime - startTime));
 
         } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
             logger.error( "バッチ処理エラー。MESSAGE: {}",  e.getMessage());
-            e.printStackTrace();
         }
 
         MSBatchResponseContent responseContent = null;

@@ -49,10 +49,9 @@ public class ScheduleApiResource {
         try {
             apiService.deleteSchedule( request, response );
         }catch (GraphApiException gae) {
-            gae.printStackTrace();
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( e.getMessage() ).build();
         }
 
@@ -79,10 +78,9 @@ public class ScheduleApiResource {
         }catch (GraphRequestTimeoutException grte){
             return Response.status( Response.Status.REQUEST_TIMEOUT).build();
         }catch (GraphApiException gae) {
-            gae.printStackTrace();
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
@@ -108,10 +106,9 @@ public class ScheduleApiResource {
         try {
             apiService.findSchedule( request, response );
         }catch (GraphApiException gae) {
-            gae.printStackTrace();
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 
@@ -141,10 +138,9 @@ public class ScheduleApiResource {
         try {
             apiService.findSchedule( request, response );
         }catch (GraphApiException gae) {
-            gae.printStackTrace();
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
         } catch (Exception e){
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 

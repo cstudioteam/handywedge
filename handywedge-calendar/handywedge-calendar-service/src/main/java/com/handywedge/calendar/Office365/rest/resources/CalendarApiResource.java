@@ -53,10 +53,9 @@ public class CalendarApiResource {
         try {
             apiService.getSchedule(request, response );
         }catch (GraphApiException gae) {
-            gae.printStackTrace();
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR).entity( gae ).build();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( "ServerError" ).build();
         }
 

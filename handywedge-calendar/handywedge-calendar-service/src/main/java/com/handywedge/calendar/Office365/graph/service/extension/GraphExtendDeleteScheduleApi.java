@@ -73,8 +73,7 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
             logger.info("[削除処理] 処理時間：{}ms", (endTime - startTime));
 
         } catch (IOException e) {
-            //logger.error( "削除処理エラー。MESSAGE: {}",  response.message());
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
             throw new GraphApiException( String.valueOf(response.code()), response.message() );
         }
 
@@ -84,7 +83,7 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
             try {
                 jsonResponse = response.body().string();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warn(e.getMessage(), e);
                 throw new GraphApiException( "", e.getMessage() );
             }finally {
                 response.body().close();
@@ -100,9 +99,5 @@ public class GraphExtendDeleteScheduleApi extends GraphExtendBaseApi {
         }
         return ;
     }
-
-//    private GraphExtendDeleteScheduleResponse makeScheduleResponse(String jsonResponse){
-//        return new GraphExtendDeleteScheduleResponse();
-//    }
 
 }

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class JsonUtils {
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String LOCAL_DATE_FORMAT = "yyyy-MM-dd";
+
+    private static final Logger logger = LogManager.getLogger( );
 
     public static ObjectMapper buildMapper() {
 
@@ -59,7 +63,7 @@ public class JsonUtils {
                 objectStr += MessageFormat.format( "{0}", obj );
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
         }
 
         return objectStr;
