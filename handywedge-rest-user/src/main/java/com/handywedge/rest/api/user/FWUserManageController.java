@@ -39,7 +39,7 @@ import com.handywedge.user.FWUserService;
 import com.handywedge.user.auth.FWLoginManager;
 
 @RequestScoped
-@Path("/user")
+@Path("/")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWUserManageController {

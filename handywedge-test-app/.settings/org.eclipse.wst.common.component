@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                  
+                      
+    
     
     
     
     <wb-module deploy-name="handywedge-test-app">
-                                    
+                                            
+        
         
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                    
+                                            
+        
         
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                    
+                                            
+        
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                    
+                                            
+        
         
         
         
@@ -33,22 +38,32 @@
         <dependent-module archiveName="handywedge-openidconnect-login-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-openidconnect-login/handywedge-openidconnect-login">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                    
+        <dependent-module archiveName="handywedge-rest-user-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-user/handywedge-rest-user">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="handywedge-rest-token-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-token/handywedge-rest-token">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+                                            
+        
         
         
         
         <property name="java-output-path" value="/handywedge-test-app/target/classes"/>
-                                        
+                                                
+        
         
         
         
         <property name="context-root" value="handywedge-test-app"/>
-                                  
+                                          
+    
     
     
     
     </wb-module>
-                
+                    
+
 
 
 

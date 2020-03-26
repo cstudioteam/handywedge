@@ -21,7 +21,6 @@ import com.handywedge.common.FWException;
 import com.handywedge.common.FWStringUtil;
 import com.handywedge.log.FWLogger;
 import com.handywedge.log.FWLoggerFactory;
-import com.handywedge.rest.api.token.FWAPITokenResponse;
 import com.handywedge.user.FWInnerUserService;
 import com.handywedge.user.FWUser;
 
@@ -45,7 +44,7 @@ public class FWOICAPITokenPublisher {
   public Response publish(FWOICAPITokenRequest request) {
     logger.info("publish start. args={}", request);
 
-    FWAPITokenResponse res = new FWAPITokenResponse();
+    FWOICAPITokenResponse res = new FWOICAPITokenResponse();
     try {
       if (request == null || FWStringUtil.isEmpty(request.getId())
           || FWStringUtil.isEmpty(request.getProvider())) {
@@ -72,9 +71,9 @@ public class FWOICAPITokenPublisher {
     return Response.ok(res).build();
   }
 
-  private FWAPITokenResponse createError(String args) {
+  private FWOICAPITokenResponse createError(String args) {
     FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR), args);
-    FWAPITokenResponse res = new FWAPITokenResponse();
+    FWOICAPITokenResponse res = new FWOICAPITokenResponse();
     res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
     res.setReturn_msg(e.getMessage());
     return res;
