@@ -12,6 +12,7 @@
     <module>handywedge-rest-user</module>
     <module>handywedge-rest-token</module>
     <module>handywedge-rest-app</module>
+    <module>handywedge-report</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -44,6 +44,9 @@
         <dependent-module archiveName="handywedge-rest-token-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-token/handywedge-rest-token">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="handywedge-report-0.8.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-report/handywedge-report">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
                                             
         
         

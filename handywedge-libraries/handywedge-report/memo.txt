@@ -1,0 +1,4 @@
+下記URLよりiTextAsian.jarをダウンロード
+https://github.com/itext/itextpdf/tree/2.1.7/itext/lib
+
+mvn install:install-file -Dfile=iTextAsian.jar -DgroupId=com.lowagie -DartifactId=iTextAsian -Dversion=2.1.7 -Dpackaging=jar

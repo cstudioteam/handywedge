@@ -21,9 +21,6 @@ import javax.inject.Inject;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.log.FWLogger;
-import com.handywedge.report.pdf.FWPDFReport;
-import com.handywedge.report.pdf.FWPDFReportException;
-import com.handywedge.report.pdf.FWPDFReportWriter;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;

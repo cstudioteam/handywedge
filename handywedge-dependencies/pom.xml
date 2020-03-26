@@ -13,7 +13,6 @@
     <module>handywedge-dependencies-logging</module>
     <module>handywedge-dependencies-cdi</module>
     <module>handywedge-dependencies-jsf</module>
-    <module>handywedge-dependencies-report</module>
     <module>handywedge-dependencies-reference</module>
     <module>handywedge-dependencies-mail</module>
   </modules>
