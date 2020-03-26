@@ -20,10 +20,6 @@ import com.handywedge.common.FWRuntimeException;
 import com.handywedge.common.FWStringUtil;
 import com.handywedge.context.FWFullContext;
 import com.handywedge.log.FWLogger;
-import com.handywedge.role.FWAction;
-import com.handywedge.role.FWRoleAcl;
-import com.handywedge.role.FWRoleException;
-import com.handywedge.role.FWRoleManager;
 
 @ApplicationScoped
 public class FWRoleManagerImpl implements FWRoleManager {

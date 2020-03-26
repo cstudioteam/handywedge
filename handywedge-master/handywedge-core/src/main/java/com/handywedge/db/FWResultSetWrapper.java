@@ -30,9 +30,6 @@ import java.util.Calendar;
 import java.util.Map;
 
 import com.handywedge.cdi.FWBeanManager;
-import com.handywedge.db.FWFullConnectionManager;
-import com.handywedge.db.FWFullResultSet;
-import com.handywedge.db.FWStatement;
 
 public class FWResultSetWrapper implements FWFullResultSet {
 

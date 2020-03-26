@@ -30,12 +30,6 @@ import com.handywedge.common.FWStringUtil;
 import com.handywedge.config.FWMessageResources;
 import com.handywedge.log.FWLogger;
 import com.handywedge.log.FWLoggerFactory;
-import com.handywedge.rest.FWRESTController;
-import com.handywedge.rest.FWRESTEmptyResponse;
-import com.handywedge.rest.FWRESTNoTokenController;
-import com.handywedge.rest.FWRESTRequest;
-import com.handywedge.rest.FWRESTRequestClass;
-import com.handywedge.rest.FWRESTResponse;
 
 @Path("/")
 @RequestScoped

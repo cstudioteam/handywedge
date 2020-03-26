@@ -12,10 +12,6 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 
 import com.handywedge.cdi.FWBeanManager;
-import com.handywedge.db.FWConnection;
-import com.handywedge.db.FWFullConnectionManager;
-import com.handywedge.db.FWFullStatement;
-import com.handywedge.db.FWResultSet;
 
 public class FWStatementWrapper implements FWFullStatement {
 

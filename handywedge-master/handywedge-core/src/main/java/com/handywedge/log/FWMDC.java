@@ -9,8 +9,6 @@ package com.handywedge.log;
 
 import org.slf4j.MDC;
 
-import com.handywedge.log.FWLogName;
-
 public class FWMDC {
 
   public static final String LOG_NAME = "logName";

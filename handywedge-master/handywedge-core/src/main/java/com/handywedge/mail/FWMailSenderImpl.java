@@ -24,11 +24,6 @@ import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWStringUtil;
 import com.handywedge.config.FWMessageResources;
 import com.handywedge.log.FWLogger;
-import com.handywedge.mail.FWAttachmentDataSource;
-import com.handywedge.mail.FWMailCharacterEncoding;
-import com.handywedge.mail.FWMailMessage;
-import com.handywedge.mail.FWMailSendException;
-import com.handywedge.mail.FWMailSender;
 
 @RequestScoped
 public class FWMailSenderImpl implements FWMailSender {

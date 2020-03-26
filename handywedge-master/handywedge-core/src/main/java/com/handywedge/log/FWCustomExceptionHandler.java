@@ -18,7 +18,6 @@ import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 import javax.servlet.http.HttpServletResponse;
 
-import com.handywedge.log.FWLogger;
 import com.handywedge.util.FWThreadLocal;
 
 public class FWCustomExceptionHandler extends ExceptionHandlerWrapper {
