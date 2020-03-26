@@ -14,7 +14,6 @@
     <module>handywedge-dependencies-cdi</module>
     <module>handywedge-dependencies-jsf</module>
     <module>handywedge-dependencies-reference</module>
-    <module>handywedge-dependencies-mail</module>
   </modules>
   <distributionManagement>
     <repository>
