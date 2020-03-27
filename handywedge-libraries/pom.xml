@@ -14,6 +14,7 @@
     <module>handywedge-rest-app</module>
     <module>handywedge-report</module>
     <module>handywedge-mail</module>
+    <module>handywedge-jsf</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
