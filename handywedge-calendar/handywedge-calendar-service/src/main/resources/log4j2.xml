@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="OFF">
   <Properties>
-    <Property name="catalina_home">.</Property>
-    <Property name="app_id">hw-cal</Property>
-    <Property name="pattern">
-      <![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%-5p %t]\t[${app_id}]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
+    <Property name="pattern"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[%mdc{logName}]\t%mdc{requestId}\t%c{2}\t[%mdc{method}]\t%m%n]]></Property>
+    <Property name="catalina_home">/opt/tomcat</Property>
+    <Property name="app_id">HandywedgeCalendarService</Property>
+    <Property name="log_level">${env:LOG_LEVEL}</Property>
   </Properties>
   <Appenders>
     <Console
@@ -24,7 +24,7 @@
       </Policies>
     </RollingFile>
     <RollingFile
-        name="debug"
+        name="error"
         fileName="${catalina_home}/logs/${app_id}_error.log"
         filePattern="${catalina_home}/logs/archive/${app_id}_error_%d{yyyy-MM-dd}.gz">
       <PatternLayout
@@ -37,13 +37,13 @@
   </Appenders>
   <Loggers>
     <Logger
-        name="com.handywedge.calendar"
-        level="debug">
+            name="com.handywedge.calendar"
+            level="${log_level}">
       <AppenderRef ref="${app_id}"/>
-      <!-- <AppenderRef ref="error" level="warn" /> -->
+      <AppenderRef ref="error" level="warn" />
     </Logger>
-    <Root level="debug">
-      <AppenderRef ref="console"/>
+    <Root level="${log_level}">
+      <AppenderRef ref="console" />
     </Root>
   </Loggers>
 </Configuration>

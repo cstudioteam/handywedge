@@ -12,16 +12,15 @@ info:
   version: 0.0.1
 
 servers:
-- url: http://localhost:8080/dev/v1/
+- url: http://localhost:8080/v1/
   description: 'ローカル開発用 API'
-- url: http://<ST環境ホスト名>:8080/v1/
+- url: http://<DEV環境ホスト名>/v1/
+  description: 'DEV環境用 API'
+- url: http://<ST環境ホスト名>/v1/
   description: 'ST環境用 API'
-- url: http://<本番環境ホスト名>:8090/v1/
+- url: http://<本番環境ホスト名>/v1/
   description: '本番環境用 API'
 
-########################################
-## ToDo: Header設計(gzip, keep-alive)
-########################################
 paths:
   '/calendar/getSchedule':
     post:
@@ -69,30 +68,6 @@ paths:
         in: query
         schema:
           type: string
-      # - name: email
-      #   required: true
-      #   description: 予定表登録のメールアドレス
-      #   in: query
-      #   schema:
-      #     type: string
-      #     format: email
-      #   example:  "booth01@aaa.com"
-      # - name: startTime
-      #   required: true
-      #   description: '予定表予約開始時刻'
-      #   in: query
-      #   schema:
-      #     type: string
-      #     format: date-time
-      #   example: "2019-09-20T13:30:00"
-      # - name: endTime
-      #   required: true
-      #   description: '予定表予約終了時刻'
-      #   in: query
-      #   schema:
-      #     type: string
-      #     format: date-time
-      #   example: "2019-09-20T14:30:00"
       responses:
         204:
           description: "No Content"
@@ -336,14 +311,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EmailAddress'
-          # example: ['recipient01@ccc.com', 'recipient01@ccc.com']
-        # ccs:
-        #   title: 'CC'
-        #   type: array
-        #   items:
-        #     $ref: '#/components/schemas/EmailAddress'
-        #   format: email
-        #   example: ['cc01@ccc.com', 'cc01@ccc.com']
         subject:
           title: '件名'
           type: string

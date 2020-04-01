@@ -7,6 +7,7 @@ import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.service.config.GraphAuthInfo;
 import com.handywedge.calendar.Office365.rest.exception.CalendarApiException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,10 +57,23 @@ public class CalendarApiConfig {
      */
     public void setGraphAuthInfo(Properties properties){
         GraphAuthInfo graphAuthInfo = new GraphAuthInfo();
-        graphAuthInfo.setApplicationId( properties.getProperty( "auth.app_id" ) );
-        graphAuthInfo.setClientSecret( properties.getProperty( "auth.secret" ) );
-        graphAuthInfo.setTenant( properties.getProperty( "auth.tenant" ) );
-        graphAuthInfo.setScope( properties.getProperty( "auth.scope" ) );
+
+        String appId = getEnv("AUTH_APP_ID");
+        String secret = getEnv("AUTH_SECRET");
+        String tenant = getEnv("AUTH_TENANT");
+        String scope = getEnv("AUTH_SCOPE");
+
+        if(StringUtils.isAnyEmpty(appId, secret, tenant, scope)){
+            appId = properties.getProperty( "auth.app_id" );
+            secret = properties.getProperty( "auth.secret" );
+            tenant = properties.getProperty( "auth.tenant" );
+            scope = properties.getProperty( "auth.scope" );
+        }
+
+        graphAuthInfo.setApplicationId( appId );
+        graphAuthInfo.setClientSecret( secret );
+        graphAuthInfo.setTenant( tenant );
+        graphAuthInfo.setScope( scope );
         graphApiInfo.setAuthInfo(graphAuthInfo);
 
         logger.debug( "OAuth認証情報: {}", gson.toJson( graphAuthInfo ) );
@@ -69,37 +83,51 @@ public class CalendarApiConfig {
      * プロキシ設定情報読み込み
      * @param properties
      */
-    public void setGraphProxyInfo(Properties properties) throws CalendarApiException {
+    public void setGraphProxyInfo(Properties properties) {
         GraphProxyInfo proxyInfo = new GraphProxyInfo();
 
-        String useProxy = properties.getProperty( "proxy.use" );
-        if(StringUtils.isBlank(useProxy) || StringUtils.equalsIgnoreCase( useProxy, "false" )){
-            graphApiInfo.setUseProxy(false);
-        }else{
-            graphApiInfo.setUseProxy(true);
-
-            if(properties.getProperty("proxy.type").equalsIgnoreCase( "HTTP" )){
-                proxyInfo.setType( Proxy.Type.HTTP);
-            }else if(properties.getProperty("proxy.type").equalsIgnoreCase( "SOCKS" )){
-                proxyInfo.setType( Proxy.Type.SOCKS);
-            }else if(properties.getProperty("proxy.type").equalsIgnoreCase( "DIRECT" )){
-                proxyInfo.setType( Proxy.Type.DIRECT);
+        String envUseProxy = getEnv( "PROXY_USE" );
+        if(StringUtils.isEmpty(envUseProxy)) {
+            String propUseProxy = properties.getProperty( "proxy.use" );
+            if(StringUtils.isBlank(propUseProxy) || StringUtils.equalsIgnoreCase( propUseProxy, "false" )){
+                graphApiInfo.setUseProxy(false);
             }else{
-                throw new CalendarApiException(
-                        500,
-                        String.format("プロパティ指定不正。[%s=%s]", "proxy.type", properties.getProperty("proxy.type") )
-                 );
+                graphApiInfo.setUseProxy(true);
+                proxyInfo.setType( transProxyType(properties.getProperty("proxy.type")) );
+                proxyInfo.setHost( properties.getProperty( "proxy.host" ) );
+                proxyInfo.setPort( Integer.parseInt( properties.getProperty("proxy.port")) );
+                graphApiInfo.setProxyInfo( proxyInfo );
             }
-
-            proxyInfo.setHost( properties.getProperty( "proxy.host" ) );
-            proxyInfo.setPort( Integer.parseInt( properties.getProperty("proxy.port")) );
-
+        }else if(StringUtils.equalsIgnoreCase( envUseProxy, "false" )){
+            graphApiInfo.setUseProxy(false);
+        }else {
+            graphApiInfo.setUseProxy(true);
+            proxyInfo.setType( transProxyType(getEnv("PROXY_TYPE")) );
+            proxyInfo.setHost( getEnv( "PROXY_HOST" ) );
+            proxyInfo.setPort( Integer.parseInt( getEnv("PROXY_PORT")) );
             graphApiInfo.setProxyInfo( proxyInfo );
         }
-        logger.debug( "プロキシー利用有無: {}", useProxy );
+
+        logger.debug( "プロキシー利用有無: {}", graphApiInfo.isUseProxy() );
         logger.debug( "プロキシー情報: {}", gson.toJson( proxyInfo ) );
     }
 
+    private Proxy.Type transProxyType(String type){
+        Proxy.Type returnType = Proxy.Type.DIRECT;
+        if(StringUtils.isEmpty(type)){
+            returnType = Proxy.Type.DIRECT;
+        } else if(type.equalsIgnoreCase( "HTTP" )){
+            returnType = Proxy.Type.HTTP;
+        }else if(type.equalsIgnoreCase( "SOCKS" )){
+            returnType = Proxy.Type.SOCKS;
+        }else if(type.equalsIgnoreCase( "DIRECT" )){
+            returnType = Proxy.Type.DIRECT;
+        }else{
+            returnType = Proxy.Type.DIRECT;
+        }
+
+        return returnType;
+    }
     /**
      * GraphApi設定情報取得
      * @return
@@ -120,12 +148,40 @@ public class CalendarApiConfig {
         logger.debug( "参照系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForRead() );
         logger.debug( "更新系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForWrite() );
 
-        graphApiInfo.setUserNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.users" )));
-        graphApiInfo.setRequestNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.requests")));
-        graphApiInfo.setDelegate( properties.getProperty("graph.api.getschedule.delegate"));
+
+        String userNumber = getEnv("GETSCHEDULE_USERS" );
+        String requestNumber =  getEnv("GETSCHEDULE_REQUESRS");
+
+        if(!StringUtils.isNumeric(userNumber)){
+            userNumber = properties.getProperty("graph.api.getschedule.users" );
+            if(!StringUtils.isNumeric(userNumber)){
+                userNumber = "5";
+            }
+        }
+        if(!StringUtils.isNumeric(requestNumber)){
+            requestNumber = properties.getProperty("graph.api.getschedule.requests" );
+            if(!StringUtils.isNumeric(requestNumber)){
+                requestNumber = "5";
+            }
+        }
+        graphApiInfo.setUserNumber( Integer.parseInt( userNumber));
+        graphApiInfo.setRequestNumber( Integer.parseInt( requestNumber));
+
+
+        String delegate = getEnv("GETSCHEDULE_DELEGATE");
+        if(StringUtils.isEmpty(delegate)){
+            delegate = properties.getProperty("graph.api.getschedule.delegate");
+        }
+
+        graphApiInfo.setDelegate( delegate );
 
         logger.debug( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
         logger.debug( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
         logger.debug( "GetSchedule情報情報: 代理者ユーザ[{}]", graphApiInfo.getDelegate() );
+    }
+
+    private String getEnv(String key){
+        logger.debug( "{}: {}", key, System.getenv(key) );
+        return System.getenv(key);
     }
 }
