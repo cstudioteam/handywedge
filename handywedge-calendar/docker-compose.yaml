@@ -1,0 +1,19 @@
+version: "3"
+services:
+  hw-cal:
+    build:
+      context: .
+      dockerfile:  Dockerfile
+    environment:
+      LANGUAGE: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      LANG: ja_JP.UTF-8
+      TZ: Japan
+    ports:
+      - "8080:8080"
+#    volumes:
+#      - "./docker/db/pgdata:/var/lib/postgresql/data"
+#      - "./docker/db/initcsv:/var/lib/postgresql/csvs"
+#      - "./docker/db/initdb:/docker-entrypoint-initdb.d"
+#    hostname:
+    restart: always
