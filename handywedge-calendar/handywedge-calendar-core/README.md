@@ -1,1 +1,0 @@
-# handywedge-calendar-core

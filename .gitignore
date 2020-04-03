@@ -13,7 +13,3 @@ hs_err_pid*
 
 #DS_Store#
 *.DS_Store
-/.metadata/
-/.recommenders/
-handywedge-calendar.back/handywedge-calendar-core/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-handywedge-calendar.back/handywedge-calendar-core/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
