@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  handywedge-test-app:
+    container_name: handywedge-test-app
+    image: handywedge-test-app
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        branch: "master"
+    networks:
+      handywedge-test-net:
+    ports:
+      - "8081:8080"
+
+  handywedge-test-db:
+    container_name: handywedge-test-db
+    image: handywedge-test-db
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+      args:
+        branch: "master"
+    environment:
+      TZ: Japan
+      POSTGRES_USER: postgres
+      POSTGRES_DB: handywedge-db
+      POSTGRES_PASSWORD: postgres
+    networks:
+      handywedge-test-net:
+    ports:
+      - "5432:5432"
+
+networks:
+  handywedge-test-net:
+    driver: bridge
