@@ -4,9 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.handywedge</groupId>
   <artifactId>handywedge-pushnotice-client</artifactId>
-  <version>0.5.0</version>
+  <parent>
+    <groupId>com.handywedge</groupId>
+    <artifactId>handywedge-libraries</artifactId>
+    <version>0.8.0-SNAPSHOT</version>
+  </parent>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
@@ -14,18 +17,11 @@
     <jersey.version>2.28</jersey.version>
     <jackson.version>2.10.0</jackson.version>
   </properties>
-  <repositories>
-    <repository>
-      <id>maven.handywedge</id>
-      <name>Handywedge Maven Repo</name>
-      <url>https://maven.handywedge.com/</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>com.handywedge</groupId>
       <artifactId>handywedge-pushnotice-core</artifactId>
-      <version>${project.version}</version>
+      <version>0.5.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -79,35 +75,4 @@
       <version>${jackson.version}</version>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <id>maven.handywedge</id>
-      <name>Handywedge Maven Repo</name>
-      <url>dav:https://maven.handywedge.com/</url>
-      <!-- snapshot版は常にtimestampが付与される -->
-      <uniqueVersion>false</uniqueVersion>
-    </repository>
-  </distributionManagement>
-  <build>
-    <finalName>hw-pushnotice-client</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
-        <inherited>true</inherited>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>3.0.0</version>
-      </extension>
-    </extensions>
-  </build>
 </project>

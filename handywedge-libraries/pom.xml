@@ -15,6 +15,7 @@
     <module>handywedge-report</module>
     <module>handywedge-mail</module>
     <module>handywedge-jsf</module>
+    <module>handywedge-pushnotice-client</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
