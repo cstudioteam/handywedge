@@ -10,7 +10,7 @@
   <packaging>war</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
   </properties>
   <repositories>
     <!-- PrimeFacesのリポジトリ（テーマ取り込み） -->
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.6</version>
+      <version>1.18.12</version>
       <scope>provided</scope>
     </dependency>
     <!-- APサーバシステム別 -->
