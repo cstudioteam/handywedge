@@ -16,6 +16,7 @@
     <module>handywedge-mail</module>
     <module>handywedge-jsf</module>
     <module>handywedge-pushnotice-client</module>
+    <module>handywedge-openidconnect-login</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
