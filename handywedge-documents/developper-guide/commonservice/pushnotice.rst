@@ -34,9 +34,64 @@
       ユーザー [shape=actor]
   }
 
---------------------------------
+================================
+Dockerコンテナについて
+================================
+| dockerコンテナを作成する前にマウントするディレクトリを決定する。
+| 本ガイドでは
+
+::
+
+  /var/docker/hw-push-notice/
+  
+| に設定し、docker-composeを使ったコンテナ起動について記載する。
+
+docker load
+---------------
+コンテナのイメージファイルは以下のURLにある。
+
+::
+
+  https://docker.handywedge.com/images/push_notice/handywedge-push_notice.tgz
+
+リポジトリに取り込むには以下のコマンドを実行する。
+
+::
+
+  curl https://docker.handywedge.com/images/push_notice/handywedge-push_notice.tgz | docker load
+
+
+:docker-compose.yml:
+
+.. code-block:: yaml
+
+  version: '3.7'
+
+  services:
+
+    hw-push-notice:
+      container_name: hw-push-notice
+      image: handywedge/push_notice:master
+      ports:
+        - "18080:8080"
+      networks:
+        hw-net:
+      volumes:
+        - /var/docker/hw-push-notice/resources/:/usr/local/tomcat/resources/
+        - /var/docker/hw-push-notice/conf/:/usr/local/tomcat/conf/Catalina/localhost/
+      restart: always
+
+  networks:
+    hw-net:
+      driver: bridge
+
+.. important:: マウントディレクトリ配下にresourcesとconfのディレクトリを設定すること。
+
+
+
+================================
 ライブラリ使用方法
---------------------------------
+================================
 
 getLoginUsers
 -----------------
@@ -61,5 +116,11 @@ sendMessage
   // addressはマイクロサービスのエンドポイント、keyはマイクロサービスに埋め込んだ接続key
   // userIdは通知を送りたいユーザーID、messageは送信するメッセージ
   PushClient.sendMessage(address, key, userId, message);
+
+Maven
+-----------------
+
+
+
 
 
