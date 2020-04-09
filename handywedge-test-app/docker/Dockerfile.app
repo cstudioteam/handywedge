@@ -1,4 +1,4 @@
-FROM maven:3.6.3-amazoncorretto-8 AS build-stage
+FROM maven:3.6.3-amazoncorretto-11 AS build-stage
 
 RUN mkdir /build && yum -y install git
 WORKDIR /build
@@ -6,14 +6,10 @@ WORKDIR /build
 ARG branch="master"
 
 RUN git clone -b ${branch} https://github.com/cstudioteam/handywedge.git
-WORKDIR handywedge/handywedge-dependencies
-RUN mvn install
-WORKDIR ../handywedge-master
-RUN mvn install
-WORKDIR ../handywedge-test-app
+WORKDIR handywedge/handywedge-test-app
 RUN mvn package
 
-FROM tomcat:9.0.33-jdk8-corretto
+FROM tomcat:9.0.33-jdk11-corretto
 
 RUN yum -y update && \
     yum -y reinstall glibc-common && \
