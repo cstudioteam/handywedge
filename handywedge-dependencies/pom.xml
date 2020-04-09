@@ -12,6 +12,7 @@
     <module>handywedge-dependencies-api</module>
     <module>handywedge-dependencies-logging</module>
     <module>handywedge-dependencies-cdi</module>
+    <module>handywedge-dependencies-mail</module>
     <module>handywedge-dependencies-reference</module>
   </modules>
   <distributionManagement>

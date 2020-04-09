@@ -13,7 +13,6 @@
     <module>handywedge-rest-token</module>
     <module>handywedge-rest-app</module>
     <module>handywedge-report</module>
-    <module>handywedge-mail</module>
     <module>handywedge-jsf</module>
     <module>handywedge-pushnotice-client</module>
     <module>handywedge-openidconnect-login</module>
