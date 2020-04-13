@@ -117,6 +117,13 @@ public class GraphCalendarService {
             logger.debug( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, scheduleInformation.size());
 
             resultScheduleInformation.addAll( scheduleInformation );
+
+            try {
+                logger.info("--- 5秒待ち ---");
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         logger.info( "予定表取得処理結果（総件数）： {}件", resultScheduleInformation.size() );
         logger.info( "予定表取得処理 E n d" );
