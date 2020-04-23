@@ -119,7 +119,7 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
 
         long retryTimes = 0;
         if(isRetryWithStatusCode(response.code())){
-            logger.warn("リトライ時間（秒）。[{}={}]", RETRY_AFTER, response.header(RETRY_AFTER));
+            logger.warn("レスポンスヘッダー　リトライ時間({})： {}秒", RETRY_AFTER, response.header(RETRY_AFTER));
             retryTimes = getRetryAfter(response);
         }
 

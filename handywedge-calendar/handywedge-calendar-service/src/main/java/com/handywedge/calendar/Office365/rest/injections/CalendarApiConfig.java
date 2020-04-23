@@ -96,7 +96,7 @@ public class CalendarApiConfig {
 
             graphApiInfo.setProxyInfo( proxyInfo );
         }
-        logger.debug( "プロキシー利用有無: {}", useProxy );
+        logger.warn( "プロキシー利用有無: {}", useProxy );
         logger.debug( "プロキシー情報: {}", gson.toJson( proxyInfo ) );
     }
 
@@ -116,22 +116,22 @@ public class CalendarApiConfig {
         graphApiInfo.setRequestTimeoutForRead( Integer.parseInt( properties.getProperty("graph.api.request.timeout.read")));
         graphApiInfo.setRequestTimeoutForWrite( Integer.parseInt( properties.getProperty("graph.api.request.timeout.write")));
 
-        logger.debug( "バッチ: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForBatch() );
-        logger.debug( "参照系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForRead() );
-        logger.debug( "更新系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForWrite() );
+        logger.warn( "バッチ: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForBatch() );
+        logger.warn( "参照系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForRead() );
+        logger.warn( "更新系: リクエストタイムアウト[{}]", graphApiInfo.getRequestTimeoutForWrite() );
 
         graphApiInfo.setUserNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.users" )));
         graphApiInfo.setRequestNumber( Integer.parseInt( properties.getProperty("graph.api.getschedule.requests")));
         graphApiInfo.setDelegate( properties.getProperty("graph.api.getschedule.delegate"));
 
-        logger.debug( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
-        logger.debug( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
+        logger.warn( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
+        logger.warn( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
         logger.debug( "GetSchedule情報情報: 代理者ユーザ[{}]", graphApiInfo.getDelegate() );
 
         graphApiInfo.setRetryTimeThreshold( Integer.parseInt( properties.getProperty("graph.api.getschedule.retrytime.threshold")));
         graphApiInfo.setBatchWaitTime( Integer.parseInt( properties.getProperty("graph.api.getschedule.waittime")));
 
-        logger.debug( "Jsonバッチ: リトライ時間閾値[{}]", graphApiInfo.getRetryTimeThreshold() );
-        logger.debug( "Jsonバッチ: リクエスト間隔[{}]", graphApiInfo.getBatchWaitTime() );
+        logger.warn( "バッチ: リトライ時間閾値[{}]", graphApiInfo.getRetryTimeThreshold() );
+        logger.warn( "バッチ: リクエスト間隔[{}]", graphApiInfo.getBatchWaitTime() );
     }
 }

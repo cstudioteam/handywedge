@@ -17,10 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class GraphExtendBaseApi {
@@ -144,10 +140,6 @@ public class GraphExtendBaseApi {
         double retryDelay = 0;
         if(retryAfterHeader != null) {
             retryDelay = Long.parseLong(retryAfterHeader);
-        }
-
-        if(retryDelay > apiInfo.getRetryTimeThreshold()){
-            return (long) 0;
         }
         return (long)retryDelay;
     }

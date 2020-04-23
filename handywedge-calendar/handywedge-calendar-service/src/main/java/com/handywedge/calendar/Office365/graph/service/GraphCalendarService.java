@@ -117,46 +117,57 @@ public class GraphCalendarService {
             MSBatchResponseContent responseContent = batchApi.getResponseContent();
 
             List<ScheduleInformation> scheduleInformation = scheduleApi.extractScheduleInformation(responseContent);
-            // 非リトライ対象
-            List<ScheduleInformation> normalScheduleInformation = scheduleInformation.stream()
-                    .filter(schd -> {
-                        if(ObjectUtils.isEmpty(schd)){
-                            return false;
-                        }
-                        if(schd.getHeaderRetryTime() > 0){
-                            return false;
-                        }
-                        return true;
-                    })
-                    .collect(Collectors.toList());
 
-            resultScheduleInformation.addAll( normalScheduleInformation );
-
-            // リトライ対象
-            List<ScheduleInformation> retryScheduleInformation = scheduleInformation.stream()
-                    .filter(schd -> {
-                        if(ObjectUtils.isEmpty(schd)){
-                            return false;
-                        }
-                        if(schd.getHeaderRetryTime() > 0){
+            // 0の場合、リトライ中断
+            if(apiInfo.getRetryTimeThreshold() != 0){
+                // リトライ処理
+                // リトライ対象外
+                List<ScheduleInformation> normalScheduleInformation = scheduleInformation.stream()
+                        .filter(schd -> {
+                            if (ObjectUtils.isEmpty(schd)) {
+                                return false;
+                            }
+                            // 閾値超えはリトライ対象外
+                            if (schd.getHeaderRetryTime() > 0 && schd.getHeaderRetryTime() <= apiInfo.getRetryTimeThreshold()) {
+                                return false;
+                            }
                             return true;
-                        }
-                        return false;
-                    })
-                    .collect(Collectors.toList());
+                        })
+                        .collect(Collectors.toList());
 
-            List<ScheduleInformation> resultRetryScheduleInformation = new ArrayList<ScheduleInformation>();
-            if(!ObjectUtils.isEmpty(retryScheduleInformation)){
-                resultRetryScheduleInformation = retryGetSchdule(request, retryScheduleInformation);
+                resultScheduleInformation.addAll(normalScheduleInformation);
+
+                // リトライ対象
+                List<ScheduleInformation> retryScheduleInformation = scheduleInformation.stream()
+                        .filter(schd -> {
+                            if (ObjectUtils.isEmpty(schd)) {
+                                return false;
+                            }
+                            if (schd.getHeaderRetryTime() <= 0) {
+                                return false;
+                            }
+                            // 閾値超えはリトライ対象外
+                            if (schd.getHeaderRetryTime() > apiInfo.getRetryTimeThreshold()) {
+                                return false;
+                            }
+                            return true;
+                        })
+                        .collect(Collectors.toList());
+
+                List<ScheduleInformation> resultRetryScheduleInformation = new ArrayList<ScheduleInformation>();
+                if (!ObjectUtils.isEmpty(retryScheduleInformation)) {
+                    resultRetryScheduleInformation = retryGetSchdule(request, retryScheduleInformation);
+                }
+
+                resultScheduleInformation.addAll(resultRetryScheduleInformation);
+            }else{
+                logger.info( "予定表取得処理" );
+                resultScheduleInformation.addAll(scheduleInformation);
             }
 
-            resultScheduleInformation.addAll( resultRetryScheduleInformation );
-            logger.debug( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, resultScheduleInformation.size());
-
-
+            logger.debug("予定表取得バッチ処理結果 [{}回目]: {}", processCount, resultScheduleInformation.size());
             try {
                 if(apiInfo.getBatchWaitTime() != 0) {
-                    logger.info("--- {}秒待ち ---", apiInfo.getBatchWaitTime());
                     Thread.sleep(apiInfo.getBatchWaitTime() * 1000);
                 }
             } catch (InterruptedException e) {
@@ -179,15 +190,12 @@ public class GraphCalendarService {
                 .map(schd -> schd.getHeaderRetryTime())
                 .orElse((long)0);
 
-        // 0の場合、リトライ中断
-        if(retryTime == 0 || apiInfo.getRetryTimeThreshold() == 0){
-            logger.info( "(リトライ)予定表取得処理 Skip" );
-            return retryScheduleInformation;
-        }
+        logger.warn("(リトライ)予定表取得処理 待ち時間[0~{}]:　{}秒", apiInfo.getRetryTimeThreshold(), retryTime);
 
         try {
-            logger.warn("--- （リトライ）{}秒待ち ---", retryTime);
-            Thread.sleep(retryTime * 1000);
+            if(retryTime != 0) {    // オーバーヘッド回避のため
+                Thread.sleep(retryTime * 1000);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
