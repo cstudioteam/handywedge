@@ -11,11 +11,14 @@ import com.handywedge.calendar.Office365.rest.models.ScheduleInformation;
 import com.handywedge.calendar.Office365.rest.models.ScheduleDetailItem;
 import com.microsoft.graph.content.MSBatchResponseContent;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GraphCalendarService {
 
@@ -114,13 +117,48 @@ public class GraphCalendarService {
             MSBatchResponseContent responseContent = batchApi.getResponseContent();
 
             List<ScheduleInformation> scheduleInformation = scheduleApi.extractScheduleInformation(responseContent);
-            logger.debug( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, scheduleInformation.size());
+            // 非リトライ対象
+            List<ScheduleInformation> normalScheduleInformation = scheduleInformation.stream()
+                    .filter(schd -> {
+                        if(ObjectUtils.isEmpty(schd)){
+                            return false;
+                        }
+                        if(schd.getHeaderRetryTime() > 0){
+                            return false;
+                        }
+                        return true;
+                    })
+                    .collect(Collectors.toList());
 
-            resultScheduleInformation.addAll( scheduleInformation );
+            resultScheduleInformation.addAll( normalScheduleInformation );
+
+            // リトライ対象
+            List<ScheduleInformation> retryScheduleInformation = scheduleInformation.stream()
+                    .filter(schd -> {
+                        if(ObjectUtils.isEmpty(schd)){
+                            return false;
+                        }
+                        if(schd.getHeaderRetryTime() > 0){
+                            return true;
+                        }
+                        return false;
+                    })
+                    .collect(Collectors.toList());
+
+            List<ScheduleInformation> resultRetryScheduleInformation = new ArrayList<ScheduleInformation>();
+            if(!ObjectUtils.isEmpty(retryScheduleInformation)){
+                resultRetryScheduleInformation = retryGetSchdule(request, retryScheduleInformation);
+            }
+
+            resultScheduleInformation.addAll( resultRetryScheduleInformation );
+            logger.debug( "予定表取得バッチ処理結果 [{}回目]: {}", processCount, resultScheduleInformation.size());
+
 
             try {
-                logger.info("--- 5秒待ち ---");
-                Thread.sleep(5000);
+                if(apiInfo.getBatchWaitTime() != 0) {
+                    logger.info("--- {}秒待ち ---", apiInfo.getBatchWaitTime());
+                    Thread.sleep(apiInfo.getBatchWaitTime() * 1000);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -129,5 +167,71 @@ public class GraphCalendarService {
         logger.info( "予定表取得処理 E n d" );
 
         return resultScheduleInformation;
+    }
+
+    private List<ScheduleInformation> retryGetSchdule(GraphExtendGetScheduleRequest request, List<ScheduleInformation> retryScheduleInformation) throws GraphApiException {
+        List<ScheduleInformation> resultRetryScheduleInformation = new ArrayList<ScheduleInformation>();
+
+        logger.info( "(リトライ)予定表取得処理 Start" );
+
+        long retryTime = retryScheduleInformation.stream()
+                .max(Comparator.comparing(ScheduleInformation::getHeaderRetryTime))
+                .map(schd -> schd.getHeaderRetryTime())
+                .orElse((long)0);
+
+        // 0の場合、リトライ中断
+        if(retryTime == 0 || apiInfo.getRetryTimeThreshold() == 0){
+            logger.info( "(リトライ)予定表取得処理 Skip" );
+            return retryScheduleInformation;
+        }
+
+        try {
+            logger.warn("--- （リトライ）{}秒待ち ---", retryTime);
+            Thread.sleep(retryTime * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<String> retryScheduleIdList = retryScheduleInformation.stream()
+                .map(schd -> {
+                    return schd.getScheduleId();
+                })
+                .collect(Collectors.toList());
+
+        List<List<List<String>>> newRetryRequestList = (List<List<List<String>>>) Common.covert3DimensionList(
+                retryScheduleIdList,
+                apiInfo.getUserNumber(),
+                apiInfo.getRequestNumber());
+
+
+        int processCount = 0;
+        for(List<List<String>> requestList: newRetryRequestList) {
+            GraphExtendGetScheduleApi scheduleApi = new GraphExtendGetScheduleApi(apiInfo);
+
+            for (List<String> userList : requestList) {
+                GraphExtendGetScheduleRequest scheduleRequest = new GraphExtendGetScheduleRequest();
+                scheduleRequest.setAvailabilityViewInterval(request.getAvailabilityViewInterval());
+                scheduleRequest.setSchedules(userList);
+                scheduleRequest.setStartTime(request.getStartTime());
+                scheduleRequest.setEndTime(request.getEndTime());
+
+                scheduleApi.buildBatchRequestSteps(scheduleRequest);
+            }
+
+            GraphExtendBatchRequest graphExtendBatchRequest = new GraphExtendBatchRequest();
+            graphExtendBatchRequest.setRequestSteps(scheduleApi.getBatchRequestSteps());
+            GraphExtendBatchApi batchApi = new GraphExtendBatchApi( apiInfo, graphExtendBatchRequest );
+            MSBatchResponseContent responseContent = batchApi.getResponseContent();
+
+            List<ScheduleInformation> scheduleInformation = scheduleApi.extractScheduleInformation(responseContent);
+
+            logger.debug( "(リトライ)予定表取得バッチ処理結果 [{}回目]: {}", processCount, scheduleInformation.size());
+            resultRetryScheduleInformation.addAll(scheduleInformation);
+        }
+
+        logger.info( "(リトライ)予定表取得処理結果（総件数）： {}件", resultRetryScheduleInformation.size() );
+        logger.info( "(リトライ)予定表取得処理 E n d" );
+
+        return resultRetryScheduleInformation;
     }
 }

@@ -10,10 +10,7 @@ import com.microsoft.graph.httpcore.TelemetryHandler;
 
 import com.handywedge.calendar.Office365.graph.service.config.GraphApiInfo;
 import com.handywedge.calendar.Office365.graph.service.config.GraphAuthInfo;
-import okhttp3.ConnectionPool;
-import okhttp3.Headers;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
+import okhttp3.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +29,12 @@ public class GraphExtendBaseApi {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private static final long GRAPH_DEFAULT_TIMEOUT = 15;
+
+    public static final int ERROR_CODE_TOOMANY_REQUESTS = 429;
+    public static final int ERROR_CODE_SERVICE_UNVAILABLE  = 503;
+    public static final int ERROR_CODE_GATEWAY_TIMEOUT = 504;
+
+    public static final String RETRY_AFTER = "Retry-After";
 
     GraphApiInfo apiInfo = null;
     private GraphAuthInfo authInfo = null;
@@ -120,6 +123,33 @@ public class GraphExtendBaseApi {
 
     public long getWriteRequestTimeout(){
         return apiInfo.getRequestTimeoutForWrite();
+    }
+
+    /**
+     * リトライ対応のステーテス判定
+     */
+    public boolean isRetryWithStatusCode(int statusCode) {
+        return (statusCode == ERROR_CODE_TOOMANY_REQUESTS
+                || statusCode == ERROR_CODE_SERVICE_UNVAILABLE
+                || statusCode == ERROR_CODE_GATEWAY_TIMEOUT);
+    }
+
+    /**
+     * リトライ時間をレスポンスから取得
+     * @param response
+     * @return
+     */
+    public long getRetryAfter(Response response) {
+        String retryAfterHeader = response.header(RETRY_AFTER);
+        double retryDelay = 0;
+        if(retryAfterHeader != null) {
+            retryDelay = Long.parseLong(retryAfterHeader);
+        }
+
+        if(retryDelay > apiInfo.getRetryTimeThreshold()){
+            return (long) 0;
+        }
+        return (long)retryDelay;
     }
 
     /**

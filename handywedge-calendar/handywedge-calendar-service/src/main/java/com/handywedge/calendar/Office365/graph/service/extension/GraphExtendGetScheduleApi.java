@@ -77,7 +77,6 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
     public List<ScheduleInformation> extractScheduleInformation(MSBatchResponseContent responseContent) throws GraphApiException {
         List<ScheduleInformation> scheduleInformation = new ArrayList<>( );
 
-
         for(ExtendBatchRequestStep batchRequestStep : getBatchRequestSteps()){
             Response response = null;
             if(null != responseContent) {
@@ -118,12 +117,19 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
     private List<ScheduleInformation> extractGetScheduleErrorResponse(Response response, List<String> requestUsers) {
         List<ScheduleInformation> scheduleInformation = new ArrayList<ScheduleInformation>();
 
+        long retryTimes = 0;
+        if(isRetryWithStatusCode(response.code())){
+            logger.warn("リトライ時間（秒）。[{}={}]", RETRY_AFTER, response.header(RETRY_AFTER));
+            retryTimes = getRetryAfter(response);
+        }
+
         for(String user : requestUsers){
             ScheduleInformation subScheduleInformation = new ScheduleInformation();
 
             subScheduleInformation.setScheduleId( user );
             subScheduleInformation.setHasError( true );
             subScheduleInformation.setErrorCode( String.valueOf( response.code() ) );
+            subScheduleInformation.setHeaderRetryTime(retryTimes);
 
             scheduleInformation.add( subScheduleInformation );
         }
@@ -144,9 +150,11 @@ public class GraphExtendGetScheduleApi extends GraphExtendBaseApi {
             subScheduleInformation.setScheduleId(jObjectScheduleInformation.getString("scheduleId" ) );
 
             if(jObjectScheduleInformation.has( "error" )){
-                logger.warn( "予定表取得エラー。取得対象:{}, エラーコード：{}",
+                logger.warn( "予定表取得エラー。取得対象:{}, エラーコード：{}, エラーメッセージ：[{}]",
                         jObjectScheduleInformation.getString( "scheduleId" ),
-                        jObjectScheduleInformation.getJSONObject("error").getString("responseCode" ));
+                        jObjectScheduleInformation.getJSONObject("error").getString("responseCode" ),
+                        jObjectScheduleInformation.getJSONObject("error").getString("message" )
+                );
 
                 subScheduleInformation.setHasError( true );
                 subScheduleInformation.setErrorCode( jObjectScheduleInformation.getJSONObject("error").getString("responseCode" ));

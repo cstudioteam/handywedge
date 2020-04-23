@@ -55,6 +55,17 @@ public class GraphApiInfo {
      */
     private String delegate;
 
+    /**
+     * Jsonバッチ　リトライ時間閾値（秒）
+     */
+    private  int retryTimeThreshold = 10;
+
+    /**
+     * Jsonバッチ　リクエスト間隔（秒）
+     */
+    private  int batchWaitTime = 5;
+
+
     public String getTimeZone() {
         return timeZone;
     }
@@ -133,5 +144,21 @@ public class GraphApiInfo {
 
     public void setRequestTimeoutForWrite(int requestTimeoutForWrite) {
         this.requestTimeoutForWrite = requestTimeoutForWrite;
+    }
+
+    public int getRetryTimeThreshold() {
+        return retryTimeThreshold;
+    }
+
+    public void setRetryTimeThreshold(int retryTimeThreshold) {
+        this.retryTimeThreshold = retryTimeThreshold;
+    }
+
+    public int getBatchWaitTime() {
+        return batchWaitTime;
+    }
+
+    public void setBatchWaitTime(int batchWaitTime) {
+        this.batchWaitTime = batchWaitTime;
     }
 }

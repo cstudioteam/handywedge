@@ -127,5 +127,11 @@ public class CalendarApiConfig {
         logger.debug( "GetSchedule情報: ユーザ数/バッチリクエスト[{}]", graphApiInfo.getUserNumber() );
         logger.debug( "GetSchedule情報情報: リクエスト数/バッチリクエスト[{}]", graphApiInfo.getRequestNumber() );
         logger.debug( "GetSchedule情報情報: 代理者ユーザ[{}]", graphApiInfo.getDelegate() );
+
+        graphApiInfo.setRetryTimeThreshold( Integer.parseInt( properties.getProperty("graph.api.getschedule.retrytime.threshold")));
+        graphApiInfo.setBatchWaitTime( Integer.parseInt( properties.getProperty("graph.api.getschedule.waittime")));
+
+        logger.debug( "Jsonバッチ: リトライ時間閾値[{}]", graphApiInfo.getRetryTimeThreshold() );
+        logger.debug( "Jsonバッチ: リクエスト間隔[{}]", graphApiInfo.getBatchWaitTime() );
     }
 }
