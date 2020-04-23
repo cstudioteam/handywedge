@@ -237,6 +237,27 @@ public class GraphCalendarService {
             resultRetryScheduleInformation.addAll(scheduleInformation);
         }
 
+        // リトライ後再発した件数集計
+        List<String> retryScheduleIds = resultRetryScheduleInformation.stream()
+                .filter(schd -> {
+                    if (ObjectUtils.isEmpty(schd)) {
+                        return false;
+                    }
+                    if (schd.getHeaderRetryTime() <= 0) {
+                        return false;
+                    }
+                    return true;
+                })
+                .map(schd -> schd.getScheduleId())
+                .collect(Collectors.toList());
+
+        if(ObjectUtils.isEmpty(retryScheduleIds)){
+            logger.warn( "(リトライ)予定表取得処理結果（リトライ再発件数）： 0件");
+        }else{
+            logger.warn( "(リトライ)予定表取得処理結果（リトライ再発件数）： {}件", retryScheduleIds.size());
+            logger.warn( "(リトライ)予定表取得処理結果（リトライ再発対象）： {} ", retryScheduleIds);
+        }
+
         logger.info( "(リトライ)予定表取得処理結果（総件数）： {}件", resultRetryScheduleInformation.size() );
         logger.info( "(リトライ)予定表取得処理 E n d" );
 
