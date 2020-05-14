@@ -10,11 +10,6 @@ import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWStringUtil;
 import com.handywedge.config.FWMessageResources;
 import com.handywedge.log.FWLogger;
-import com.handywedge.mail.FWAttachmentDataSource;
-import com.handywedge.mail.FWMailException;
-import com.handywedge.mail.FWMailMessage;
-import com.handywedge.mail.FWMailSender;
-import com.handywedge.mail.FWMailTransport;
 
 @RequestScoped
 public class FWMailTransportImpl implements FWMailTransport {

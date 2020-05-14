@@ -5,8 +5,6 @@ import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.websocket.Session;
 
@@ -22,8 +20,6 @@ public class PingSender implements Callable<String> {
   protected static final Logger logger = LogManager.getLogger("PushService");
 
   protected static boolean running = (PING_INTERVAL_SEC != 0);
-
-  private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
   @Override
   public String call() throws Exception {

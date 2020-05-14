@@ -23,10 +23,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import com.handywedge.db.FWFullConnection;
-import com.handywedge.db.FWPreparedStatement;
-import com.handywedge.db.FWStatement;
-
 // Connectionのメソッドを隠蔽したアプリケーション利用クラス
 public class FWConnectionWrapper implements FWFullConnection {
 

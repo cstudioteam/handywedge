@@ -1,0 +1,36 @@
+FROM amazonlinux:2 AS build-stage
+
+RUN mkdir /build && yum -y install git
+WORKDIR /build
+
+ARG branch="master"
+
+RUN git clone -b ${branch} https://github.com/cstudioteam/handywedge.git
+
+FROM postgres:12.2
+
+# ロケール設定
+RUN localedef -v -c -i ja_JP -f UTF-8 ja_JP.UTF-8; echo "";
+ENV LANG=ja_JP.UTF-8
+
+# タイムゾーン設定
+RUN rm -f /etc/localtime && \
+    ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+# vimパッケージ
+RUN apt-get update && apt-get install -y vim
+
+# 初期化用SQLとスクリプト
+COPY --from=build-stage /build/handywedge/handywedge-master/sql/*.sql /tmp/
+COPY --from=build-stage /build/handywedge/handywedge-test-app/sql/*.sql /tmp/
+
+RUN echo "#!/bin/bash" > /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "set -e" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "psql -v ON_ERROR_STOP=1 -d handywedge-db -f /tmp/create_user.sql" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "psql -v ON_ERROR_STOP=1 -d handywedge-db -f /tmp/create_schema.sql" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "psql -v ON_ERROR_STOP=1 -U handywedge -d handywedge-db -f /tmp/ddl.sql" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "psql -v ON_ERROR_STOP=1 -U handywedge-app -d handywedge-db -f /tmp/create_table.sql" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    echo "psql -v ON_ERROR_STOP=1 -U handywedge -d handywedge-db -f /tmp/dml.sql" >> /docker-entrypoint-initdb.d/01_app.sh && \
+    chown postgres:postgres /tmp/*.sql && \
+    chown postgres:postgres /docker-entrypoint-initdb.d/*.sh

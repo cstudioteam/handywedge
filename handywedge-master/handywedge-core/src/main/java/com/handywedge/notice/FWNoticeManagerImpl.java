@@ -24,8 +24,6 @@ import com.handywedge.db.FWResultSet;
 import com.handywedge.db.FWStatement;
 import com.handywedge.db.FWTransactional;
 import com.handywedge.log.FWLogger;
-import com.handywedge.notice.FWNotice;
-import com.handywedge.notice.FWNoticeManager;
 
 
 @RequestScoped

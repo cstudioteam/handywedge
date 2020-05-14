@@ -27,8 +27,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-import com.handywedge.db.FWFullCallableStatement;
-
 public class FWCallableStatementWrapper extends FWPreparedStatementWrapper
     implements FWFullCallableStatement {
 

@@ -30,21 +30,9 @@
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
-    <dependency>
+     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>handywedge-dependencies-jsf</artifactId>
-      <version>${project.version}</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>handywedge-dependencies-rest</artifactId>
-      <version>${project.version}</version>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>handywedge-dependencies-report</artifactId>
+      <artifactId>handywedge-dependencies-mail</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>

@@ -2,7 +2,6 @@ package com.handywedge.pushnotice.websocket;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -12,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Application Lifecycle Listener implementation class PushNoticeListener
- * 
+ *
  * @param <PingSender>
  *
  */
@@ -31,7 +30,7 @@ public class PushNoticeListener implements ServletContextListener {
     logger.info("PushNoticeListener contextInitialized start.");
     ExecutorService exec = Executors.newCachedThreadPool();
     PingSender sender = new PingSender();
-    Future<String> future = exec.submit(sender);;
+    exec.submit(sender);
     logger.info("PushNoticeListener PingSender started.");
   }
 

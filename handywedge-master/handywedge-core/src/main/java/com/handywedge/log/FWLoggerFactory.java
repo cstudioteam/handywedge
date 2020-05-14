@@ -9,8 +9,6 @@ package com.handywedge.log;
 
 import org.slf4j.LoggerFactory;
 
-import com.handywedge.log.FWLogger;
-
 public final class FWLoggerFactory {
 
   private FWLoggerFactory() {}

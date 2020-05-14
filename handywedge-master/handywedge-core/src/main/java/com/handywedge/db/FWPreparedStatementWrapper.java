@@ -28,9 +28,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.handywedge.db.FWFullPreparedStatement;
-import com.handywedge.db.FWResultSet;
-
 public class FWPreparedStatementWrapper extends FWStatementWrapper
     implements FWFullPreparedStatement {
 

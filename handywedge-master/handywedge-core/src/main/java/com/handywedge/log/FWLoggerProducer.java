@@ -11,8 +11,6 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import com.handywedge.log.FWLogger;
-
 @Dependent
 public class FWLoggerProducer {
 

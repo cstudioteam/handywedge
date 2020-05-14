@@ -10,9 +10,6 @@ package com.handywedge.log;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-import com.handywedge.log.FWLogName;
-import com.handywedge.log.FWLogger;
-
 public class FWLoggerImpl implements FWLogger {
 
   private Logger logger;

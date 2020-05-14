@@ -23,8 +23,6 @@ import javax.inject.Inject;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.config.FWMessageResources;
-import com.handywedge.crypto.FWCipher;
-import com.handywedge.crypto.FWCipherException;
 import com.handywedge.log.FWLogger;
 
 import lombok.Getter;
