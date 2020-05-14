@@ -1,6 +1,7 @@
 プッシュ通知
 =============
-| プッシュ通知サービスはサーバーからプッシュ通知コンテナに接続されたクライアントへ通知を送信するサービスである。
+| プッシュ通知サービスはサーバーアプリケーションからプッシュ通知コンテナに接続されたクライアントへ通知を送信するサービスである。
+| サービスに接続するためには予め :doc:`/restservice/resttoken` で発行した認証トークンが必要となる。
 | 通知はWebsocketを使って行われるが、サーバーからクライアントへの片方向のメッセージングとする。
 | また、プッシュ通知サービスはマルチインタンスでは動作しないため1つのインスタンスで稼働させること。
 
@@ -22,7 +23,7 @@
         業務プログラム <-- プッシュ通知ライブラリ;
 
       === プッシュ通知 ===
-        業務プログラム -> プッシュ通知ライブラリ [label="sendMessage(message)"];
+        業務プログラム -> プッシュ通知ライブラリ [label="sendMessage(userId, message)"];
         プッシュ通知ライブラリ -> プッシュ通知コンテナ [label="POST message"];
         プッシュ通知コンテナ --> ユーザー [label="プッシュ通知 message"];
         プッシュ通知ライブラリ <-- プッシュ通知コンテナ;
@@ -37,6 +38,17 @@
 ================================
 Dockerコンテナについて
 ================================
+| プッシュ通知サービスはDockerコンテナ上のTomcatで稼働している。
+| Tomcatのホームディレクトリは
+
+.. code-block:: none
+
+  /usr/local/tomcat
+
+| となる。
+| プッシュ通知サービスのログファイルはTomcatホームディレクトリの ``logs`` ディレクトリに出力される。
+|
+
 | dockerコンテナを作成する前にマウントするディレクトリを決定する。
 | 本ガイドでは
 
@@ -60,8 +72,13 @@ docker load
 
   curl https://docker.handywedge.com/images/push_notice/handywedge-push_notice.tgz | docker load
 
+``handywedge/push_notice:master`` としてイメージが取り込まれる。
 
-:docker-compose.yml:
+
+docker-compose.yml
+------------------------------
+
+コンテナを起動するためのdocker-compose.ymlサンプル。
 
 .. code-block:: yaml
 
@@ -87,11 +104,63 @@ docker load
 
 .. important:: マウントディレクトリ配下にresourcesとconfのディレクトリを設定すること。
 
+hw-pushnotice.xml
+------------------------------
+| confディレクトリに **hw-pushnotice.xml** を作成し **hw-pushnotice.properties** に設定したデータソースを定義する。
+| プロパティを反映させるためにクラスローダーの委譲設定も記載する。
 
+::
+
+  <?xml version='1.0' encoding='utf-8'?>
+  <Context>
+    <Loader delegate="true" />
+    <Resource
+      name="jdbc/fw"
+      auth="Container"
+      type="javax.sql.DataSource"
+      driverClassName="org.postgresql.Driver"
+      url="jdbc:postgresql://handywedge-db:5432/handywedge"
+      username="handywedge-app"
+      password="handywedge-app-pswd"
+      initialSize="2"
+      maxWaitMillis="10000" />
+  </Context>
+
+hw-pushnotice.properties
+------------------------------
+resourcesディレクトリに **hw-pushnotice.properties** を作成し必要な設定をする。
+
+::
+
+  # 認証時にHWのテーブル接続に使うためのデータソース名
+  JDBC_JNDI_NAME=jdbc/fw
+
+  # Websocket接続のPING送信間隔（秒）
+  PING_INTERVAL_SEC=45
+
+  # サーバー間で利用する認証キー
+  ACCESS_KEY=HW-PUSH
+
+  # Websocketの同一ユーザーからの複数接続設定
+  MULTI_SESSION=true
 
 ================================
-ライブラリ使用方法
+サーバーライブラリ使用方法
 ================================
+サーバーサイドのライブラリを使用するにはマイクロサービスに設定したサーバー間認証で利用する認証キーが必要となる。
+
+.. hint:: hw-pushnotice.propertiesのACCESS_KEY
+
+Maven
+-----------------
+
+::
+
+  <dependency>
+    <groupId>com.handywedge</groupId>
+    <artifactId>handywedge-pushnotice-client</artifactId>
+    <version>0.9.0-SNAPSHOT</version>
+  </dependency>
 
 getLoginUsers
 -----------------
@@ -102,7 +171,7 @@ getLoginUsers
 
   import com.handywedge.pushnotice.client.PushClient;
 
-  // addressはマイクロサービスのエンドポイント、keyはマイクロサービスに埋め込んだ接続key
+  // addressはマイクロサービスのエンドポイント、keyはマイクロサービスに埋め込んだサーバー間認証キー
   List<String> connectUsers = PushClient.getLoginUsers(address, key).getLoginUsers();
 
 sendMessage
@@ -113,14 +182,14 @@ sendMessage
 
   import com.handywedge.pushnotice.client.PushClient;
 
-  // addressはマイクロサービスのエンドポイント、keyはマイクロサービスに埋め込んだ接続key
+  // addressはマイクロサービスのエンドポイント、keyはマイクロサービスに埋め込んだサーバー間認証キー
   // userIdは通知を送りたいユーザーID、messageは送信するメッセージ
   PushClient.sendMessage(address, key, userId, message);
 
-Maven
------------------
+================================
+クライアントからの接続方法
+================================
+下記Websocket接続URLで接続する。
 
-
-
-
+``ws(wss)://{マイクロサービスコンテナエンドポイント}//hw-pushnotice/Ws/pushnotice/{認証トークン}``
 
