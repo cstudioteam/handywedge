@@ -21,3 +21,4 @@
   :maxdepth: 2
 
   binarystore
+  pushnotice
