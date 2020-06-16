@@ -1,8 +1,17 @@
+FROM maven:3.6.3-jdk-8 AS build-stage
+
+# warビルド
+RUN mkdir /tmp/install
+WORKDIR /tmp/install
+ADD ./handywedge-binarystore/ /tmp/install/handywedge-binarystore/
+RUN cd handywedge-binarystore && \
+    mvn clean package
+
 FROM tomcat:8.0.50-jre8
 
 # 言語インストール
 RUN apt-get update && \
-    apt-get -y install task-japanese locales-all openjdk-8-jdk
+    apt-get -y install task-japanese locales-all
 
 # 言語設定
 ENV LANG=ja_JP.UTF-8
@@ -11,26 +20,12 @@ ENV LANG=ja_JP.UTF-8
 RUN rm -f /etc/localtime && \
     ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# warビルド&デプロイ
-WORKDIR /tmp/install
 RUN rm -rf $CATALINA_HOME/webapps/* && \
     echo "export LANG=ja_JP.UTF-8" > /usr/local/tomcat/bin/setenv.sh && \
     echo "export JAVA_OPTS=-Duser.timezone=JST" >> /usr/local/tomcat/bin/setenv.sh && \
-    chmod +x /usr/local/tomcat/bin/setenv.sh && \
-    wget https://github.com/cstudioteam/handywedge/archive/master.zip && \
-    unzip master.zip && \
-    wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && \
-    tar xzf apache-maven-3.5.4-bin.tar.gz && \
-    cd  handywedge-master/handywedge-binarystore && \
-    /tmp/install/apache-maven-3.5.4/bin/mvn package && \
-    cp /tmp/install/handywedge-master/handywedge-binarystore/target/handywedge-binarystore.war $CATALINA_HOME/webapps/
+    chmod +x $CATALINA_HOME/bin/setenv.sh
 
-# インストーラー等削除
-WORKDIR /root
-RUN rm -rf /tmp/install/ && \
-    rm -rf .m2 && \
-    apt -y purge openjdk-8-jdk && \
-    apt -y autoremove
+COPY --from=build-stage /tmp/install/handywedge-binarystore/target/handywedge-binarystore.war $CATALINA_HOME/webapps
 
 # 上書き可能環境変数
 ENV LOG_LEVEL=info
