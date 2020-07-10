@@ -26,7 +26,7 @@ public class DBMasterService {
   @Inject
   private FWLogger logger;
 
-  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.REQUIRED)
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.READ_ONLY)
   public List<Test> selectAll() throws SQLException {
 
     logger.info("DBマスタ参照");
@@ -43,7 +43,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.READ_ONLY)
   public Test select(String key) throws SQLException {
 
     logger.info("テストテーブル取得");
@@ -75,7 +75,7 @@ public class DBMasterService {
     }
   }
 
-  @FWTransactional(dataSourceName = "jdbc/ds_handywedge")
+  @FWTransactional(dataSourceName = "jdbc/ds_handywedge", value = FWTxType.NON_TRANSACTION)
   public void insert(Test test) throws SQLException {
 
     logger.info("テストテーブル追加");

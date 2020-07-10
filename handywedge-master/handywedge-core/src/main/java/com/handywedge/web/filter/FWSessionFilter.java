@@ -197,12 +197,8 @@ public class FWSessionFilter implements Filter {
 
   private void terminate(HttpServletRequest request) {
     Boolean login = FWThreadLocal.get(FWThreadLocal.LOGIN); // ログイン・ログアウトフラグ
-    if (login != null) {
-      if (login) {
-        request.changeSessionId(); // @セキュリティ セッションは維持してIDだけ変更(Session Fixation)
-      } else {
-        request.getSession().invalidate();
-      }
+    if (login != null && !login) { // ログアウト
+      request.getSession().invalidate();
     }
     FWThreadLocal.destroy();
     FWMDC.clear();

@@ -12,7 +12,10 @@ import java.sql.Timestamp;
 import java.util.Locale;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWPasswordUtil;
@@ -101,6 +104,16 @@ public class FWLoginManagerImpl implements FWLoginManager {
     user.setBeforeLoginTime(innerUser.getLastLoginTime());
     updateLoginTime(id);
     FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
+    try {
+      if (FacesContext.getCurrentInstance() != null
+          && FacesContext.getCurrentInstance().getExternalContext() != null) {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+        request.changeSessionId(); // @セキュリティ ログイン時にセッションIDを変更(Session Fixation)
+      }
+    } catch (Exception e) {
+      logger.debug("セッションIDの変更に失敗しました。", e.getMessage());
+    }
   }
 
   private String getPassword(String id, FWConnection con) throws SQLException {

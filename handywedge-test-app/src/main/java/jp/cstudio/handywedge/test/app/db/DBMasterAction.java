@@ -11,6 +11,7 @@ import javax.inject.Named;
 import org.primefaces.event.CellEditEvent;
 
 import com.handywedge.common.FWStringUtil;
+import com.handywedge.log.FWLogger;
 
 import jp.cstudio.handywedge.test.app.db.dto.Test;
 import lombok.Getter;
@@ -34,14 +35,16 @@ public class DBMasterAction {
   @Getter
   private String addValue;
 
+  @Inject
+  private FWLogger logger;
+
   @PostConstruct
   public void init() {
 
     try {
       test = service.selectAll();
     } catch (SQLException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
+      logger.error("DBマスタ参照でエラーが発生しました。", e);
     }
   }
 
@@ -60,7 +63,7 @@ public class DBMasterAction {
       try {
         service.update(target);
       } catch (SQLException e) {
-        e.printStackTrace();
+        logger.error("DBマスタ更新でエラーが発生しました。", e);
       }
     }
   }
@@ -77,7 +80,7 @@ public class DBMasterAction {
       service.insert(t);
       test = service.selectAll();
     } catch (SQLException e) {
-      e.printStackTrace();
+      logger.error("DBマスタ登録でエラーが発生しました。", e);
     }
   }
 
@@ -88,7 +91,7 @@ public class DBMasterAction {
         service.delete(key);
         test = service.selectAll();
       } catch (SQLException e) {
-        e.printStackTrace();
+        logger.error("DBマスタ削除でエラーが発生しました。", e);
       }
     }
   }

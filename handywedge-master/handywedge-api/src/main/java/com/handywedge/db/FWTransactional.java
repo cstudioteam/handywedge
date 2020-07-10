@@ -31,7 +31,7 @@ public @interface FWTransactional {
   @Nonbinding
   /**
    * トランザクションタイプを指定します。<br>
-   * 現在のバージョンではREQUIREDのみサポートされます。
+   * 現在のバージョンではREQUIRED, NON_TRANSACTION, READ_ONLYのみサポートされます。
    *
    * @return トランザクションタイプ
    */
@@ -67,8 +67,18 @@ public @interface FWTransactional {
     /**
      * トランザクションを新しく開始します。<br>
      * 既にトランザクションが開始されていた場合は、そのトランザクション内で処理が行われます。<br>
+     * REQUIRED以外で開始した場合はFWの機能をInjectしないでください。<br>
      */
-    REQUIRED;
+    REQUIRED,
+    /**
+     * オートコミットモードをtrueでコネクションを取得するようにします。<br>
+     */
+    NON_TRANSACTION,
+    /**
+     * オートコミットモードをtrueかつ、読み取り専用のコネクションを取得するようにします。<br>
+     * 更新操作を行うと例外が発生します。<br>
+     */
+    READ_ONLY;
   }
 
 }

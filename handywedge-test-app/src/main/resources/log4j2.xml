@@ -35,8 +35,8 @@
     </RollingFile>
     <RollingFile
       name="error"
-      fileName="${catalina_home}/logs/handywedge_error.log"
-      filePattern="${catalina_home}/logs/archive/handywedge_error_%d{yyyy-MM-dd}.gz"
+      fileName="${catalina_home}/logs/${app_id}_error.log"
+      filePattern="${catalina_home}/logs/archive/${app_id}_error_%d{yyyy-MM-dd}.gz"
     >
       <PatternLayout
         pattern="${pattern}"
@@ -81,7 +81,7 @@
     </Logger>
     <Logger
       name="jdbc.sqlonly"
-      level="error"
+      level="off"
       additivity="false"
     >
       <AppenderRef ref="${app_id}_jdbc" />

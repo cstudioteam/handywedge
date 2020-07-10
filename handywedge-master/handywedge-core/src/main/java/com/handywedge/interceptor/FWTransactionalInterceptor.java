@@ -51,13 +51,22 @@ public class FWTransactionalInterceptor {
     FWFullConnection connection = null;
     if (txMgr.isTopLayer()) {
       logger.debug("toplayer. txType={}, dataSourceName={}", txType, dataSourceName);
+      connection = connectionManager.getConnection(dataSourceName);
       switch (txType) {
         case REQUIRED:
-          connection = connectionManager.getConnection(dataSourceName);
+          connection.setReadOnly(false); // プールから取得する場合は戻しておく必要がある
           connection.setAutoCommit(false);
           break;
+        case NON_TRANSACTION:
+          connection.setReadOnly(false);
+          connection.setAutoCommit(true);
+          break;
+        case READ_ONLY:
+          connection.setReadOnly(true);
+          connection.setAutoCommit(true);
+          break;
         default:
-          connection = connectionManager.getConnection(dataSourceName);
+          connection.setReadOnly(false);
           connection.setAutoCommit(false);
           break;
       }
@@ -79,7 +88,7 @@ public class FWTransactionalInterceptor {
       returnVal = ctx.proceed();
       logger.perfEnd(signature, startTime);
       txMgr.decrementLayer();
-      if (txMgr.isTopLayer()) {
+      if (txMgr.isTopLayer() && !connection.getAutoCommit()) {
         try {
           try {
             connection.commit();
@@ -114,27 +123,29 @@ public class FWTransactionalInterceptor {
             logger.warn("BusinessLogic exception!", t);
           }
 
-          // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
-          boolean rollback = true;
-          Class<? extends Exception>[] dontRollbackOn = tx.dontRollbackOn();
-          for (Class<? extends Exception> c : dontRollbackOn) {
-            if (isSubClass(c, t)) {
-              rollback = false;
-              break;
+          if (!connection.getAutoCommit()) {
+            // ロールバックはJTAライクではなく独自仕様にする。（例外は全てロールバック）
+            boolean rollback = true;
+            Class<? extends Exception>[] dontRollbackOn = tx.dontRollbackOn();
+            for (Class<? extends Exception> c : dontRollbackOn) {
+              if (isSubClass(c, t)) {
+                rollback = false;
+                break;
+              }
             }
-          }
 
-          try {
-            if (rollback) {
-              connection.rollback();
-              logger.info("transaction rollback.");
-            } else {
-              connection.commit();
-              logger.info("transaction commit.");
+            try {
+              if (rollback) {
+                connection.rollback();
+                logger.info("transaction rollback.");
+              } else {
+                connection.commit();
+                logger.info("transaction commit.");
+              }
+            } catch (SQLException e) {
+              // コミットロールバックの例外はログだけ出力して元の例外は上にスローする
+              logger.error("SQLException.", e);
             }
-          } catch (SQLException e) {
-            // コミットロールバックの例外はログだけ出力して元の例外は上にスローする
-            logger.error("SQLException.", e);
           }
         }
       }
