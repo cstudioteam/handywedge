@@ -12,7 +12,6 @@
    commonlib/index
    commonservice/index
    restservice/index
-   microservice/index
 
 
 索引／検索
