@@ -16,6 +16,8 @@
     <module>handywedge-jsf</module>
     <module>handywedge-pushnotice-client</module>
     <module>handywedge-openidconnect-login</module>
+    <module>handywedge-officetopdf</module>
+    <module>handywedge-pdftosvg</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
