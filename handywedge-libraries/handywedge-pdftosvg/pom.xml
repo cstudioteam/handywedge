@@ -1,5 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.handywedge</groupId>
@@ -8,110 +11,72 @@
   </parent>
   <artifactId>handywedge-pdf2svg</artifactId>
   <description>PDFドキュメントをSVG化ライブラリ</description>
-
   <properties>
-    <!-- Java Vserion -->
-    <java.version>1.8</java.version>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-
-    <!-- Java Encoding -->
-    <project.encondig>UTF-8</project.encondig>
-    <project.build.sourceEncoding>${project.encondig}</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
-
     <!-- common library -->
-    <log4j.version>2.11.2</log4j.version>
-<!--    <slf4j.version>1.7.30</slf4j.version>-->
     <commons-io.version>2.6</commons-io.version>
     <commons-lang3.version>3.9</commons-lang3.version>
-
     <!-- core library -->
-<!--    <jodconverter.version>4.3.0</jodconverter.version>-->
-<!--    <libreoffice.version>6.4.3</libreoffice.version>-->
-<!--    <batik.version>1.13</batik.version>-->
-<!--    <pdfbox.version>2.0.21</pdfbox.version>-->
+    <!-- <jodconverter.version>4.3.0</jodconverter.version> -->
+    <!-- <libreoffice.version>6.4.3</libreoffice.version> -->
+    <!-- <batik.version>1.13</batik.version> -->
+    <!-- <pdfbox.version>2.0.21</pdfbox.version> -->
   </properties>
-
   <dependencies>
-<!--    <dependency>-->
-<!--      <groupId>org.jodconverter</groupId>-->
-<!--      <artifactId>jodconverter-core</artifactId>-->
-<!--      <version>${jodconverter.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.jodconverter</groupId>-->
-<!--      <artifactId>jodconverter-local</artifactId>-->
-<!--      <version>${jodconverter.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.jodconverter</groupId>-->
-<!--      <artifactId>jodconverter-remote</artifactId>-->
-<!--      <version>${jodconverter.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.apache.xmlgraphics</groupId>-->
-<!--      <artifactId>batik-svggen</artifactId>-->
-<!--      <version>${batik.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.apache.xmlgraphics</groupId>-->
-<!--      <artifactId>batik-dom</artifactId>-->
-<!--      <version>${batik.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.apache.xmlgraphics</groupId>-->
-<!--      <artifactId>batik-codec</artifactId>-->
-<!--      <version>${batik.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.apache.pdfbox</groupId>-->
-<!--      <artifactId>pdfbox</artifactId>-->
-<!--      <version>${pdfbox.version}</version>-->
-<!--    </dependency>-->
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${log4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>${log4j.version}</version>
-    </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-api</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-log4j12</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--    </dependency>-->
-
+    <!-- <dependency> -->
+    <!-- <groupId>org.jodconverter</groupId> -->
+    <!-- <artifactId>jodconverter-core</artifactId> -->
+    <!-- <version>${jodconverter.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.jodconverter</groupId> -->
+    <!-- <artifactId>jodconverter-local</artifactId> -->
+    <!-- <version>${jodconverter.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.jodconverter</groupId> -->
+    <!-- <artifactId>jodconverter-remote</artifactId> -->
+    <!-- <version>${jodconverter.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
+    <!-- <artifactId>batik-svggen</artifactId> -->
+    <!-- <version>${batik.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
+    <!-- <artifactId>batik-dom</artifactId> -->
+    <!-- <version>${batik.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
+    <!-- <artifactId>batik-codec</artifactId> -->
+    <!-- <version>${batik.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.apache.pdfbox</groupId> -->
+    <!-- <artifactId>pdfbox</artifactId> -->
+    <!-- <version>${pdfbox.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.slf4j</groupId> -->
+    <!-- <artifactId>slf4j-api</artifactId> -->
+    <!-- <version>${slf4j.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.slf4j</groupId> -->
+    <!-- <artifactId>slf4j-log4j12</artifactId> -->
+    <!-- <version>${slf4j.version}</version> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
