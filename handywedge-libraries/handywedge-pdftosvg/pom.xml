@@ -15,58 +15,8 @@
     <!-- common library -->
     <commons-io.version>2.6</commons-io.version>
     <commons-lang3.version>3.9</commons-lang3.version>
-    <!-- core library -->
-    <!-- <jodconverter.version>4.3.0</jodconverter.version> -->
-    <!-- <libreoffice.version>6.4.3</libreoffice.version> -->
-    <!-- <batik.version>1.13</batik.version> -->
-    <!-- <pdfbox.version>2.0.21</pdfbox.version> -->
   </properties>
   <dependencies>
-    <!-- <dependency> -->
-    <!-- <groupId>org.jodconverter</groupId> -->
-    <!-- <artifactId>jodconverter-core</artifactId> -->
-    <!-- <version>${jodconverter.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.jodconverter</groupId> -->
-    <!-- <artifactId>jodconverter-local</artifactId> -->
-    <!-- <version>${jodconverter.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.jodconverter</groupId> -->
-    <!-- <artifactId>jodconverter-remote</artifactId> -->
-    <!-- <version>${jodconverter.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
-    <!-- <artifactId>batik-svggen</artifactId> -->
-    <!-- <version>${batik.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
-    <!-- <artifactId>batik-dom</artifactId> -->
-    <!-- <version>${batik.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.apache.xmlgraphics</groupId> -->
-    <!-- <artifactId>batik-codec</artifactId> -->
-    <!-- <version>${batik.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.apache.pdfbox</groupId> -->
-    <!-- <artifactId>pdfbox</artifactId> -->
-    <!-- <version>${pdfbox.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.slf4j</groupId> -->
-    <!-- <artifactId>slf4j-api</artifactId> -->
-    <!-- <version>${slf4j.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.slf4j</groupId> -->
-    <!-- <artifactId>slf4j-log4j12</artifactId> -->
-    <!-- <version>${slf4j.version}</version> -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
