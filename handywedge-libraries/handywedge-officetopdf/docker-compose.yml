@@ -1,14 +1,17 @@
 version: "3.6"
 services:
   libreoffice:
+#    image: libreoffice/online:master-nogui
     image: libreoffice/online:master
     environment:
       domain: (localhost|127\.0\.0\.1|host\.docker\.internal)
       username: admin
       password: secret
-#      extra_params: --o:ssl.enable=false --o:ssl.termination=false
+      #      extra_params: --o:ssl.enable=false --o:ssl.termination=false
       extra_params: '--o:ssl.enable=false --o:net.post_allow.host[0]=::ffff:172.[0-9]+.[0-9]+.[0-9]+'
       DONT_GEN_SSL_CERT: 1
+      LC_ALL: ja_JP.UTF-8
+      LANG: ja_JP.UTF-8
     volumes:
       - lo_config_volume:/etc/loolwsd
     cap_add:
