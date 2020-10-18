@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.handywedge.converter.tosvg.exceptions.FWConvertProcessException;
 import com.handywedge.converter.tosvg.exceptions.FWConvertTimeoutException;
 import com.handywedge.converter.tosvg.exceptions.FWUnsupportedFormatException;
 import org.apache.commons.lang3.ObjectUtils;
@@ -45,12 +46,13 @@ public class Pdf2SVGTest extends TestCase {
       svgFiles = converter.pdfToSvg(file);
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      assertTrue(false);
     } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
-    } catch (IOException e) {
+      assertTrue(false);
+    } catch (FWConvertProcessException e) {
       e.printStackTrace();
+      assertTrue(false);
     }
     if (ObjectUtils.isEmpty(svgFiles)) {
       System.out.println("SVG Converter is empty");
@@ -70,12 +72,13 @@ public class Pdf2SVGTest extends TestCase {
       svgFiles = converter.pdfToSvg(file);
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      assertTrue(false);
     } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
-    } catch (IOException e) {
+      assertTrue(false);
+    } catch (FWConvertProcessException e) {
       e.printStackTrace();
+      assertTrue(false);
     }
 
     if (ObjectUtils.isEmpty(svgFiles)) {

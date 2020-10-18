@@ -9,55 +9,58 @@ handywedge-pdf2svg
   |分類       |変換元形式       |変換元形式  |
   |-----------|---------------|------|
   |PDF        |*.pdf          |*.svg |
-  |MS Office  |*.xls, *.xlxs  |*.svg |
-  |MS Office  |*.doc, *.docx  |*.svg |
-  |MS Office  |*.ppt, *.pptx  |*.svg |
-  
-# 環境構築
 
-## インストール
+  
+# pdf2svgコマンド環境構築
+
+### pdf2svg ローカル構築
+
+- macOS
+```
+$ sudo brew install pdf2svg
+```
+
+- linux
+
+  * Debian,Ubuntu
+  ```
+  $ sudo apt install pdf2svg
+  ```
+  
+  * centos
+  ```
+  $ sudo yum install pdf2svg
+  ```
+
+- windows
+
+  [インストール手順](http://tako.nakano.net/textext_pdf2svg.html)
+
+### pdf2svg Docker環境
+
+- Docker起動
+```
+ $ docker-compose build --no-cache 
+ $ docker-compose up -d
+```
+
+- PDF->SVG変換
+```
+　$ docker-compose exec pdf2svg /bin/bash -c "pdf2svg /tmp/DockerEngine導入ガイド(Linux).pdf /tmp/aaaa_%05d.svg all " 
+```
+
+- Docker停止
+```
+ $ docker-compose down
+```
 
 ## ビルド
 
 ## リリース
 
-## サービス起動
-```
-
-```
 # 注意事項
 
-## パフォーマンス改善
-
-- javaバージョン
-
-  - java 1.8.191以降、java 9.0.4以降バージョンを推薦
-
-  - JVMパラメータを設定
-    ```
-    -Dsun.java2d.cmm=sun.java2d.cmm.kcms.KcmsServiceProvider
-    ```
-    Or
-    ```
-    System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
-    ```
-   
-
-- LocalOfficeManagerよりExternalOfficeManagerを利用
-
-　 ExternalOfficeManagerを利用する際、プロンプトよりLibreOfficeを起動しておく必要がある。
-   ```
-   $ soffice -accept="socket,host=127.0.0.1,port=2002;urp;"
-   ```
 
 # 外部参照リンク
 
-- [LibreOffice](https://ja.libreoffice.org/)
-
-  [LibreOffice Online](https://groupoffice.readthedocs.io/en/latest/install/extras/libreoffice-online.html)
-
-- [JodConverter](https://github.com/sbraconnier/jodconverter/wiki)
-
-- [PDFBOX](https://pdfbox.apache.org/)
-
-- [Apache™ Batik](https://xmlgraphics.apache.org/batik/using/architecture.html)
+- [pdf2svg ソースコードダウンロードURL](https://github.com/dawbarton/pdf2svg/tags)

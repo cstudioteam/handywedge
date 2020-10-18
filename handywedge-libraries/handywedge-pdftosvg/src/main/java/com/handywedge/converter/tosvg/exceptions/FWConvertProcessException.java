@@ -1,9 +1,9 @@
 package com.handywedge.converter.tosvg.exceptions;
 
-public class FWUnsupportedFormatException extends Exception {
+public class FWConvertProcessException extends Throwable {
 	private static final long serialVersionUID = 1L;
 
-	public FWUnsupportedFormatException(String msg){
+	public FWConvertProcessException(String msg){
 		super(msg);
 	}
 }
