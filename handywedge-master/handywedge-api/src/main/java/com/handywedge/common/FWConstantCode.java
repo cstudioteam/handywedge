@@ -99,6 +99,21 @@ public interface FWConstantCode {
    */
   String ROLE_UNAUTHORIZED = "00601E";
 
+  /**
+   * 変換元のファイルが読み込めない。
+   */
+  String OFFICE_TO_PDF_UNREAD = "00701E";
+
+  /**
+   * サポートしていないファイル形式。
+   */
+  String OFFICE_TO_PDF_UNSUPPORTED = "00702E";
+
+  /**
+   * 変換に失敗。
+   */
+  String OFFICE_TO_PDF_FAIL = "00703E";
+
   /* REST機能のFWコード */
 
   /**

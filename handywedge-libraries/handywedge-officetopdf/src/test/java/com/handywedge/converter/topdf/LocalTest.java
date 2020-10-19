@@ -1,14 +1,15 @@
 package com.handywedge.converter.topdf;
 
+import java.io.File;
+
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.handywedge.converter.topdf.exceptions.FWConvertProcessException;
-import com.handywedge.converter.topdf.exceptions.FWConvertTimeoutException;
 import com.handywedge.converter.topdf.exceptions.FWUnsupportedFormatException;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.commons.lang3.ObjectUtils;
-
-import java.io.File;
 
 /**
  * Unit test for simple App.
@@ -50,9 +51,6 @@ public class LocalTest extends TestCase {
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
-      e.printStackTrace();
-      assertTrue(false);
     } catch (FWConvertProcessException e) {
       e.printStackTrace();
       assertTrue(false);
@@ -74,9 +72,6 @@ public class LocalTest extends TestCase {
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
-      e.printStackTrace();
-      assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
       assertTrue(false);
     } catch (FWConvertProcessException e) {
@@ -101,9 +96,6 @@ public class LocalTest extends TestCase {
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
-      e.printStackTrace();
-      assertTrue(false);
     } catch (FWConvertProcessException e) {
       e.printStackTrace();
       assertTrue(false);
@@ -126,9 +118,6 @@ public class LocalTest extends TestCase {
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
-      e.printStackTrace();
-      assertTrue(false);
     } catch (FWConvertProcessException e) {
       e.printStackTrace();
       assertTrue(false);
@@ -143,15 +132,12 @@ public class LocalTest extends TestCase {
     try {
       File pdfFile = converter.fileToPdf(file);
       if (ObjectUtils.isEmpty(pdfFile)) {
-          System.out.println("SVG Converter is empty");
-          assertTrue(false);
+        System.out.println("SVG Converter is empty");
+        assertTrue(false);
       } else {
-          assertTrue(true);
+        assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
-      e.printStackTrace();
-      assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
       assertTrue(false);
     } catch (FWConvertProcessException e) {
@@ -174,9 +160,6 @@ public class LocalTest extends TestCase {
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
-      e.printStackTrace();
-      assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
       assertTrue(false);
     } catch (FWConvertProcessException e) {

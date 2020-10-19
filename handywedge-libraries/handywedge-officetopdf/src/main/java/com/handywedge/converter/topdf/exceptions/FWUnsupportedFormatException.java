@@ -1,9 +1,11 @@
 package com.handywedge.converter.topdf.exceptions;
 
-public class FWUnsupportedFormatException extends Exception {
-	private static final long serialVersionUID = 1L;
+import com.handywedge.common.FWException;
 
-	public FWUnsupportedFormatException(String msg){
-		super(msg);
-	}
+public class FWUnsupportedFormatException extends FWException {
+  private static final long serialVersionUID = 1L;
+
+  public FWUnsupportedFormatException(String code) {
+    super(code);
+  }
 }

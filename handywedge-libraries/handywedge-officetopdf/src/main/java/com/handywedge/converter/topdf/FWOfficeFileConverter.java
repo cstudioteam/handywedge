@@ -1,16 +1,17 @@
 package com.handywedge.converter.topdf;
 
+import java.io.File;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.handywedge.common.FWConstantCode;
 import com.handywedge.converter.topdf.exceptions.FWConvertProcessException;
-import com.handywedge.converter.topdf.exceptions.FWConvertTimeoutException;
 import com.handywedge.converter.topdf.exceptions.FWUnsupportedFormatException;
 import com.handywedge.converter.topdf.task.FWOfficeToPDFJob;
 import com.handywedge.converter.topdf.utils.FWConverterConst;
 import com.handywedge.log.FWLogger;
 import com.handywedge.log.FWLoggerFactory;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
 
 /**
  * ドキュメント変換クラス
@@ -19,94 +20,75 @@ import java.io.File;
  */
 public class FWOfficeFileConverter {
 
-	private static final FWLogger logger = FWLoggerFactory.getLogger(FWOfficeFileConverter.class);
+  private static final FWLogger logger = FWLoggerFactory.getLogger(FWOfficeFileConverter.class);
 
-	/**
-	 * [ローカル]SVGファイルへ変換
-	 *
-	 * @param sourceFile 変換元MS Officeドキュメントファイル
-	 * @return 変換したPDFファイル
-	 */
-	public File fileToPdf(File sourceFile)
-			throws FWUnsupportedFormatException, FWConvertProcessException, FWConvertTimeoutException {
-		File pdfFile = null;
+  /**
+   * [ローカル]SVGファイルへ変換
+   *
+   * @param sourceFile 変換元MS Officeドキュメントファイル
+   * @return 変換したPDFファイル
+   */
+  public File fileToPdf(File sourceFile)
+      throws FWUnsupportedFormatException, FWConvertProcessException {
+    final long startTime = logger.perfStart("fileToPdf");
 
-		logger.info("=== Converter Start. ===");
-		final long startTime = System.currentTimeMillis();
+    if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
+      throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_UNREAD,
+          sourceFile.getAbsolutePath());
+    }
 
-		if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
-			String message = String.format("can not read source file: %s", sourceFile);
-			logger.error(message);
-			throw new FWConvertProcessException(message);
-		}
+    // 拡張子判別
+    final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
 
-		// 拡張子判別
-		final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
+    if (!isOfficeDocument(inputExtension)) {
+      throw new FWUnsupportedFormatException(FWConstantCode.OFFICE_TO_PDF_UNSUPPORTED);
+    }
 
-		if (!isOfficeDocument(inputExtension)) {
-			String message = String.format("Unsupported extension: [%s]", inputExtension);
-			logger.error(message);
-			throw new FWUnsupportedFormatException(message);
-		}
+    // MS OfficeドキュメントのPDF変換
+    FWOfficeToPDFJob toPDFJob = new FWOfficeToPDFJob();
+    File pdfFile = toPDFJob.converter(sourceFile);
 
-		// MS OfficeドキュメントのPDF変換
-		FWOfficeToPDFJob toPDFJob = new FWOfficeToPDFJob();
-		pdfFile = toPDFJob.converter(sourceFile);
+    logger.perfEnd("fileToPdf", startTime);
+    return pdfFile;
+  }
 
-		final long endTime = System.currentTimeMillis();
-		logger.info(" DocumentConverter ExecutionTime: {}ms", endTime - startTime);
+  /**
+   * [リモート]SVGファイルへ変換
+   *
+   * @param sourceFile 変換元ファイル
+   * @param endpoint LibreOfficeサーバーIPアドレス
+   * @return 変換したsvgファイル
+   */
+  public File fileToPdf(File sourceFile, String endpoint)
+      throws FWUnsupportedFormatException, FWConvertProcessException {
+    final long startTime = logger.perfStart("fileToPdf");
 
-		logger.info("=== Converter end. ===");
-		return pdfFile;
-	}
+    if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
+      throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_UNREAD,
+          sourceFile.getAbsolutePath());
+    }
 
-	/**
-	 * [リモート]SVGファイルへ変換
-	 *
-	 * @param sourceFile 変換元ファイル
-	 * @param endpoint   LibreOfficeサーバーIPアドレス
-	 * @return 変換したsvgファイル
-	 */
-	public File fileToPdf(File sourceFile, String endpoint)
-			throws FWUnsupportedFormatException, FWConvertProcessException, FWConvertTimeoutException {
-		File pdfFile = null;
+    // 拡張子判別
+    final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
 
-		logger.info("=== Converter Start. ===");
-		final long startTime = System.currentTimeMillis();
+    if (!isOfficeDocument(inputExtension)) {
+      throw new FWUnsupportedFormatException(FWConstantCode.OFFICE_TO_PDF_UNSUPPORTED);
+    }
 
-		if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
-			String message = String.format("can not read source file: %s", sourceFile);
-			logger.error(message);
-			throw new FWConvertProcessException(message);
-		}
+    // MS OfficeドキュメントのPDF変換
+    FWOfficeToPDFJob toPDFJob = new FWOfficeToPDFJob();
+    File pdfFile = toPDFJob.converter(sourceFile, endpoint);
 
-		// 拡張子判別
-		final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
+    logger.perfEnd("fileToPdf", startTime);
+    return pdfFile;
+  }
 
-		if (!isOfficeDocument(inputExtension)) {
-			String message = String.format("Unsupported extension: [%s]", inputExtension);
-			logger.error(message);
-			throw new FWUnsupportedFormatException(message);
-		}
+  private boolean isOfficeDocument(String extension) {
+    if (StringUtils.isEmpty(extension)) {
+      return false;
+    }
 
-		// MS OfficeドキュメントのPDF変換
-		FWOfficeToPDFJob toPDFJob = new FWOfficeToPDFJob();
-		pdfFile = toPDFJob.converter(sourceFile, endpoint);
-
-		final long endTime = System.currentTimeMillis();
-		logger.info(" DocumentConverter ExecutionTime: {}ms", endTime - startTime);
-
-		logger.info("=== Converter end. ===");
-		return pdfFile;
-	}
-
-	private boolean isOfficeDocument(String extension) {
-		if (StringUtils.isEmpty(extension)) {
-			return false;
-		}
-
-		return FWConverterConst.OFFICE_DOCUMENT_EXTENSIONS
-				.contains(StringUtils.lowerCase(extension));
-	}
+    return FWConverterConst.OFFICE_DOCUMENT_EXTENSIONS.contains(StringUtils.lowerCase(extension));
+  }
 
 }
