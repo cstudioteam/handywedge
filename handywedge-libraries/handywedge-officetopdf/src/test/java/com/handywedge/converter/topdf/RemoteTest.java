@@ -7,7 +7,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jodconverter.core.office.OfficeException;
 
 import java.io.File;
 
@@ -42,7 +41,7 @@ public class RemoteTest extends TestCase {
 		String docName = "doc/Talendジョブ保守ガイド.docx";
 		File file = new File(docName);
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
@@ -68,7 +67,7 @@ public class RemoteTest extends TestCase {
 		// File file = new File("doc/情報システム運用規程.doc");
 		File file = new File("doc/情報システム運用規程2.doc");
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
@@ -93,7 +92,7 @@ public class RemoteTest extends TestCase {
 		System.out.println("======[XLSX -> SVG]======");
 		File file = new File("doc/年次会計報告書.xlsx");
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
@@ -118,7 +117,7 @@ public class RemoteTest extends TestCase {
 		System.out.println("======[XLS -> SVG]======");
 		File file = new File("doc/申込書.xls");
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
@@ -143,7 +142,7 @@ public class RemoteTest extends TestCase {
 		System.out.println("======[PPTX -> SVG]======");
 		File file = new File("doc/ppt-sample.pptx");
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
@@ -168,7 +167,7 @@ public class RemoteTest extends TestCase {
 		System.out.println("======[PPT -> SVG]======");
 		File file = new File("doc/プレゼンテーション.ppt");
 
-		FWDocumentConverter converter = new FWDocumentConverter();
+		FWOfficeFileConverter converter = new FWOfficeFileConverter();
 		try {
 			File pdfFile = converter.fileToPdf(file, ONLINE_SERVICE_ENDPOINT);
 			if (ObjectUtils.isEmpty(pdfFile)) {
