@@ -85,7 +85,6 @@ public class FWOfficeToPDFJob {
     final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(officeFile.getName()));
     final String baseExtension = FilenameUtils.getExtension(officeFile.getName());
 
-    // FIXME 一時ディレクトリが削除漏れのようなので残らないように修正する
     Path pdfTempDir = null;
     try {
       pdfTempDir = Files.createTempDirectory(null);
@@ -131,6 +130,13 @@ public class FWOfficeToPDFJob {
     } finally {
       OfficeUtils.stopQuietly(manager);
       FileUtils.deleteQuietly(newOfficeFile);
+      if(pdfTempDir != null){
+        try {
+          FileUtils.deleteDirectory(pdfTempDir.toFile());
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+      }
     }
     return pdfFile;
   }

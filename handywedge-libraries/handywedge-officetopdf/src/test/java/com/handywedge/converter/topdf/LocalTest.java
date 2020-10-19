@@ -46,6 +46,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
@@ -69,6 +70,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
@@ -91,6 +93,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
@@ -113,6 +116,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
@@ -135,6 +139,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
@@ -157,6 +162,7 @@ public class LocalTest extends TestCase {
         System.out.println("SVG Converter is empty");
         assertTrue(false);
       } else {
+        System.out.println("Result: " + pdfFile.getAbsolutePath());
         assertTrue(true);
       }
     } catch (FWUnsupportedFormatException e) {
