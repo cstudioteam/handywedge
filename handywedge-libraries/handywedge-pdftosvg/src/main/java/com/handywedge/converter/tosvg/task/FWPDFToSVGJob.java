@@ -57,12 +57,18 @@ public class FWPDFToSVGJob {
 
   public List<File> converter(File pdfFile) throws FWConvertProcessException {
     final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(pdfFile.getName()));
-
-    // FIXME 一次ディレクトリの削除漏れ？
+    
     Path svgTempDir = null;
     try {
       svgTempDir = Files.createTempDirectory(null);
     } catch (IOException e) {
+      if(svgTempDir != null){
+        try {
+          FileUtils.deleteDirectory(svgTempDir.toFile());
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+      }
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
     }
     String svgTempDirName = svgTempDir.toAbsolutePath().toString();
@@ -80,12 +86,26 @@ public class FWPDFToSVGJob {
       process = pb.start();
       success = process.waitFor(TIME_OUT, TimeUnit.SECONDS);
     } catch (IOException | InterruptedException e) {
+      if(svgTempDir != null){
+        try {
+          FileUtils.deleteDirectory(svgTempDir.toFile());
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+      }
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
     } finally {
       process.destroy();
     }
 
     if (!success) {
+      if(svgTempDir != null){
+        try {
+          FileUtils.deleteDirectory(svgTempDir.toFile());
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+      }
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_TIMEOUT);
     }
 
@@ -96,6 +116,13 @@ public class FWPDFToSVGJob {
     svgFiles = svgFiles.stream().sorted(Comparator.comparing(File::getAbsolutePath))
         .collect(Collectors.toList());
     if (ObjectUtils.isEmpty(svgFiles)) {
+      if(svgTempDir != null){
+        try {
+          FileUtils.deleteDirectory(svgTempDir.toFile());
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+      }
       String message =
           String.format("Failure no converted files: {} [{}b]", pdfFile, pdfFile.length());
       logger.debug(message);

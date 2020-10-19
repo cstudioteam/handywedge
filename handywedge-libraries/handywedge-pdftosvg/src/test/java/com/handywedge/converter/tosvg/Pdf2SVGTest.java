@@ -43,6 +43,7 @@ public class Pdf2SVGTest extends TestCase {
     List<File> svgFiles = null;
     try {
       svgFiles = converter.pdfToSvg(file);
+      svgFiles.forEach(svg -> System.out.println("Result: " + svg.getAbsolutePath()));
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);
@@ -66,6 +67,7 @@ public class Pdf2SVGTest extends TestCase {
     List<File> svgFiles = null;
     try {
       svgFiles = converter.pdfToSvg(file);
+      svgFiles.forEach(svg -> System.out.println("Result: " + svg.getAbsolutePath() ));
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);

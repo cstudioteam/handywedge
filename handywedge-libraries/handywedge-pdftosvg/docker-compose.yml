@@ -8,7 +8,10 @@ services:
     environment:
       LC_ALL: ja_JP.UTF-8
       LANG: ja_JP.UTF-8
+      TZ: Asia/Tokyo
     volumes:
       - ./doc:/tmp
+    ports:
+      "8080:8080"
     restart: always
     tty: true
