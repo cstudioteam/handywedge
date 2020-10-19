@@ -1,7 +1,6 @@
 package com.handywedge.converter.tosvg;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import com.handywedge.converter.tosvg.exceptions.FWConvertProcessException;
@@ -40,7 +39,7 @@ public class Pdf2SVGTest extends TestCase {
     System.out.println("======[PDF -> SVG]======");
     File file = new File("doc/DockerEngine導入ガイド(Linux).pdf");
 
-    FWDocumentConverter converter = new FWDocumentConverter();
+    FWPdfConverter converter = new FWPdfConverter();
     List<File> svgFiles = null;
     try {
       svgFiles = converter.pdfToSvg(file);
@@ -66,7 +65,7 @@ public class Pdf2SVGTest extends TestCase {
     System.out.println("======[PDF -> SVG]======");
     File file = new File("doc/DockerEngine.pdf");
 
-    FWDocumentConverter converter = new FWDocumentConverter();
+    FWPdfConverter converter = new FWPdfConverter();
     List<File> svgFiles = null;
     try {
       svgFiles = converter.pdfToSvg(file);
