@@ -3,10 +3,10 @@ package com.handywedge.converter.tosvg;
 import java.io.File;
 import java.util.List;
 
-import com.handywedge.converter.tosvg.exceptions.FWConvertProcessException;
-import com.handywedge.converter.tosvg.exceptions.FWConvertTimeoutException;
-import com.handywedge.converter.tosvg.exceptions.FWUnsupportedFormatException;
 import org.apache.commons.lang3.ObjectUtils;
+
+import com.handywedge.converter.tosvg.exceptions.FWConvertProcessException;
+import com.handywedge.converter.tosvg.exceptions.FWUnsupportedFormatException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -46,9 +46,6 @@ public class Pdf2SVGTest extends TestCase {
     } catch (FWUnsupportedFormatException e) {
       e.printStackTrace();
       assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
-      e.printStackTrace();
-      assertTrue(false);
     } catch (FWConvertProcessException e) {
       e.printStackTrace();
       assertTrue(false);
@@ -70,9 +67,6 @@ public class Pdf2SVGTest extends TestCase {
     try {
       svgFiles = converter.pdfToSvg(file);
     } catch (FWUnsupportedFormatException e) {
-      e.printStackTrace();
-      assertTrue(false);
-    } catch (FWConvertTimeoutException e) {
       e.printStackTrace();
       assertTrue(false);
     } catch (FWConvertProcessException e) {

@@ -114,6 +114,26 @@ public interface FWConstantCode {
    */
   String OFFICE_TO_PDF_FAIL = "00703E";
 
+  /**
+   * 変換元のファイルが読み込めない。
+   */
+  String PDF_TO_SVG_UNREAD = "00801E";
+
+  /**
+   * サポートしていないファイル形式。
+   */
+  String PDF_TO_SVG_UNSUPPORTED = "00802E";
+
+  /**
+   * 変換に失敗。
+   */
+  String PDF_TO_SVG_FAIL = "00803E";
+
+  /**
+   * 変換処理でタイムアウト。
+   */
+  String PDF_TO_SVG_TIMEOUT = "00804E";
+
   /* REST機能のFWコード */
 
   /**
