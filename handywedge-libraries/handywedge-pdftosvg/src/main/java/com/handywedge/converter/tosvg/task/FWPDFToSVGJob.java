@@ -2,18 +2,14 @@ package com.handywedge.converter.tosvg.task;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.handywedge.common.FWConstantCode;
@@ -57,22 +53,11 @@ public class FWPDFToSVGJob {
 
   public List<File> converter(File pdfFile) throws FWConvertProcessException {
     final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(pdfFile.getName()));
-    
-    Path svgTempDir = null;
-    try {
-      svgTempDir = Files.createTempDirectory(null);
-    } catch (IOException e) {
-      if(svgTempDir != null){
-        try {
-          FileUtils.deleteDirectory(svgTempDir.toFile());
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-      }
-      throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
-    }
-    String svgTempDirName = svgTempDir.toAbsolutePath().toString();
-    String svgTempFileName = baseName + "_%05d." + FWConverterConst.EXTENSION_SVG;
+    final String newBaseName = UUID.randomUUID().toString().replace("-", "");
+
+    File svgTempDir = FileUtils.getTempDirectory();
+    String svgTempDirName = svgTempDir.getAbsolutePath();
+    String svgTempFileName = newBaseName + "_%04d." + FWConverterConst.EXTENSION_SVG;
 
     String[] commands =
         buildCommand(pdfFile.getAbsolutePath(), svgTempDirName + File.separator + svgTempFileName);
@@ -86,43 +71,20 @@ public class FWPDFToSVGJob {
       process = pb.start();
       success = process.waitFor(TIME_OUT, TimeUnit.SECONDS);
     } catch (IOException | InterruptedException e) {
-      if(svgTempDir != null){
-        try {
-          FileUtils.deleteDirectory(svgTempDir.toFile());
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-      }
+      deleteSVGFiles(svgTempDir, newBaseName, FWConverterConst.EXTENSION_SVG);
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
     } finally {
       process.destroy();
     }
 
     if (!success) {
-      if(svgTempDir != null){
-        try {
-          FileUtils.deleteDirectory(svgTempDir.toFile());
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-      }
+      deleteSVGFiles(svgTempDir, newBaseName, FWConverterConst.EXTENSION_SVG);
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_TIMEOUT);
     }
 
-    List<File> svgFiles = (List<File>) FileUtils.listFiles(svgTempDir.toFile(),
-        FileFilterUtils.suffixFileFilter("." + FWConverterConst.EXTENSION_SVG),
-        FileFilterUtils.trueFileFilter());
-
-    svgFiles = svgFiles.stream().sorted(Comparator.comparing(File::getAbsolutePath))
-        .collect(Collectors.toList());
+    List<File> svgFiles = searchSVGFiles(svgTempDir, newBaseName, FWConverterConst.EXTENSION_SVG);
     if (ObjectUtils.isEmpty(svgFiles)) {
-      if(svgTempDir != null){
-        try {
-          FileUtils.deleteDirectory(svgTempDir.toFile());
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-      }
+      deleteSVGFiles(svgTempDir, newBaseName, FWConverterConst.EXTENSION_SVG);
       String message =
           String.format("Failure no converted files: {} [{}b]", pdfFile, pdfFile.length());
       logger.debug(message);
@@ -135,4 +97,36 @@ public class FWPDFToSVGJob {
     return svgFiles;
   }
 
+  private void deleteSVGFiles(File tempDir, String prefix, String suffix) {
+    IOFileFilter fileNameFilter =
+      FileFilterUtils.and(
+        FileFilterUtils.prefixFileFilter(prefix),
+        FileFilterUtils.suffixFileFilter("." + suffix));
+    Collection<File> files =
+        FileUtils.listFiles(tempDir, fileNameFilter, null);
+    files.stream()
+      .filter(File::isFile)
+      .forEach(
+        file -> {
+          FileUtils.deleteQuietly(file);
+        });
+  }
+
+  private List<File> searchSVGFiles(File tempDir, String prefix, String suffix) {
+    List<File> svgFiles = new LinkedList<File>();
+
+    IOFileFilter fileNameFilter =
+      FileFilterUtils.and(
+        FileFilterUtils.prefixFileFilter(prefix),
+        FileFilterUtils.suffixFileFilter("." + suffix));
+    Collection<File> files =
+      FileUtils.listFiles(tempDir, fileNameFilter, null);
+    svgFiles = files.stream()
+      .filter(File::isFile)
+      .sorted(Comparator.comparing(File::getAbsolutePath))
+      .collect(Collectors.toList());
+
+    return svgFiles;
+  }
 }
+

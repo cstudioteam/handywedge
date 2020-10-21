@@ -14,3 +14,7 @@ hs_err_pid*
 #DS_Store#
 *.DS_Store
 log4j2.xml
+handywedge-libraries/handywedge-officetopdf/logs/office2pdf.log
+handywedge-libraries/handywedge-officetopdf/logs/office2pdf_error.log
+handywedge-libraries/handywedge-pdftosvg/logs/handywedge-converter.log
+handywedge-libraries/handywedge-pdftosvg/logs/handywedge-converter_error.log
