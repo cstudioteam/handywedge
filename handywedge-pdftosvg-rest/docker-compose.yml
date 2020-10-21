@@ -1,0 +1,19 @@
+version: "3.6"
+services:
+  pdf2svg:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: psf2svg-container
+    environment:
+      LC_ALL: ja_JP.UTF-8
+      LANG: ja_JP.UTF-8
+      TZ: Asia/Tokyo
+      converter_dir: /converters/pdf2svg
+    volumes:
+      - ./doc:/converters/pdf2svg
+      - ./docker/modules:/temp/release
+    ports:
+      - "8080:8080"
+    restart: always
+    tty: true
