@@ -80,7 +80,8 @@ public class FWOfficeToPDFJob {
    * @return 変換したPDFファイル
    * @throws FWConvertProcessException
    */
-  public File converter(File officeFile, String endpoint) throws FWConvertProcessException {
+  public File converter(File officeFile, String endpoint, Integer timeout)
+      throws FWConvertProcessException {
     // office file
     final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(officeFile.getName()));
     final String baseExtension = FilenameUtils.getExtension(officeFile.getName());
@@ -115,7 +116,8 @@ public class FWOfficeToPDFJob {
 
     final OfficeManager manager = RemoteOfficeManager.builder()
         .urlConnection(endpoint + "/lool/convert-to/pdf").poolSize(POOL_SIZE)
-        .taskQueueTimeout(QUEUE_TIME_OUT).taskExecutionTimeout(EXECUTION_TIME_OUT).build();
+        .taskQueueTimeout(timeout != null ? (timeout * 1000) : QUEUE_TIME_OUT)
+        .taskExecutionTimeout(timeout != null ? (timeout * 1000) : EXECUTION_TIME_OUT).build();
     try {
       manager.start();
 
@@ -130,7 +132,7 @@ public class FWOfficeToPDFJob {
     } finally {
       OfficeUtils.stopQuietly(manager);
       FileUtils.deleteQuietly(newOfficeFile);
-      if(pdfTempDir != null){
+      if (pdfTempDir != null) {
         try {
           FileUtils.deleteDirectory(pdfTempDir.toFile());
         } catch (IOException ex) {

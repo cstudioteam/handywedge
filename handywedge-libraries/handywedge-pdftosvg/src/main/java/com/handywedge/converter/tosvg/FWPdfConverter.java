@@ -31,6 +31,18 @@ public class FWPdfConverter {
    */
   public List<File> pdfToSvg(File sourceFile)
       throws FWUnsupportedFormatException, FWConvertProcessException {
+    return pdfToSvg(sourceFile, null);
+  }
+
+  /**
+   * PDFファイルをSVGファイルへ変換
+   *
+   * @param sourceFile 変換元PDFファイル
+   * @param timeout 変換処理のタイムアウト値（秒）
+   * @return 変換したsvgファイル
+   */
+  public List<File> pdfToSvg(File sourceFile, Integer timeout)
+      throws FWUnsupportedFormatException, FWConvertProcessException {
     final long startTime = logger.perfStart("pdfToSvg");
 
     if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
@@ -47,7 +59,7 @@ public class FWPdfConverter {
 
     // PDFのSVG変換
     FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob();
-    List<File> targetFiles = toSVGJob.converter(sourceFile);
+    List<File> targetFiles = toSVGJob.converter(sourceFile, timeout);
 
     logger.perfEnd("pdfToSvg", startTime);
     return targetFiles;

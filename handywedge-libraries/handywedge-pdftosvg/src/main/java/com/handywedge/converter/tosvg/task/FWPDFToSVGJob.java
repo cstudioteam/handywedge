@@ -2,12 +2,16 @@ package com.handywedge.converter.tosvg.task;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,8 +55,7 @@ public class FWPDFToSVGJob {
     return commands.toArray(new String[0]);
   }
 
-  public List<File> converter(File pdfFile) throws FWConvertProcessException {
-    final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(pdfFile.getName()));
+  public List<File> converter(File pdfFile, Integer timeout) throws FWConvertProcessException {
     final String newBaseName = UUID.randomUUID().toString().replace("-", "");
 
     File svgTempDir = FileUtils.getTempDirectory();
@@ -69,7 +72,7 @@ public class FWPDFToSVGJob {
     boolean success = false;
     try {
       process = pb.start();
-      success = process.waitFor(TIME_OUT, TimeUnit.SECONDS);
+      success = process.waitFor(timeout != null ? timeout : TIME_OUT, TimeUnit.SECONDS);
     } catch (IOException | InterruptedException e) {
       deleteSVGFiles(svgTempDir, newBaseName, FWConverterConst.EXTENSION_SVG);
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
@@ -98,33 +101,22 @@ public class FWPDFToSVGJob {
   }
 
   private void deleteSVGFiles(File tempDir, String prefix, String suffix) {
-    IOFileFilter fileNameFilter =
-      FileFilterUtils.and(
-        FileFilterUtils.prefixFileFilter(prefix),
+    IOFileFilter fileNameFilter = FileFilterUtils.and(FileFilterUtils.prefixFileFilter(prefix),
         FileFilterUtils.suffixFileFilter("." + suffix));
-    Collection<File> files =
-        FileUtils.listFiles(tempDir, fileNameFilter, null);
-    files.stream()
-      .filter(File::isFile)
-      .forEach(
-        file -> {
-          FileUtils.deleteQuietly(file);
-        });
+    Collection<File> files = FileUtils.listFiles(tempDir, fileNameFilter, null);
+    files.stream().filter(File::isFile).forEach(file -> {
+      FileUtils.deleteQuietly(file);
+    });
   }
 
   private List<File> searchSVGFiles(File tempDir, String prefix, String suffix) {
     List<File> svgFiles = new LinkedList<File>();
 
-    IOFileFilter fileNameFilter =
-      FileFilterUtils.and(
-        FileFilterUtils.prefixFileFilter(prefix),
+    IOFileFilter fileNameFilter = FileFilterUtils.and(FileFilterUtils.prefixFileFilter(prefix),
         FileFilterUtils.suffixFileFilter("." + suffix));
-    Collection<File> files =
-      FileUtils.listFiles(tempDir, fileNameFilter, null);
-    svgFiles = files.stream()
-      .filter(File::isFile)
-      .sorted(Comparator.comparing(File::getAbsolutePath))
-      .collect(Collectors.toList());
+    Collection<File> files = FileUtils.listFiles(tempDir, fileNameFilter, null);
+    svgFiles = files.stream().filter(File::isFile)
+        .sorted(Comparator.comparing(File::getAbsolutePath)).collect(Collectors.toList());
 
     return svgFiles;
   }
