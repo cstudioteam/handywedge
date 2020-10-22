@@ -6,7 +6,7 @@
 	<Property name="app_id">handywedge-pdftosvg-rest</Property>
 <!--	<Property name="catalina_home">/usr/local/tomcat</Property>-->
 <!--	<Property name="catalina_home">/opt/apache-tomcat</Property>-->
-	<Property name="log_home">/usr/local/tomcat/logs</Property>
+	<Property name="log_home">/usr/apache-tomcat/logs</Property>
   </Properties>
 	<Appenders>
 	  <Console name="console" target="SYSTEM_OUT">
@@ -36,7 +36,7 @@
 	  </RollingFile>
 	</Appenders>
 	<Loggers>
-	  <Root level="info">
+	  <Root level="debug">
 		<AppenderRef ref="console" />
 		<AppenderRef ref="${app_id}" />
 	  </Root>

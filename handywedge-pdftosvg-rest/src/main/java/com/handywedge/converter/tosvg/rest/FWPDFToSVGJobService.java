@@ -14,11 +14,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -33,7 +33,7 @@ import java.util.UUID;
 
 @Path("/file")
 public class FWPDFToSVGJobService {
-	private static final Logger logger = LoggerFactory.getLogger(FWPDFToSVGJobService.class);
+	private static final Logger logger = LogManager.getLogger(FWPDFToSVGJobService.class);
 
 	@POST
 	@Path("/converter/svg")

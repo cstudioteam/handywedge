@@ -9,10 +9,8 @@ services:
       LC_ALL: ja_JP.UTF-8
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
-      converter_dir: /converters/pdf2svg
     volumes:
-      - ./doc:/converters/pdf2svg
-      - ./docker/modules:/temp/release
+      - ./docker/doc:/converters/pdf2svg
     ports:
       - "8080:8080"
     restart: always

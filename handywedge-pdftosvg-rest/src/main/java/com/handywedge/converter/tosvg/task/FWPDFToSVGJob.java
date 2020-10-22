@@ -14,15 +14,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * PDFファイルをSVGファイルへ変換
  */
 public class FWPDFToSVGJob {
-  private static final Logger logger = LoggerFactory.getLogger(FWPDFToSVGJob.class);
+  private static final Logger logger = LogManager.getLogger(FWPDFToSVGJob.class);
 
   private static final String SPACE = " ";
   private static final int TIME_OUT = 10;
