@@ -7,8 +7,12 @@
 	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 	<init-param>
 	  <param-name>jersey.config.server.provider.packages</param-name>
-	  <param-value>com.handywedge.converter.tosvg.rest</param-value>
+	  <param-value>com.handywedge.converter.tosvg.rest.resources</param-value>
 	</init-param>
+    <init-param>
+	  <param-name>javax.ws.rs.Application</param-name>
+	  <param-value>com.handywedge.converter.tosvg.rest.FWPDFToSVGApplication</param-value>
+    </init-param>
 	<init-param>
 	  <param-name>jersey.config.server.provider.classnames</param-name>
 	  <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
