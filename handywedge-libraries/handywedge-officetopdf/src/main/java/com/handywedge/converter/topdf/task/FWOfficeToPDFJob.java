@@ -63,7 +63,7 @@ public class FWOfficeToPDFJob {
       final DocumentConverter converter = LocalConverter.make(officeManager);
       converter.convert(officeFile).to(pdfFile).execute();
     } catch (OfficeException e) {
-      String message = String.format("Failed conversion: {} [{}b] to {}; {}; input file: {}",
+      String message = String.format("Failed conversion: %s [%d byte] to %s; %s; input file: %s",
           officeFile, officeFile.length(), pdfFile, e, officeFile.getName());
       logger.debug(message);
       throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_FAIL, e);
@@ -125,7 +125,7 @@ public class FWOfficeToPDFJob {
           DefaultDocumentFormatRegistry.getFormatByExtension(FWConverterConst.EXTENSION_PDF);
       RemoteConverter.make(manager).convert(newOfficeFile).to(pdfFile).as(targetFormat).execute();
     } catch (OfficeException e) {
-      String message = String.format("Failed conversion: {} [{}b] to {}; {}; input file: {}",
+      String message = String.format("Failed conversion: %s [%d byte] to %s; %s; input file: %s",
           officeFile, officeFile.length(), pdfFile, e, officeFile.getName());
       logger.debug(message);
       throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_FAIL, e);

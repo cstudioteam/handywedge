@@ -69,7 +69,7 @@ public class FWOfficeFileConverter {
    *
    * @param sourceFile 変換元ファイル
    * @param endpoint LibreOfficeサーバーIPアドレス
-   * @param リモート呼び出し時のタイムアウト値（秒）
+   * @param timeout リモート呼び出し時のタイムアウト値（秒）
    * @return 変換したsvgファイル
    */
   public File fileToPdf(File sourceFile, String endpoint, Integer timeout)
