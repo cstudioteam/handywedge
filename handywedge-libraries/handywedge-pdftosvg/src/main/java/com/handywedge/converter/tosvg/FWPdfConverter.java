@@ -23,6 +23,27 @@ public class FWPdfConverter {
 
   private static final FWLogger logger = FWLoggerFactory.getLogger(FWPdfConverter.class);
 
+  private int pageThreshold;
+  private int threadCount;
+
+  /**
+   *　コンストラクター
+   */
+  public FWPdfConverter(){
+    this.pageThreshold = 100;
+    this.threadCount = Runtime.getRuntime().availableProcessors() -1;
+  }
+
+  /**
+   *　コンストラクター
+   * @param pageThreshold ページ数しきい値
+   * @param threadCount 並行スレッド数
+   */
+  public FWPdfConverter(int pageThreshold, int threadCount){
+    this.pageThreshold = pageThreshold;
+    this.threadCount = threadCount;
+  }
+
   /**
    * PDFファイルをSVGファイルへ変換
    *
@@ -58,8 +79,40 @@ public class FWPdfConverter {
     }
 
     // PDFのSVG変換
-    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob();
+    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob(this.pageThreshold, this.threadCount);
     List<File> targetFiles = toSVGJob.converter(sourceFile, timeout);
+
+    logger.perfEnd("pdfToSvg", startTime);
+    return targetFiles;
+  }
+
+  /**
+   * PDFファイルをSVGファイルへ変換
+   *
+   * @param sourceFile 変換元PDFファイル
+   * @param endpoint PDF変換RESTのIPアドレス
+   * @param timeout 変換処理のタイムアウト値（秒）
+   * @return 変換したsvgファイル
+   */
+  public List<File> pdfToSvg(File sourceFile, String endpoint, Integer timeout)
+      throws FWUnsupportedFormatException, FWConvertProcessException {
+    final long startTime = logger.perfStart("pdfToSvg");
+
+    if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
+      throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_UNREAD,
+          sourceFile.getAbsolutePath());
+    }
+
+    // 拡張子判別
+    final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
+
+    if (!isPDF(inputExtension)) {
+      throw new FWUnsupportedFormatException(FWConstantCode.PDF_TO_SVG_UNSUPPORTED);
+    }
+
+    // PDFのSVG変換
+    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob(this.pageThreshold, this.threadCount);
+    List<File> targetFiles = toSVGJob.converter(sourceFile, endpoint, timeout);
 
     logger.perfEnd("pdfToSvg", startTime);
     return targetFiles;
