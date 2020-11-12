@@ -24,54 +24,55 @@ public class FWPdfConverter {
   private static final Logger logger = LogManager.getLogger(FWPdfConverter.class);
 
   private int pageThreshold;
-	private int threadCount;
+  private int threadCount;
 
-	/**
-	 *　コンストラクター
-	 * @param pageThreshold ページ数しきい値
-	 * @param threadCount 並行スレッド数
-	 */
-	public FWPdfConverter(int pageThreshold, int threadCount){
-  	this.pageThreshold = pageThreshold;
-		this.threadCount = threadCount;
-	}
+  /**
+   * コンストラクター
+   * 
+   * @param pageThreshold ページ数しきい値
+   * @param threadCount 並行スレッド数
+   */
+  public FWPdfConverter(int pageThreshold, int threadCount) {
+    this.pageThreshold = pageThreshold;
+    this.threadCount = threadCount;
+  }
 
-	/**
-	 * PDFファイルをSVGファイルへ変換
-	 *
-	 * @param sourceFile 変換元PDFファイル
-	 * @return 変換したsvgファイル
-	 */
-	public List<File> pdfToSvg(File sourceFile)
-		throws FWUnsupportedFormatException, FWConvertProcessException {
-		final long startTime = System.currentTimeMillis();
-		logger.info("{}() start.", "pdfToSvg");
+  /**
+   * PDFファイルをSVGファイルへ変換
+   *
+   * @param sourceFile 変換元PDFファイル
+   * @return 変換したsvgファイル
+   */
+  public List<File> pdfToSvg(File sourceFile)
+      throws FWUnsupportedFormatException, FWConvertProcessException {
+    final long startTime = System.currentTimeMillis();
+    logger.info("{}() start.", "pdfToSvg");
 
-		if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
-		  throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_UNREAD,
-				sourceFile.getAbsolutePath());
-		}
+    if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {
+      throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_UNREAD,
+          sourceFile.getAbsolutePath());
+    }
 
-		// 拡張子判別
-		final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
+    // 拡張子判別
+    final String inputExtension = FilenameUtils.getExtension(sourceFile.getName());
 
-		if (!isPDF(inputExtension)) {
-		  throw new FWUnsupportedFormatException(FWConstantCode.PDF_TO_SVG_UNSUPPORTED);
-		}
+    if (!isPDF(inputExtension)) {
+      throw new FWUnsupportedFormatException(FWConstantCode.PDF_TO_SVG_UNSUPPORTED);
+    }
 
-		// PDFのSVG変換
-		FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob(this.pageThreshold, this.threadCount);
-		List<File> targetFiles = toSVGJob.converter(sourceFile);
+    // PDFのSVG変換
+    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob(this.pageThreshold, this.threadCount);
+    List<File> targetFiles = toSVGJob.converter(sourceFile);
 
-		logger.info("{}() end.\tElapsedTime[{}]ms", "pdfToSvg", System.currentTimeMillis() - startTime);
-		return targetFiles;
-	}
+    logger.info("{}() end.\tElapsedTime[{}]ms", "pdfToSvg", System.currentTimeMillis() - startTime);
+    return targetFiles;
+  }
 
-	private boolean isPDF(String extension) {
-		if (StringUtils.isEmpty(extension)) {
-		  return false;
-		}
+  private boolean isPDF(String extension) {
+    if (StringUtils.isEmpty(extension)) {
+      return false;
+    }
 
-		return FWConverterConst.PDF_DOCUMENT_EXTENSIONS.contains(StringUtils.lowerCase(extension));
-	}
+    return FWConverterConst.PDF_DOCUMENT_EXTENSIONS.contains(StringUtils.lowerCase(extension));
+  }
 }

@@ -39,10 +39,11 @@ public class FWPDFToSVGJob {
 
   /**
    * コンストラクター
+   * 
    * @param pageThreshold ページ数しきい値
    * @param threadCount 並行スレッド数
    */
-  public FWPDFToSVGJob(int pageThreshold, int threadCount){
+  public FWPDFToSVGJob(int pageThreshold, int threadCount) {
     this.pageThreshold = pageThreshold;
     this.threadCount = threadCount;
   }
@@ -70,18 +71,18 @@ public class FWPDFToSVGJob {
   }
 
 
-  private int getPdfFilePageCount(File pdfFile){
+  private int getPdfFilePageCount(File pdfFile) {
     int pages = 0;
 
     long start = System.currentTimeMillis();
-    PDDocument document= null;
+    PDDocument document = null;
     try {
       document = PDDocument.load(pdfFile);
       pages = document.getNumberOfPages();
     } catch (IOException e) {
       logger.warn("Load PDFFile Pages error.");
-    }finally{
-      if(ObjectUtils.isNotEmpty(document)){
+    } finally {
+      if (ObjectUtils.isNotEmpty(document)) {
         try {
           document.close();
         } catch (IOException e) {
@@ -107,10 +108,10 @@ public class FWPDFToSVGJob {
     clearOldConverterFiles(svgTempDir, FWConverterConst.EXTENSION_PDF, DELETE_DILE_BEFORE_DAYS);
 
     int threads = 1;
-    if(pageCount >= this.pageThreshold){
+    if (pageCount >= this.pageThreshold) {
       threads = this.threadCount;
       logger.info("Over {} pages, converter use {} threads.", this.pageThreshold, threads);
-    }else{
+    } else {
       logger.info("Less than {} pages, converter use {} threads.", this.pageThreshold, threads);
       threads = ForkJoinPool.getCommonPoolParallelism();
     }
@@ -119,35 +120,36 @@ public class FWPDFToSVGJob {
     try {
       forkJoinPool = new ForkJoinPool(threads);
       forkJoinPool.submit(() -> {
-        IntStream.range(1, pageCount+1)
-            .parallel()
-            .forEach(page -> {
-              long start = System.currentTimeMillis();
+        IntStream.range(1, pageCount + 1).parallel().forEach(page -> {
+          long start = System.currentTimeMillis();
 
-              String svgTempFileName = newBaseName + String.format("_%04d.", page) + FWConverterConst.EXTENSION_SVG;
-              String[] commands = buildCommand(pdfFile.getAbsolutePath(), svgTempDirName + File.separator + svgTempFileName, page);
+          String svgTempFileName =
+              newBaseName + String.format("_%04d.", page) + FWConverterConst.EXTENSION_SVG;
+          String[] commands = buildCommand(pdfFile.getAbsolutePath(),
+              svgTempDirName + File.separator + svgTempFileName, page);
 
-              ProcessBuilder pb = new ProcessBuilder(commands);
-              Process process = null;
-              try {
-                process = pb.start();
-                process.waitFor(PAGE_CONVERTER_TIME_OUT, TimeUnit.SECONDS);
-              } catch (IOException | InterruptedException e) {
-                logger.warn("Converted file error. page: {}, details: {}", page, e.getMessage());
-              } finally {
-                process.destroy();
-              }
+          ProcessBuilder pb = new ProcessBuilder(commands);
+          Process process = null;
+          try {
+            process = pb.start();
+            process.waitFor(PAGE_CONVERTER_TIME_OUT, TimeUnit.SECONDS);
+          } catch (IOException | InterruptedException e) {
+            logger.warn("Converted file error. page: {}, details: {}", page, e.getMessage());
+          } finally {
+            process.destroy();
+          }
 
-              long end = System.currentTimeMillis();
-              logger.debug("Converted file. page: {}, time: {} ms", page, end - start);
-            });
+          long end = System.currentTimeMillis();
+          logger.debug("Converted file. page: {}, time: {} ms", page, end - start);
+        });
       }).get();
     } catch (InterruptedException | ExecutionException e) {
       throw new FWConvertProcessException(FWConstantCode.PDF_TO_SVG_FAIL, e);
-    }finally {
+    } finally {
       forkJoinPool.shutdown();
       try {
-        forkJoinPool.awaitTermination(Long.valueOf(PAGE_CONVERTER_TIME_OUT * pageCount), TimeUnit.SECONDS);
+        forkJoinPool.awaitTermination(Long.valueOf(PAGE_CONVERTER_TIME_OUT * pageCount),
+            TimeUnit.SECONDS);
       } catch (InterruptedException e) {
       }
     }
@@ -168,16 +170,14 @@ public class FWPDFToSVGJob {
   }
 
   private void clearOldConverterFiles(File tempDir, String suffix, int beforeDay) {
-    LocalDateTime now =  LocalDateTime.now();
-    Date specifyDay = Date.from(now.minusDays(beforeDay).atZone(ZoneId.systemDefault()).toInstant());
+    LocalDateTime now = LocalDateTime.now();
+    Date specifyDay =
+        Date.from(now.minusDays(beforeDay).atZone(ZoneId.systemDefault()).toInstant());
 
-    IOFileFilter fileNameFilter =
-        FileFilterUtils.and(
-            FileFilterUtils.ageFileFilter(specifyDay),
-            FileFilterUtils.suffixFileFilter("." + suffix));
-    Collection<File> files =
-        FileUtils.listFiles(tempDir, fileNameFilter, null);
-    if(ObjectUtils.isNotEmpty(files)) {
+    IOFileFilter fileNameFilter = FileFilterUtils.and(FileFilterUtils.ageFileFilter(specifyDay),
+        FileFilterUtils.suffixFileFilter("." + suffix));
+    Collection<File> files = FileUtils.listFiles(tempDir, fileNameFilter, null);
+    if (ObjectUtils.isNotEmpty(files)) {
       logger.info("Delete {} file {} days ago. number: {}", suffix, beforeDay, files.size());
       logger.debug("Deleted files. count: {}, details: {}", files.size(), files);
       files.stream().filter(File::isFile).forEach(file -> {
@@ -187,33 +187,22 @@ public class FWPDFToSVGJob {
   }
 
   private void deleteSVGFiles(File tempDir, String prefix, String suffix) {
-    IOFileFilter fileNameFilter =
-      FileFilterUtils.and(
-        FileFilterUtils.prefixFileFilter(prefix),
+    IOFileFilter fileNameFilter = FileFilterUtils.and(FileFilterUtils.prefixFileFilter(prefix),
         FileFilterUtils.suffixFileFilter("." + suffix));
-    Collection<File> files =
-        FileUtils.listFiles(tempDir, fileNameFilter, null);
-    files.stream()
-      .filter(File::isFile)
-      .forEach(
-        file -> {
-          FileUtils.deleteQuietly(file);
-        });
+    Collection<File> files = FileUtils.listFiles(tempDir, fileNameFilter, null);
+    files.stream().filter(File::isFile).forEach(file -> {
+      FileUtils.deleteQuietly(file);
+    });
   }
 
   private List<File> searchSVGFiles(File tempDir, String prefix, String suffix) {
     List<File> svgFiles = new LinkedList<File>();
 
-    IOFileFilter fileNameFilter =
-      FileFilterUtils.and(
-        FileFilterUtils.prefixFileFilter(prefix),
+    IOFileFilter fileNameFilter = FileFilterUtils.and(FileFilterUtils.prefixFileFilter(prefix),
         FileFilterUtils.suffixFileFilter("." + suffix));
-    Collection<File> files =
-      FileUtils.listFiles(tempDir, fileNameFilter, null);
-    svgFiles = files.stream()
-      .filter(File::isFile)
-      .sorted(Comparator.comparing(File::getAbsolutePath))
-      .collect(Collectors.toList());
+    Collection<File> files = FileUtils.listFiles(tempDir, fileNameFilter, null);
+    svgFiles = files.stream().filter(File::isFile)
+        .sorted(Comparator.comparing(File::getAbsolutePath)).collect(Collectors.toList());
 
     return svgFiles;
   }

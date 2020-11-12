@@ -10,20 +10,20 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class FWPDFToSVGApplication extends ResourceConfig {
-	public FWPDFToSVGApplication() {
-		packages("com.handywedge.converter.tosvg.rest.resources");
-		register( JacksonJaxbJsonProvider.class);
-		register( JsonParseExceptionMapper.class, 1);
+  public FWPDFToSVGApplication() {
+    packages("com.handywedge.converter.tosvg.rest.resources");
+    register(JacksonJaxbJsonProvider.class);
+    register(JsonParseExceptionMapper.class, 1);
 
-		register( MultiPartFeature.class);
+    register(MultiPartFeature.class);
 
-		register( FWPDFToSVGJobService.class );
-		register( new AbstractBinder() {
-			@Override
-			protected void configure() {
-					bindAsContract( FWPDFToSVGJobService.class ).in( RequestScoped.class );
-					bindAsContract( FWPDFToSVGJobConfig.class ).in( RequestScoped.class );
-			}
-		});
-	}
+    register(FWPDFToSVGJobService.class);
+    register(new AbstractBinder() {
+      @Override
+      protected void configure() {
+        bindAsContract(FWPDFToSVGJobService.class).in(RequestScoped.class);
+        bindAsContract(FWPDFToSVGJobConfig.class).in(RequestScoped.class);
+      }
+    });
+  }
 }
