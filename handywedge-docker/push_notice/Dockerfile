@@ -1,38 +1,32 @@
-FROM tomcat:9.0.31
+FROM maven:3.6.3-amazoncorretto-8 AS build-stage
+
+# warビルド
+RUN mkdir /tmp/install
+WORKDIR /tmp/install
+COPY handywedge-pushnotice-service/ /tmp/install/handywedge-pushnotice-service/
+RUN cd handywedge-pushnotice-service && \
+    mvn clean package
+
+FROM tomcat:9.0.39-jdk8-corretto
 
 # 言語、build用JDKインストール
-RUN set -x && \
-    apt update && \
-    apt upgrade -y --no-install-recommends && \
-    apt -y --no-install-recommends install task-japanese locales-all
+RUN yum -y update && \
+    yum -y reinstall glibc-common && \
+    yum -y install glibc-langpack-ja && \
+    yum clean all
 
 # 言語設定
 ENV LANG=ja_JP.UTF-8
+ENV LC_ALL ja_JP.UTF-8
 
 # タイムゾーン設定
 RUN rm -f /etc/localtime && \
     ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# warビルド&デプロイ
-WORKDIR /tmp/install
-RUN rm -rf $CATALINA_HOME/webapps/* && \
-    mkdir -p $CATALINA_HOME/conf/Catalina/localhost/ && \
+RUN mkdir -p $CATALINA_HOME/conf/Catalina/localhost/ && \
     mkdir -p $CATALINA_HOME/resources && \
     echo "export CLASSPATH=$CATALINA_HOME/resources" >> $CATALINA_HOME/bin/setenv.sh && \
-    echo "export LANG=ja_JP.UTF-8" >> $CATALINA_HOME/bin/setenv.sh && \
-    echo "export JAVA_OPTS=-Duser.timezone=Asia/Tokyo" >> $CATALINA_HOME/bin/setenv.sh && \
-    chmod +x $CATALINA_HOME/bin/setenv.sh && \
-    curl -LO https://github.com/cstudioteam/handywedge/archive/master.zip && \
-    unzip master.zip && \
-    curl -O https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-    tar xzf apache-maven-3.6.3-bin.tar.gz && \
-    cd  handywedge-master/handywedge-pushnotice-service && \
-    /tmp/install/apache-maven-3.6.3/bin/mvn package && \
-    cp /tmp/install/handywedge-master/handywedge-pushnotice-service/target/hw-pushnotice.war $CATALINA_HOME/webapps/
+    chmod +x $CATALINA_HOME/bin/setenv.sh
 
-# インストーラー等削除
-WORKDIR /root
-RUN rm -rf /tmp/install/ && \
-    rm -rf .m2
-
-WORKDIR /usr/local/tomcat
+# デプロイ
+COPY --from=build-stage /tmp/install/handywedge-pushnotice-service/target/hw-pushnotice.war $CATALINA_HOME/webapps

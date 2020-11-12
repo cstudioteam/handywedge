@@ -11,6 +11,11 @@ docker save handywedge/pdf2svg:master | gzip > handywedge-pdf2svg.tgz
 docker build --rm -t handywedge/binarystore/aws:master -f handywedge-docker/binarystore/aws/Dockerfile ./
 docker save handywedge/binarystore/aws:master | gzip > handywedge-binarystore-aws.tgz
 ```
+## プッシュ通知
+```
+docker build --rm -t handywedge/push_notice:master -f handywedge-docker/push_notice/Dockerfile ./
+docker save handywedge/push_notice:master | gzip > handywedge-push_notice.tgz
+```
 
 
 # dockerエンジンのインストール
