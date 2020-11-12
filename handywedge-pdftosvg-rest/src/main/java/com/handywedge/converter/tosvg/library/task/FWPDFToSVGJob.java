@@ -4,17 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
-import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
-import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
-import com.handywedge.converter.tosvg.library.utils.FWConverterUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -22,6 +24,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
+
+import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
+import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
+import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
+import com.handywedge.converter.tosvg.library.utils.FWConverterUtils;
 
 /**
  * PDFファイルをSVGファイルへ変換
@@ -34,33 +41,10 @@ public class FWPDFToSVGJob {
 
   private static final int DELETE_DILE_BEFORE_DAYS = 7;
 
-  private final int pageThreshold;
-  private final int threadCount;
-
-  /**
-   * コンストラクター
-   * 
-   * @param pageThreshold ページ数しきい値
-   * @param threadCount 並行スレッド数
-   */
-  public FWPDFToSVGJob(int pageThreshold, int threadCount) {
-    this.pageThreshold = pageThreshold;
-    this.threadCount = threadCount;
-  }
-
-
   private static String[] buildCommand(String inputFile, String outputFile, int page) {
     List<String> commands = new ArrayList<String>();
-
-    boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
-    if (isWindows) {
-      commands.add("cmd.exe");
-      commands.add("/c");
-    } else {
-      commands.add("sh");
-      commands.add("-c");
-    }
-
+    commands.add("sh");
+    commands.add("-c");
     StringBuilder sb = new StringBuilder();
     sb.append("pdf2svg").append(SPACE).append("\"").append(inputFile).append("\"").append(SPACE)
         .append("\"").append(outputFile).append("\"").append(SPACE).append(page).append(SPACE);
@@ -107,14 +91,11 @@ public class FWPDFToSVGJob {
     clearOldConverterFiles(svgTempDir, FWConverterConst.EXTENSION_SVG, DELETE_DILE_BEFORE_DAYS);
     clearOldConverterFiles(svgTempDir, FWConverterConst.EXTENSION_PDF, DELETE_DILE_BEFORE_DAYS);
 
-    int threads = 1;
-    if (pageCount >= this.pageThreshold) {
-      threads = this.threadCount;
-      logger.info("Over {} pages, converter use {} threads.", this.pageThreshold, threads);
-    } else {
-      logger.info("Less than {} pages, converter use {} threads.", this.pageThreshold, threads);
-      threads = ForkJoinPool.getCommonPoolParallelism();
+    int threads = ForkJoinPool.getCommonPoolParallelism() - 1;
+    if (threads < 1) {
+      threads = 1;
     }
+    logger.info("{} pages, converter use {} threads.", pageCount, threads);
 
     ForkJoinPool forkJoinPool = null;
     try {

@@ -1,18 +1,18 @@
 package com.handywedge.converter.tosvg.library;
 
-import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
-import com.handywedge.converter.tosvg.library.exceptions.FWUnsupportedFormatException;
-import com.handywedge.converter.tosvg.library.task.FWPDFToSVGJob;
-import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
-import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
+import java.io.File;
+import java.util.List;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-import java.io.File;
-import java.util.List;
+import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
+import com.handywedge.converter.tosvg.library.exceptions.FWUnsupportedFormatException;
+import com.handywedge.converter.tosvg.library.task.FWPDFToSVGJob;
+import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
+import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
 
 /**
  * ドキュメント変換クラス
@@ -22,20 +22,6 @@ import java.util.List;
 public class FWPdfConverter {
 
   private static final Logger logger = LogManager.getLogger(FWPdfConverter.class);
-
-  private int pageThreshold;
-  private int threadCount;
-
-  /**
-   * コンストラクター
-   * 
-   * @param pageThreshold ページ数しきい値
-   * @param threadCount 並行スレッド数
-   */
-  public FWPdfConverter(int pageThreshold, int threadCount) {
-    this.pageThreshold = pageThreshold;
-    this.threadCount = threadCount;
-  }
 
   /**
    * PDFファイルをSVGファイルへ変換
@@ -61,7 +47,7 @@ public class FWPdfConverter {
     }
 
     // PDFのSVG変換
-    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob(this.pageThreshold, this.threadCount);
+    FWPDFToSVGJob toSVGJob = new FWPDFToSVGJob();
     List<File> targetFiles = toSVGJob.converter(sourceFile);
 
     logger.info("{}() end.\tElapsedTime[{}]ms", "pdfToSvg", System.currentTimeMillis() - startTime);

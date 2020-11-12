@@ -1,3 +1,18 @@
+# マイクロサービスビルド
+※1つ上のリポジトリのルートディレクトリで実行する
+## pdf2svg
+```
+docker build --rm -t handywedge/pdf2svg:master -f ./handywedge-docker/pdf2svg/Dockerfile ./
+docker save handywedge/pdf2svg:master | gzip > handywedge-pdf2svg.tgz
+```
+
+## バイナリストア
+```
+docker build --rm -t handywedge/binarystore/aws:master -f handywedge-docker/binarystore/aws/Dockerfile ./
+docker save handywedge/binarystore/aws:master | gzip > handywedge-binarystore-aws.tgz
+```
+
+
 # dockerエンジンのインストール
 ##### インストール環境：CentOS7
 

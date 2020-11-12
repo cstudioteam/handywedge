@@ -1,16 +1,26 @@
 package com.handywedge.converter.tosvg.rest.resources;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.handywedge.converter.tosvg.library.FWPdfConverter;
-import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
-import com.handywedge.converter.tosvg.library.exceptions.FWUnsupportedFormatException;
-import com.handywedge.converter.tosvg.rest.config.FWPDFToSVGJobConfig;
-import com.handywedge.converter.tosvg.rest.requests.FWErrorResponse;
-import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
-import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
-import com.handywedge.converter.tosvg.library.utils.FWConverterUtils;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,24 +31,20 @@ import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.handywedge.converter.tosvg.library.FWPdfConverter;
+import com.handywedge.converter.tosvg.library.exceptions.FWConvertProcessException;
+import com.handywedge.converter.tosvg.library.exceptions.FWUnsupportedFormatException;
+import com.handywedge.converter.tosvg.library.utils.FWConstantCode;
+import com.handywedge.converter.tosvg.library.utils.FWConverterConst;
+import com.handywedge.converter.tosvg.library.utils.FWConverterUtils;
+import com.handywedge.converter.tosvg.rest.requests.FWErrorResponse;
 
 @Path("/file")
 public class FWPDFToSVGJobService {
   private static final Logger logger = LogManager.getLogger(FWPDFToSVGJobService.class);
-
-  @Inject
-  private FWPDFToSVGJobConfig config;
 
   @POST
   @Path("/converter/svg")
@@ -62,8 +68,7 @@ public class FWPDFToSVGJobService {
     String fileName = bodyPart.getContentDisposition().getFileName();
     logger.info("Converter File={}", fileName);
 
-    FWPdfConverter converter =
-        new FWPdfConverter(config.getPageThreshold(), config.getMultithreadNumber());
+    FWPdfConverter converter = new FWPdfConverter();
     File pdfFile = null;
     List<File> svgFiles = new ArrayList<>();
     try {

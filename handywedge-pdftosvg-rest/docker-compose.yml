@@ -1,17 +1,14 @@
 version: "3.6"
 services:
   pdf2svg:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    container_name: psf2svg-container
+    container_name: handywedge-pdf2svg
+    image: handywedge/pdf2svg:master
     environment:
       LC_ALL: ja_JP.UTF-8
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
-#    volumes:
-#      - ./docker/doc:/converters/pdf2svg
+    volumes:
+      - ./docker/pdf2svg:/converters/pdf2svg
     ports:
-      - "8080:8080"
+      - "8081:8080"
     restart: always
-    tty: true
