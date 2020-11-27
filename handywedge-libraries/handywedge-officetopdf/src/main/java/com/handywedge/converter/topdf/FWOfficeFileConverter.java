@@ -2,6 +2,7 @@ package com.handywedge.converter.topdf;
 
 import java.io.File;
 
+import com.handywedge.converter.topdf.exceptions.FWLockedWithPasswordException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,7 +61,8 @@ public class FWOfficeFileConverter {
    * @return 変換したsvgファイル
    */
   public File fileToPdf(File sourceFile, String endpoint)
-      throws FWUnsupportedFormatException, FWConvertProcessException {
+      throws FWUnsupportedFormatException, FWConvertProcessException,
+      FWLockedWithPasswordException {
     return fileToPdf(sourceFile, endpoint, null);
   }
 
@@ -73,7 +75,8 @@ public class FWOfficeFileConverter {
    * @return 変換したsvgファイル
    */
   public File fileToPdf(File sourceFile, String endpoint, Integer timeout)
-      throws FWUnsupportedFormatException, FWConvertProcessException {
+      throws FWUnsupportedFormatException, FWConvertProcessException,
+      FWLockedWithPasswordException {
     final long startTime = logger.perfStart("fileToPdf");
 
     if ((sourceFile == null) || !sourceFile.exists() || !sourceFile.canRead()) {

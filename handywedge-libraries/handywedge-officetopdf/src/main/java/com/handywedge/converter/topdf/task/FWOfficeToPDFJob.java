@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.handywedge.converter.topdf.exceptions.FWLockedWithPasswordException;
+import com.handywedge.converter.topdf.wrapper.FWOfficeException;
+import com.handywedge.converter.topdf.wrapper.FWRemoteConverter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -64,7 +67,7 @@ public class FWOfficeToPDFJob {
       converter.convert(officeFile).to(pdfFile).execute();
     } catch (OfficeException e) {
       String message = String.format("Failed conversion: %s [%d byte] to %s; %s; input file: %s",
-          officeFile, officeFile.length(), pdfFile, e, officeFile.getName());
+        officeFile, officeFile.length(), pdfFile, e, officeFile.getName());
       logger.debug(message);
       throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_FAIL, e);
     } finally {
@@ -81,7 +84,7 @@ public class FWOfficeToPDFJob {
    * @throws FWConvertProcessException
    */
   public File converter(File officeFile, String endpoint, Integer timeout)
-      throws FWConvertProcessException {
+      throws FWConvertProcessException, FWLockedWithPasswordException {
     // office file
     final String baseName = Objects.requireNonNull(FilenameUtils.getBaseName(officeFile.getName()));
     final String baseExtension = FilenameUtils.getExtension(officeFile.getName());
@@ -96,7 +99,7 @@ public class FWOfficeToPDFJob {
     // office file rename
     final String newBaseName = UUID.randomUUID().toString().replace("-", "");
     File newOfficeFile =
-        new File(pdfTempDir.toString() + File.separator + newBaseName + "." + baseExtension);
+      new File(pdfTempDir.toString() + File.separator + newBaseName + "." + baseExtension);
     try {
       FileUtils.copyFile(officeFile, newOfficeFile);
     } catch (IOException e) {
@@ -115,18 +118,24 @@ public class FWOfficeToPDFJob {
     }
 
     final OfficeManager manager = RemoteOfficeManager.builder()
-        .urlConnection(endpoint + "/lool/convert-to/pdf").poolSize(POOL_SIZE)
-        .taskQueueTimeout(timeout != null ? (timeout * 1000) : QUEUE_TIME_OUT)
-        .taskExecutionTimeout(timeout != null ? (timeout * 1000) : EXECUTION_TIME_OUT).build();
+      .urlConnection(endpoint + "/lool/convert-to/pdf").poolSize(POOL_SIZE)
+      .taskQueueTimeout(timeout != null ? (timeout * 1000) : QUEUE_TIME_OUT)
+      .taskExecutionTimeout(timeout != null ? (timeout * 1000) : EXECUTION_TIME_OUT).build();
     try {
       manager.start();
 
       final DocumentFormat targetFormat =
           DefaultDocumentFormatRegistry.getFormatByExtension(FWConverterConst.EXTENSION_PDF);
-      RemoteConverter.make(manager).convert(newOfficeFile).to(pdfFile).as(targetFormat).execute();
+      FWRemoteConverter.make(manager).convert(newOfficeFile).to(pdfFile).as(targetFormat).execute();
+    } catch (FWOfficeException fwe) {
+      String message = String
+          .format("Failed conversion: [%s] file locked with Password", officeFile);
+      logger.debug(message);
+      throw new FWLockedWithPasswordException(FWConstantCode.OFFICE_TO_PDF_LOCKEDWITHPASSWORD);
     } catch (OfficeException e) {
-      String message = String.format("Failed conversion: %s [%d byte] to %s; %s; input file: %s",
-          officeFile, officeFile.length(), pdfFile, e, officeFile.getName());
+      String message = String
+        .format("Failed conversion: %s [%d byte] to %s; %s; input file: %s", officeFile,
+          officeFile.length(), pdfFile, e, officeFile.getName());
       logger.debug(message);
       throw new FWConvertProcessException(FWConstantCode.OFFICE_TO_PDF_FAIL, e);
     } finally {

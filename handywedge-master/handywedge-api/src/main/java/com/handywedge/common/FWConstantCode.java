@@ -115,6 +115,11 @@ public interface FWConstantCode {
   String OFFICE_TO_PDF_FAIL = "00703E";
 
   /**
+   * ファイルにパスワードが掛かっているため変換に失敗しました。
+   */
+  String OFFICE_TO_PDF_LOCKEDWITHPASSWORD = "00704E";
+
+  /**
    * 変換元のファイルが読み込めない。
    */
   String PDF_TO_SVG_UNREAD = "00801E";
