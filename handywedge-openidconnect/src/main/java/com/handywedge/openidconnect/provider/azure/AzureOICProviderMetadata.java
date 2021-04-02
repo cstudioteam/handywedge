@@ -7,6 +7,8 @@
  */
 package com.handywedge.openidconnect.provider.azure;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.handywedge.openidconnect.entity.OICProviderMetadata;
 
 /**
@@ -14,6 +16,8 @@ import com.handywedge.openidconnect.entity.OICProviderMetadata;
  *
  * @author takeuchi
  */
+// FIXME 暫定対応で追加されたメタデータ（device_authorization_endpoint）のデシリアライズを無視
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AzureOICProviderMetadata extends OICProviderMetadata {
 
   private String microsoft_multi_refresh_token;
