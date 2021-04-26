@@ -14,7 +14,7 @@
 	<url>https://www.handywedge.com/</url>
 	<properties>
 		<!-- common library -->
-		<commons-io.version>2.6</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<commons-lang3.version>3.9</commons-lang3.version>
 		<!-- core library -->
 		<jodconverter.version>4.3.0</jodconverter.version>
