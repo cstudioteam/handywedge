@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.handywedge</groupId>
     <artifactId>handywedge-libraries</artifactId>
-    <version>0.10.0</version>
+    <version>0.11.0-SNAPSHOT</version>
   </parent>
   <dependencies>
     <dependency>

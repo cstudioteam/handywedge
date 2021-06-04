@@ -34,25 +34,25 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="handywedge-core-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-core/handywedge-core">
+        <dependent-module archiveName="handywedge-core-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-core/handywedge-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-api-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-api/handywedge-api">
+        <dependent-module archiveName="handywedge-api-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-api/handywedge-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-openidconnect-login-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-openidconnect-login/handywedge-openidconnect-login">
+        <dependent-module archiveName="handywedge-openidconnect-login-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-openidconnect-login/handywedge-openidconnect-login">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-rest-user-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-user/handywedge-rest-user">
+        <dependent-module archiveName="handywedge-rest-user-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-user/handywedge-rest-user">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-rest-token-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-token/handywedge-rest-token">
+        <dependent-module archiveName="handywedge-rest-token-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-token/handywedge-rest-token">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-report-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-report/handywedge-report">
+        <dependent-module archiveName="handywedge-report-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-report/handywedge-report">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="handywedge-jsf-0.10.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-jsf/handywedge-jsf">
+        <dependent-module archiveName="handywedge-jsf-0.11.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-jsf/handywedge-jsf">
             <dependency-type>uses</dependency-type>
         </dependent-module>
                                                         
