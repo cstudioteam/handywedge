@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;

@@ -3,9 +3,9 @@ package jp.cstudio.handywedge.test.app.crypto;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

@@ -3,8 +3,8 @@ package com.handywedge.openidconnect.login;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWPasswordUtil;

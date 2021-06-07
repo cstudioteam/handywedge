@@ -9,7 +9,7 @@ package com.handywedge.context;
 
 import java.util.Date;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import com.handywedge.context.FWRequestContext;
 

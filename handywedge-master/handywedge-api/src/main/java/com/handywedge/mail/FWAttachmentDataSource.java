@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 /**
  * フレームワーク内部で使用するクラスです。<br>

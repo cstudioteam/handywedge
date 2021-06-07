@@ -32,8 +32,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.JsonNode;

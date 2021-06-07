@@ -13,16 +13,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebInitParam;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import org.slf4j.MDC;
  */
 @WebFilter(filterName = "OCIFilter", urlPatterns = {"/*"},
     initParams = {@WebInitParam(name = "encoding", value = "utf-8")})
-public class OICFilter implements javax.servlet.Filter {
+public class OICFilter implements jakarta.servlet.Filter {
 
   protected static Logger logger = LoggerFactory.getLogger(OICFilter.class);
 

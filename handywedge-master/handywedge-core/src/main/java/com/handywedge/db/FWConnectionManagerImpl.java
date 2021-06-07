@@ -11,8 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -20,6 +18,9 @@ import javax.sql.DataSource;
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWRuntimeException;
 import com.handywedge.log.FWLogger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 @RequestScoped
 public class FWConnectionManagerImpl implements FWFullConnectionManager {

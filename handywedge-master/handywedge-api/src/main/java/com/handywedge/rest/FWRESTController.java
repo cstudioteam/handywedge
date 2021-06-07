@@ -7,7 +7,7 @@
  */
 package com.handywedge.rest;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWException;

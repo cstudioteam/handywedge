@@ -9,8 +9,8 @@ package com.handywedge.context;
 
 import java.util.Date;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 
 import com.handywedge.context.FWSessionContext;
 import com.handywedge.user.FWFullUser;

@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWRuntimeException;

@@ -11,11 +11,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Locale;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWPasswordUtil;

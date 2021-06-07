@@ -60,9 +60,10 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>[7.0]</version>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
+      <version>9.0.0</version>
+      <scope>provided</scope>
     </dependency>
     <!-- AWS SDK -->
     <dependency>

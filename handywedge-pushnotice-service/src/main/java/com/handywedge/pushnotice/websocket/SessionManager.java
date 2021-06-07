@@ -8,13 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.websocket.Session;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.handywedge.pushnotice.util.Property;
 
+import jakarta.websocket.Session;
 
 public class SessionManager {
 

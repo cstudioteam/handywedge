@@ -2,8 +2,8 @@ package jp.cstudio.handywedge.test.app.db;
 
 import java.sql.SQLException;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import com.handywedge.db.FWConnectionManager;
 import com.handywedge.db.FWPreparedStatement;

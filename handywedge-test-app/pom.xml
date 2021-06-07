@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.handywedge</groupId>
   <artifactId>handywedge-test-app</artifactId>
-  <version>0.10.0</version>
+  <version>2.0.0b-SNAPSHOT</version>
   <packaging>war</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -75,27 +75,33 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>handywedge-rest-user</artifactId>
-      <version>0.10.0</version>
+      <version>2.0.0b-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>handywedge-rest-token</artifactId>
-      <version>0.10.0</version>
+      <version>2.0.0b-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>handywedge-report</artifactId>
-      <version>0.10.0</version>
+      <version>2.0.0b-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>handywedge-jsf</artifactId>
-      <version>0.10.0</version>
+      <version>2.0.0b-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.sun.faces</groupId>
       <artifactId>jsf-impl</artifactId>
       <version>2.2.20</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
+      <version>9.0.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>

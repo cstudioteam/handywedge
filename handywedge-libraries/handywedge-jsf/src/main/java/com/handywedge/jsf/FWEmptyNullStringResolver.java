@@ -10,8 +10,8 @@ package com.handywedge.jsf;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 
 /*
  * JSF2.2のjavax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULLパラメータが機能しない不具合をカバーするクラス。

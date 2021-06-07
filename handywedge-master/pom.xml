@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.handywedge</groupId>
   <artifactId>handywedge-master</artifactId>
-  <version>0.10.0</version>
+  <version>2.0.0b-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>handywedgeのルートプロジェクト</description>
   <modules>
@@ -32,9 +32,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>8.0</version>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
+      <version>9.0.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -81,7 +81,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>javadoc</id>

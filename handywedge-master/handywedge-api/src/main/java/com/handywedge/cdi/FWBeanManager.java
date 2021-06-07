@@ -9,10 +9,11 @@ package com.handywedge.cdi;
 
 import java.lang.annotation.Annotation;
 
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 
 /**
  * &#64;Injectでのインスタンスが取得できない場合に直接BeanManagerを介してCDI管理インスタンスを取得するためのクラスです。<br>

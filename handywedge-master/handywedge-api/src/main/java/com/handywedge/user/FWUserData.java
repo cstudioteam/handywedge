@@ -10,7 +10,7 @@ package com.handywedge.user;
 import java.io.Serializable;
 import java.util.Locale;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

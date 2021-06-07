@@ -2,7 +2,7 @@ package jp.cstudio.handywedge.test.app.log;
 
 import java.util.Set;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 public class AppLogReader extends LogReader {
 

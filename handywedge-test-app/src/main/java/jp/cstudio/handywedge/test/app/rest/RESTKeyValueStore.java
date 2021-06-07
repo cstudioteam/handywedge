@@ -2,7 +2,7 @@ package jp.cstudio.handywedge.test.app.rest;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.handywedge.log.FWLogger;
 import com.handywedge.rest.FWRESTController;

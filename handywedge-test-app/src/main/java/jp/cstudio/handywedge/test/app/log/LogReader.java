@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.Set;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 public abstract class LogReader implements Runnable {
 

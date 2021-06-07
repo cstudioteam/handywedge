@@ -10,11 +10,11 @@ package com.handywedge.interceptor;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import com.handywedge.common.FWBusinessException;
 import com.handywedge.db.FWFullConnection;

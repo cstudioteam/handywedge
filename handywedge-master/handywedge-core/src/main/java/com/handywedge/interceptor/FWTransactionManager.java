@@ -7,7 +7,7 @@
  */
 package com.handywedge.interceptor;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class FWTransactionManager {
