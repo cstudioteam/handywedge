@@ -13,10 +13,11 @@
   <packaging>pom</packaging>
   <dependencies>
     <!-- CDI実装。 APサーバで実装済の場合はコメントアウト -->
+    <!-- jakartaee 9 対応は4x -->
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
-      <artifactId>weld-servlet</artifactId>
-      <version>2.3.3.Final</version>
+      <artifactId>weld-servlet-core</artifactId>
+      <version>4.0.1.SP1</version>
     </dependency>
   </dependencies>
 </project>
