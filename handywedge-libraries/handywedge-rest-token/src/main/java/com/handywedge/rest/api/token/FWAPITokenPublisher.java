@@ -7,8 +7,17 @@
  */
 package com.handywedge.rest.api.token;
 
-import jakarta.annotation.PostConstruct;
+import com.handywedge.common.FWConstantCode;
+import com.handywedge.common.FWException;
+import com.handywedge.common.FWStringUtil;
+import com.handywedge.context.FWRESTContext;
+import com.handywedge.log.FWLogger;
+import com.handywedge.user.FWInnerUserService;
+import com.handywedge.user.FWUser;
+import com.handywedge.user.auth.FWLoginManager;
+
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -18,34 +27,23 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import com.handywedge.cdi.FWBeanManager;
-import com.handywedge.common.FWConstantCode;
-import com.handywedge.common.FWException;
-import com.handywedge.common.FWStringUtil;
-import com.handywedge.context.FWRESTContext;
-import com.handywedge.log.FWLogger;
-import com.handywedge.log.FWLoggerFactory;
-import com.handywedge.user.FWInnerUserService;
-import com.handywedge.user.FWUser;
-import com.handywedge.user.auth.FWLoginManager;
-
 @RequestScoped
 @Path("/")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWAPITokenPublisher {
 
+  @Inject
   private FWLoginManager loginMrg;
-  private FWInnerUserService userService;
-  private FWLogger logger = FWLoggerFactory.getLogger(FWAPITokenPublisher.class);
-  private FWRESTContext restCtx;
 
-  @PostConstruct
-  public void init() {
-    loginMrg = FWBeanManager.getBean(FWLoginManager.class);
-    userService = FWBeanManager.getBean(FWInnerUserService.class);
-    restCtx = FWBeanManager.getBean(FWRESTContext.class);
-  }
+  @Inject
+  private FWInnerUserService userService;
+
+  @Inject
+  private FWLogger logger;
+
+  @Inject
+  private FWRESTContext restCtx;
 
   @POST
   @Path("/pub")

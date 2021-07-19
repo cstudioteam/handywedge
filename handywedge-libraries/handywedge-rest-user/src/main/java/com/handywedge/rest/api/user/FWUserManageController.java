@@ -10,8 +10,22 @@ package com.handywedge.rest.api.user;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import jakarta.annotation.PostConstruct;
+import com.handywedge.common.FWConstantCode;
+import com.handywedge.common.FWException;
+import com.handywedge.common.FWStringUtil;
+import com.handywedge.config.FWMessageResources;
+import com.handywedge.context.FWRESTContext;
+import com.handywedge.db.FWDatabaseMetaInfo;
+import com.handywedge.log.FWLogger;
+import com.handywedge.rest.FWRESTEmptyResponse;
+import com.handywedge.rest.FWRESTResponse;
+import com.handywedge.user.FWUserManager;
+import com.handywedge.user.FWUserManagerPreRegisterStatus;
+import com.handywedge.user.FWUserService;
+import com.handywedge.user.auth.FWLoginManager;
+
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -22,48 +36,29 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import com.handywedge.cdi.FWBeanManager;
-import com.handywedge.common.FWConstantCode;
-import com.handywedge.common.FWException;
-import com.handywedge.common.FWStringUtil;
-import com.handywedge.config.FWMessageResources;
-import com.handywedge.context.FWRESTContext;
-import com.handywedge.db.FWDatabaseMetaInfo;
-import com.handywedge.log.FWLogger;
-import com.handywedge.log.FWLoggerFactory;
-import com.handywedge.rest.FWRESTEmptyResponse;
-import com.handywedge.rest.FWRESTResponse;
-import com.handywedge.user.FWUserManager;
-import com.handywedge.user.FWUserManagerPreRegisterStatus;
-import com.handywedge.user.FWUserService;
-import com.handywedge.user.auth.FWLoginManager;
-
 @RequestScoped
 @Path("/")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWUserManageController {
 
-  private FWLogger logger = FWLoggerFactory.getLogger(FWUserManageController.class);
+  @Inject
+  private FWLogger logger;
 
+  @Inject
   private FWUserManager userMgr;
 
+  @Inject
   private FWLoginManager loginMgr;
 
+  @Inject
   private FWRESTContext ctx;
 
+  @Inject
   private FWUserService service;
 
+  @Inject
   private FWMessageResources fwMsg;
-
-  @PostConstruct
-  public void init() {
-    userMgr = FWBeanManager.getBean(FWUserManager.class);
-    loginMgr = FWBeanManager.getBean(FWLoginManager.class);
-    ctx = FWBeanManager.getBean(FWRESTContext.class);
-    service = FWBeanManager.getBean(FWUserService.class);
-    fwMsg = FWBeanManager.getBean(FWMessageResources.class);
-  }
 
   @PUT
   @Path("/password")
@@ -146,8 +141,7 @@ public class FWUserManageController {
         res.setReturn_cd(FWConstantCode.FW_REST_USER_TOKEN_EMPTY);
         res.setReturn_msg(e.getMessage());
       } else {
-        FWUserManagerPreRegisterStatus preRegisterStatus =
-            service.validResetToken(token);
+        FWUserManagerPreRegisterStatus preRegisterStatus = service.validResetToken(token);
         if (preRegisterStatus == FWUserManagerPreRegisterStatus.NONE) {
           redirect = FWStringUtil.getResetPasswdFailUrl();
           FWException e =
@@ -169,8 +163,7 @@ public class FWUserManageController {
             res.setReturn_cd(0);
           } else {
             redirect = FWStringUtil.getResetPasswdFailUrl();
-            FWException e =
-                new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
+            FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
             logger.error(e.getMessage());
             res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
             res.setReturn_msg(e.getMessage());
@@ -230,9 +223,8 @@ public class FWUserManageController {
         res.setReturn_cd(FWConstantCode.FW_REST_USER_PRE_REG_MAIL_EMPTY);
         res.setReturn_msg(e.getMessage());
       } else {
-        boolean result =
-            userMgr.register(request.getId(), request.getPassword(), request.getPre_register(),
-                request.getMail_address());
+        boolean result = userMgr.register(request.getId(), request.getPassword(),
+            request.getPre_register(), request.getMail_address());
         if (result) {
           res.setReturn_cd(0);
         } else {
@@ -265,8 +257,7 @@ public class FWUserManageController {
         res.setReturn_cd(FWConstantCode.FW_REST_USER_TOKEN_EMPTY);
         res.setReturn_msg(e.getMessage());
       } else {
-        FWUserManagerPreRegisterStatus preRegisterStatus =
-            service.validPreToken(token);
+        FWUserManagerPreRegisterStatus preRegisterStatus = service.validPreToken(token);
         if (preRegisterStatus == FWUserManagerPreRegisterStatus.NONE) {
           redirect = FWStringUtil.getActRegisterFailUrl();
           FWException e =
@@ -283,9 +274,8 @@ public class FWUserManageController {
           res.setReturn_msg(e.getMessage());
         } else if (preRegisterStatus == FWUserManagerPreRegisterStatus.REGISTER) {
           redirect = FWStringUtil.getActRegisterFailUrl();
-          FWException e =
-              new FWException(
-                  String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED));
+          FWException e = new FWException(
+              String.valueOf(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED));
           logger.warn(e.getMessage());
           res.setReturn_cd(FWConstantCode.FW_REST_USER_ACTUAL_REG_TOKEN_REGISTERED);
           res.setReturn_msg(e.getMessage());
@@ -296,8 +286,7 @@ public class FWUserManageController {
             res.setReturn_cd(0);
           } else {
             redirect = FWStringUtil.getActRegisterFailUrl();
-            FWException e =
-                new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
+            FWException e = new FWException(String.valueOf(FWConstantCode.FW_REST_ERROR));
             logger.error(e.getMessage());
             res.setReturn_cd(FWConstantCode.FW_REST_ERROR);
             res.setReturn_msg(e.getMessage());

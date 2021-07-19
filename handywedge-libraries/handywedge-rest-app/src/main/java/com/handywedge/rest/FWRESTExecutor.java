@@ -10,7 +10,16 @@ package com.handywedge.rest;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.handywedge.cdi.FWBeanManager;
+import com.handywedge.common.FWConstantCode;
+import com.handywedge.common.FWException;
+import com.handywedge.common.FWStringUtil;
+import com.handywedge.config.FWMessageResources;
+import com.handywedge.log.FWLogger;
+
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -22,22 +31,14 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.handywedge.cdi.FWBeanManager;
-import com.handywedge.common.FWConstantCode;
-import com.handywedge.common.FWException;
-import com.handywedge.common.FWStringUtil;
-import com.handywedge.config.FWMessageResources;
-import com.handywedge.log.FWLogger;
-import com.handywedge.log.FWLoggerFactory;
-
 @Path("/")
 @RequestScoped
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class FWRESTExecutor {
 
-  private FWLogger logger = FWLoggerFactory.getLogger(FWRESTExecutor.class);
+  @Inject
+  private FWLogger logger;
 
   private Response doPost(Class<?> logicClazz, InputStream in) throws Exception {
     FWRESTController logic = (FWRESTController) FWBeanManager.getBean(logicClazz);
@@ -88,7 +89,7 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+      if (!(logicClazz.getDeclaredConstructor().newInstance() instanceof FWRESTNoTokenController)) {
         return Response.ok(createRoutingError()).build();
       }
       Response res = doPost(logicClazz, in);
@@ -153,7 +154,7 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+      if (!(logicClazz.getDeclaredConstructor().newInstance() instanceof FWRESTNoTokenController)) {
         return Response.ok(createRoutingError()).build();
       }
       Response res = doGet(logicClazz, param);
@@ -214,7 +215,7 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+      if (!(logicClazz.getDeclaredConstructor().newInstance() instanceof FWRESTNoTokenController)) {
         return Response.ok(createRoutingError()).build();
       }
       Response res = doPut(logicClazz, in);
@@ -275,7 +276,7 @@ public class FWRESTExecutor {
       if (logicClazz == null) {
         return Response.ok(createRoutingError()).build();
       }
-      if (!(logicClazz.newInstance() instanceof FWRESTNoTokenController)) {
+      if (!(logicClazz.getDeclaredConstructor().newInstance() instanceof FWRESTNoTokenController)) {
         return Response.ok(createRoutingError()).build();
       }
       Response res = doDelete(logicClazz, in);
