@@ -16,11 +16,13 @@ public interface FWLoginManager {
    * 引数のユーザーIDとパスワードが正しいか認証します。<br>
    * 認証された場合はtrueを返し、同時にセッションのユーザー情報に値を設定します。<br>
    * 認証済のセッションでこのメソッドが呼ばれた場合は特に何もしません。<br>
-   * 仮登録ユーザーの場合はパスワードが正しい場合でもfalseとなります。
+   * 仮登録ユーザーの場合はパスワードが正しい場合でもfalseとなります。<br>
+   * JSFを利用しないアプリケーションではこのメソッドは使わずにcheckPasswordを使ってください。
    *
    * @param id ユーザーID
    * @param password パスワード
    * @return ユーザーIDとパスワードが正しい場合はtrue
+   * @see FWLoginManager#checkPassword(String, String)
    */
   boolean login(String id, String password);
 
