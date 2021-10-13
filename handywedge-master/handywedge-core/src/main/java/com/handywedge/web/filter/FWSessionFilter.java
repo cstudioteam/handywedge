@@ -11,7 +11,17 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
-import jakarta.faces.FacesException;
+import com.handywedge.common.FWConstantCode;
+import com.handywedge.common.FWSessionTimeoutException;
+import com.handywedge.common.FWStringUtil;
+import com.handywedge.config.FWMessageResources;
+import com.handywedge.context.FWFullContext;
+import com.handywedge.log.FWLogger;
+import com.handywedge.log.FWMDC;
+import com.handywedge.role.FWRoleManager;
+import com.handywedge.user.FWFullUser;
+import com.handywedge.util.FWThreadLocal;
+
 import jakarta.inject.Inject;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -23,17 +33,6 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.handywedge.common.FWConstantCode;
-import com.handywedge.common.FWSessionTimeoutException;
-import com.handywedge.common.FWStringUtil;
-import com.handywedge.config.FWMessageResources;
-import com.handywedge.context.FWFullContext;
-import com.handywedge.log.FWLogger;
-import com.handywedge.log.FWMDC;
-import com.handywedge.role.FWRoleManager;
-import com.handywedge.user.FWFullUser;
-import com.handywedge.util.FWThreadLocal;
 
 @WebFilter(filterName = "handywedge_session_filter")
 public class FWSessionFilter implements Filter {
@@ -209,13 +208,7 @@ public class FWSessionFilter implements Filter {
   }
 
   private void terminateError(Exception e) {
-    Throwable cause;
-    if (e instanceof FacesException) {
-      cause = e.getCause();
-    } else {
-      cause = e;
-    }
-
+    Throwable cause = e.getCause() != null ? e.getCause() : e;
     Boolean b = FWThreadLocal.get(FWThreadLocal.INTERCEPTOR_ERROR);
     if (b != null && !b) {
       logger.error("FWSessionFilter Exception.", cause);
