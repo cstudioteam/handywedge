@@ -22,5 +22,6 @@
 
   binarystore
   pushnotice
-  openidconnect   
+  openidconnect
+  report
 
