@@ -1,4 +1,4 @@
-FROM maven:3.8.3-amazoncorretto-11 AS build-stage
+FROM maven:3.8.4-amazoncorretto-11 AS build-stage
 
 # warビルド
 RUN mkdir /tmp/install
@@ -7,7 +7,7 @@ ADD ./handywedge-report-service/ /tmp/install/handywedge-report-service/
 RUN cd handywedge-report-service && \
     mvn clean package
 
-FROM tomcat:10.0.12-jdk11-corretto
+FROM tomcat:10.0.14-jdk11-corretto
 
 # ロケール言語パック設定
 RUN yum -y update && \
