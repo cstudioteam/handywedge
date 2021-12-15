@@ -7,7 +7,7 @@ COPY handywedge-pushnotice-service/ /tmp/install/handywedge-pushnotice-service/
 RUN cd handywedge-pushnotice-service && \
     mvn clean package
 
-FROM tomcat:9.0.39-jdk8-corretto
+FROM tomcat:9.0.56-jdk8-corretto
 
 # 言語、build用JDKインストール
 RUN yum -y update && \
