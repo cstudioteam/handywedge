@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.handywedge</groupId>
   <artifactId>handywedge-openid-connect</artifactId>
@@ -17,7 +13,6 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <jersey.version>1.19.4</jersey.version>
-    <log4j.version>2.15.0</log4j.version>
   </properties>
   <repositories>
     <repository>
@@ -27,6 +22,17 @@
       <layout>default</layout>
     </repository>
   </repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>2.16.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -75,22 +81,18 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
-      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-web</artifactId>
-      <version>${log4j.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -121,8 +123,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.6</version>
-        <executions>
-        </executions>
+        <executions></executions>
       </plugin>
     </plugins>
   </build>
