@@ -6,7 +6,7 @@
   <Properties>
     <!-- Eclipseでフォーマット改行させないためにCDATAセクションに -->
     <Property name="pattern"><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS}\t%level\t[%mdc{userId}]\t[%mdc{logName}]\t%mdc{requestId}\t%c{2}\t%m%n]]></Property>
-    <Property name="catalina_home">${env:CATALINA_HOME}</Property>
+    <Property name="catalina_home">${env:CATALINA_HOME:-/usr/local/tomcat}</Property>
     <Property name="app_name">handywedge-report-service</Property>
     <Property name="log_level">${env:LOG_LEVEL:-info}</Property>
   </Properties>
