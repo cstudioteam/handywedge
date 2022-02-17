@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  skeleton-web:
+    container_name: skeleton-web
+    image: skeleton-web
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.web
+    networks:
+      skeleton-net:
+    depends_on:
+      - skeleton-app
+    volumes:
+      - /var/docker/skeleton/web/log/:/var/log/nginx/
+      - /var/docker/skeleton/web/conf/:/etc/nginx/conf.d/
+      - /var/docker/skeleton/web/html/:/usr/share/nginx/html/
+    restart: always
+  skeleton-app:
+    container_name: skeleton-app
+    image: skeleton-app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.app
+      args:
+        - PROFILE=prod
+    environment:
+      - TZ=Japan
+    networks:
+      skeleton-net:
+    volumes:
+      - /var/docker/skeleton/app/logs/:/usr/local/tomcat/logs/
+      - /var/docker/skeleton/app/resources/:/usr/local/tomcat/resources/
+      - /var/docker/skeleton/app/webapps/:/usr/local/tomcat/webapps/
+    restart: always
+
+networks:
+  skeleton-net:
+    driver: bridge

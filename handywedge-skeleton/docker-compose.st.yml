@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  skeleton-web:
+    ports:
+      - "80:80"
+  skeleton-app:
+    build:
+      args:
+        - PROFILE=st
+    depends_on:
+      - skeleton-db
+  skeleton-db:
+    container_name: skeleton-db
+    image: skeleton-db
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.db
+    environment:
+      TZ: Japan
+      POSTGRES_USER: postgres
+      POSTGRES_DB: skeleton
+      POSTGRES_PASSWORD: i888Pkq!LTRGh6
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/docker/skeleton/db/data/:/var/lib/postgresql/data/
+    networks:
+      skeleton-net:
+    restart: always
+
+networks:
+  skeleton-net:
+    driver: bridge

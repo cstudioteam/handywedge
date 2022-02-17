@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+  <Resource
+    name="jdbc/fw"
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="net.sf.log4jdbc.DriverSpy"
+    url="jdbc:log4jdbc:postgresql://localhost:5432/skeleton"
+    username="skeleton"
+    password="atgggTz5paKgJ@"
+    initialSize="2"
+    maxTotal="5"
+    removeAbandonedOnMaintenance="true"
+    removeAbandonedOnBorrow="true"
+    logAbandoned="true"
+    maxWaitMillis="10000" />
+  <Resource
+    name="BeanManager"
+    auth="Container"
+    type="jakarta.enterprise.inject.spi.BeanManager"
+    factory="org.jboss.weld.resources.ManagerObjectFactory" />
+</Context>

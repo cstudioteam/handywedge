@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+                
+    
+    
+    <wb-module deploy-name="skeleton">
+                                
+        
+        
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+                                
+        
+        
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+                                
+        
+        
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                                
+        
+        
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+                        
+        
+        <dependent-module archiveName="handywedge-core-2.0.0b-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-core/handywedge-core">
+                                    
+            
+            <dependency-type>uses</dependency-type>
+                                
+        
+        </dependent-module>
+                        
+        
+        <dependent-module archiveName="handywedge-api-2.0.0b-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-api/handywedge-api">
+                                    
+            
+            <dependency-type>uses</dependency-type>
+                                
+        
+        </dependent-module>
+                        
+        
+        <dependent-module archiveName="handywedge-rest-app-2.0.0b-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-app/handywedge-rest-app">
+                                    
+            
+            <dependency-type>uses</dependency-type>
+                                
+        
+        </dependent-module>
+                        
+        
+        <dependent-module archiveName="handywedge-rest-token-2.0.0b-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/handywedge-rest-token/handywedge-rest-token">
+                                    
+            
+            <dependency-type>uses</dependency-type>
+                                
+        
+        </dependent-module>
+                                
+        
+        
+        <property name="context-root" value="skeleton"/>
+                            
+    
+    
+    </wb-module>
+            
+
+
+</project-modules>

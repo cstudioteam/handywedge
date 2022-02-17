@@ -1,0 +1,3 @@
+CREATE USER "skeleton" ENCRYPTED PASSWORD 'atgggTz5paKgJ@';
+GRANT ALL ON DATABASE "skeleton" TO "skeleton";
+CREATE SCHEMA AUTHORIZATION "skeleton";

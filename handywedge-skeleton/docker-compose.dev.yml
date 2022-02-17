@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  skeleton-db:
+    container_name: skeleton-db
+    image: skeleton-db
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.db
+      args:
+        - PROFILE=dev
+    environment:
+      TZ: Japan
+      POSTGRES_USER: postgres
+      POSTGRES_DB: skeleton
+      POSTGRES_PASSWORD: i586Pkq!LTRGh6
+    ports:
+      - "5432:5432"
+    volumes:
+      - /private/var/docker/skeleton/db/data/:/var/lib/postgresql/data/
+    networks:
+      skeleton-net:
+    restart: "no"

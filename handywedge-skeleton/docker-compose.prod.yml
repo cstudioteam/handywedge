@@ -1,0 +1,6 @@
+version: '3.7'
+
+services:
+  skeleton-web:
+    ports:
+      - "80:80"

@@ -1,0 +1,21 @@
+FROM nginx:1.20.2
+
+# ロケール設定
+RUN apt-get update && apt-get install -y apt-utils && apt-get install -y --no-install-recommends locales zip unzip gzip vim
+
+RUN cp /usr/share/X11/locale/locale.alias /usr/share/locale/locale.alias
+RUN echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen
+RUN locale-gen
+
+ENV LANGUAGE ja_JP.UTF-8
+ENV LC_ALL ja_JP.UTF-8
+ENV LANG ja_JP.UTF-8
+RUN update-locale LANG=ja_JP.UTF-8
+
+# タイムゾーン設定
+RUN echo "Asia/Tokyo" > /etc/timezone
+RUN mv /etc/localtime /etc/localtime.bak
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+# ログの実体を作るためにリンク削除
+RUN rm /var/log/nginx/access.log && rm /var/log/nginx/error.log
