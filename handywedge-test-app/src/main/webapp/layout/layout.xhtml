@@ -15,21 +15,9 @@
     <div style="height: 2em; margin: 2px;">
       <ui:include src="/layout/topSticky.xhtml" />
     </div>
-    <div style="width: 1100px; margin: 0 auto;">
-      <p:layout>
-        <p:layoutUnit
-          position="west"
-          resizable="true"
-          size="250"
-          minSize="100"
-          maxSize="300"
-        >
-          <ui:include src="/layout/menu.xhtml" />
-        </p:layoutUnit>
-        <p:layoutUnit position="center">
-          <ui:insert name="content" />
-        </p:layoutUnit>
-      </p:layout>
+    <div class="p-d-flex p-pt-6" style="width: 1100px; margin: 0 auto;">
+      <div><ui:include src="/layout/menu.xhtml" /></div>
+      <div><ui:insert name="content" /></div>
     </div>
   </h:form>
 </h:body>

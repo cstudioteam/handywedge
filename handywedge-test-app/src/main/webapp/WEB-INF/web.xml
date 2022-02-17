@@ -48,10 +48,6 @@
     <res-auth>Container</res-auth>
   </resource-ref>
   <context-param>
-    <param-name>primefaces.FONT_AWESOME</param-name>
-    <param-value>true</param-value>
-  </context-param>
-  <context-param>
     <param-name>handywedge.app_id</param-name>
     <param-value>handywedge-test-app</param-value>
   </context-param>
