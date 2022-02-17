@@ -11,12 +11,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Locale;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
-import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-
 import com.handywedge.common.FWConstantCode;
 import com.handywedge.common.FWPasswordUtil;
 import com.handywedge.common.FWRuntimeException;
@@ -36,6 +30,9 @@ import com.handywedge.user.FWUser;
 import com.handywedge.user.FWUserImpl;
 import com.handywedge.util.FWInternalUtil;
 import com.handywedge.util.FWThreadLocal;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class FWLoginManagerImpl implements FWLoginManager {
@@ -104,16 +101,6 @@ public class FWLoginManagerImpl implements FWLoginManager {
     user.setBeforeLoginTime(innerUser.getLastLoginTime());
     updateLoginTime(id);
     FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
-    try {
-      if (FacesContext.getCurrentInstance() != null
-          && FacesContext.getCurrentInstance().getExternalContext() != null) {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        request.changeSessionId(); // @セキュリティ ログイン時にセッションIDを変更(Session Fixation)
-      }
-    } catch (Exception e) {
-      logger.debug("セッションIDの変更に失敗しました。", e.getMessage());
-    }
   }
 
   private String getPassword(String id, FWConnection con) throws SQLException {
