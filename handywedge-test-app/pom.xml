@@ -9,15 +9,6 @@
     <java.version>11</java.version>
   </properties>
   <repositories>
-    <!-- PrimeFacesのリポジトリ（テーマ取り込み） -->
-    <repository>
-      <id>org.primefaecs</id>
-      <name>PrimeFaces Maven Repository</name>
-      <url>http://repository.primefaces.org/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
     <repository>
       <id>maven.handywedge</id>
       <name>Handywedge Maven Repo</name>
@@ -41,13 +32,8 @@
     <dependency>
       <groupId>org.primefaces</groupId>
       <artifactId>primefaces</artifactId>
-      <version>6.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.primefaces.themes</groupId>
-      <artifactId>bootstrap</artifactId>
-      <version>1.0.10</version>
-      <scope>compile</scope>
+      <version>11.0.0</version>
+      <classifier>jakarta</classifier>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -89,9 +75,9 @@
       <version>2.0.0b-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <version>2.2.20</version>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.faces</artifactId>
+      <version>2.3.17</version>
     </dependency>
     <dependency>
       <groupId>jakarta.platform</groupId>
