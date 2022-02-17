@@ -9,6 +9,8 @@ package com.handywedge.context;
 
 import java.util.Date;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * フレームワーク内部で使用するインターフェースです。<br>
  * アプリケーションでは使用しないで下さい。<br>
@@ -103,4 +105,7 @@ public interface FWRequestContext {
    */
   void setPreToken(String preToken);
 
+  HttpServletRequest getHttpServletRequest();
+
+  void setHttpServletRequest(HttpServletRequest request);
 }

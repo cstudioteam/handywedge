@@ -11,6 +11,8 @@ import java.util.Date;
 
 import com.handywedge.user.FWUser;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * フレームワークコンテキスト情報のインターフェースです。<br>
  * 下記の情報を取得出来ます。<br>
@@ -94,4 +96,11 @@ public interface FWContext {
    * @return リクエストURL
    */
   String getRequestUrl();
+
+  /**
+   * HttpServletRequestのインスタンスを返します。
+   * 
+   * @return HttpServletRequestのインスタンス
+   */
+  HttpServletRequest getHttpServletRequest();
 }

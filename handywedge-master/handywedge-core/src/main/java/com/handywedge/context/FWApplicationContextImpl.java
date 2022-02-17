@@ -13,11 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.enterprise.context.ApplicationScoped;
-
-import com.handywedge.context.FWApplicationContext;
 import com.handywedge.role.FWRoleAcl;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import lombok.Data;
 
 @Data

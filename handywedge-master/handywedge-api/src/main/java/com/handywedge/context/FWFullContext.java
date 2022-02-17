@@ -13,6 +13,8 @@ import java.util.List;
 import com.handywedge.role.FWRoleAcl;
 import com.handywedge.user.FWFullUser;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * フレームワーク内部で使用するインターフェースです。<br>
  * アプリケーションでは使用しないで下さい。<br>
@@ -111,4 +113,5 @@ public interface FWFullContext extends FWContext {
    */
   void setPreToken(String preToken);
 
+  void setHttpServletRequest(HttpServletRequest request);
 }

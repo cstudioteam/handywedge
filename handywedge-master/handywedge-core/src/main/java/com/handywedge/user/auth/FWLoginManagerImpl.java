@@ -18,6 +18,7 @@ import com.handywedge.common.FWStringUtil;
 import com.handywedge.config.FWMessageResources;
 import com.handywedge.context.FWApplicationContext;
 import com.handywedge.context.FWFullRESTContext;
+import com.handywedge.context.FWRequestContext;
 import com.handywedge.db.FWConnection;
 import com.handywedge.db.FWConnectionManager;
 import com.handywedge.db.FWPreparedStatement;
@@ -57,6 +58,9 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
   @Inject
   private FWInnerUserService userService;
+
+  @Inject
+  private FWRequestContext reqCtx;
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
@@ -101,6 +105,7 @@ public class FWLoginManagerImpl implements FWLoginManager {
     user.setBeforeLoginTime(innerUser.getLastLoginTime());
     updateLoginTime(id);
     FWThreadLocal.put(FWThreadLocal.LOGIN, true); // ログインリクエストフラグ。フィルタで処理をする
+    reqCtx.getHttpServletRequest().changeSessionId(); // @セキュリティ ログイン時にセッションIDを変更(Session Fixation)
   }
 
   private String getPassword(String id, FWConnection con) throws SQLException {

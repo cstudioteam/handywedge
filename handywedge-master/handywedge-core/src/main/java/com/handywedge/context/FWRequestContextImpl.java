@@ -10,9 +10,7 @@ package com.handywedge.context;
 import java.util.Date;
 
 import jakarta.enterprise.context.RequestScoped;
-
-import com.handywedge.context.FWRequestContext;
-
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 
 @Data
@@ -26,5 +24,7 @@ public class FWRequestContextImpl implements FWRequestContext {
   private String token;
   private String requestUrl;
   private String preToken;
+
+  private HttpServletRequest httpServletRequest;
 
 }

@@ -9,12 +9,10 @@ package com.handywedge.context;
 
 import java.util.Date;
 
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-
-import com.handywedge.context.FWSessionContext;
 import com.handywedge.user.FWFullUser;
 
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 import lombok.Data;
 
 @Data

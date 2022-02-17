@@ -64,6 +64,7 @@ public class FWSessionFilter implements Filter {
     FWMDC.put(FWMDC.REQUEST_ID, context.getRequestId());
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+    context.setHttpServletRequest(httpServletRequest);
 
     if (!initConfig) { // rbがセッションスコープにアクセスするのでinitではなくこのタイミングで実施
       initConfig = true;

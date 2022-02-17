@@ -13,6 +13,7 @@ import java.util.List;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.handywedge.role.FWRoleAcl;
 import com.handywedge.user.FWFullUser;
@@ -139,5 +140,15 @@ public class FWContextImpl implements FWFullContext {
   @Override
   public void setPreToken(String preToken) {
     requestContext.setPreToken(preToken);
+  }
+
+  @Override
+  public HttpServletRequest getHttpServletRequest() {
+    return requestContext.getHttpServletRequest();
+  }
+
+  @Override
+  public void setHttpServletRequest(HttpServletRequest request) {
+    requestContext.setHttpServletRequest(request);
   }
 }
