@@ -91,9 +91,7 @@ public class FWInternalUtil {
 
   public static String generateToken() {
     try {
-      // 下記で選択されるNativePRNGBlockingでは、Linux環境だとものすごい遅い（30秒以上かかる）
-      // SecureRandom sr = SecureRandom.getInstanceStrong();
-      SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
+      SecureRandom sr = SecureRandom.getInstanceStrong();
       byte[] b = new byte[16];
       sr.nextBytes(b);
       StringBuilder buf = new StringBuilder();
