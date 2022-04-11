@@ -107,9 +107,12 @@ public class FWRESTFilter implements Filter {
       } else if (httpServletRequest.getMethod().equalsIgnoreCase("GET")
           && requestUrl.equals(restCtx.getContextPath() + "/fw/rest/api/user/password/reset")) {
         logger.info("password reset request.(GET)");
-      } else if (requestUrl.startsWith(restCtx.getContextPath() + "/fw/rest/app/no_token/")) {
-        logger.info("No Token API request.");
       } else {
+        boolean noTokenRequest =
+            requestUrl.startsWith(restCtx.getContextPath() + "/fw/rest/app/no_token/");
+        if (noTokenRequest) {
+          logger.info("No Token API request.");
+        }
         String tokenHeader = httpServletRequest.getHeader("Authorization");
         logger.info("TOKEN:[{}]", tokenHeader);
         if (FWStringUtil.isEmpty(tokenHeader)) {
@@ -125,12 +128,12 @@ public class FWRESTFilter implements Filter {
         }
         if (!FWStringUtil.isEmpty(tokenHeader)) { // トークン認証
           String token = FWStringUtil.splitBearerToken(tokenHeader);
-          if (FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) {
+          if ((FWStringUtil.isEmpty(token) || !loginMgr.authAPIToken(token)) && !noTokenRequest) {
             logger.warn("APIToken Authorization false. Authorization={}", tokenHeader);
             httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"invalid_token\"");
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
-          } else if (!loginMgr.expirationAPIToken(token)) {
+          } else if (!loginMgr.expirationAPIToken(token) && !noTokenRequest) {
             logger.warn("APIToken Authorization false. Authorization={}", tokenHeader);
             httpServletResponse.setHeader("WWW-Authenticate", "Bearer error=\"expired_token\"");
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -138,7 +141,7 @@ public class FWRESTFilter implements Filter {
           } else {
             logger.info("APIToken Authorization true. token={}", token);
           }
-        } else {
+        } else if (!noTokenRequest) {
           logger.warn("APIToken Header nothing.");
           httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           return;
