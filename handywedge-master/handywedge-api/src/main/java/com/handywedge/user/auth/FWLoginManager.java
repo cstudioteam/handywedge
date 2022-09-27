@@ -62,12 +62,19 @@ public interface FWLoginManager {
   String publishAPIToken(String id, boolean multiple);
 
   /**
-   * 引数のトークンを削除します。<br>
-   * トークンが発行されていない場合は特に何もしません。
+   * 引数のAPIトークンを削除します。<br>
+   * APIトークンが発行されていない場合は特に何もしません。
    *
-   * @param token トークン
+   * @param token APIトークン
    */
   void removeAPIToken(String token);
+
+  /**
+   * 引数のユーザーIDのAPIトークンを全て削除します。<br>
+   *
+   * @param id ユーザーID
+   */
+  void removeAllAPIToken(String id);
 
   /**
    * APIトークンで認証を行います。<br>

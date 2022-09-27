@@ -224,6 +224,20 @@ public class FWLoginManagerImpl implements FWLoginManager {
 
   @FWTransactional(dataSourceName = "jdbc/fw")
   @Override
+  public void removeAllAPIToken(String id) {
+    long startTime = logger.perfStart("removeAllAPIToken");
+    FWConnection con = cm.getConnection();
+    try (FWPreparedStatement ps = con.prepareStatement("DELETE FROM fw_api_token WHERE id = ?")) {
+      ps.setString(1, id);
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new FWRuntimeException(FWConstantCode.DB_FATAL, e);
+    }
+    logger.perfEnd("removeAllAPIToken", startTime);
+  }
+
+  @FWTransactional(dataSourceName = "jdbc/fw")
+  @Override
   public boolean authAPIToken(String token) {
     long startTime = logger.perfStart("authAPIToken");
 
