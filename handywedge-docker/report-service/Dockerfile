@@ -7,7 +7,7 @@ ADD ./handywedge-report-service/ /tmp/install/handywedge-report-service/
 RUN cd handywedge-report-service && \
     mvn clean package
 
-FROM tomcat:10.0.14-jdk11-corretto
+FROM tomcat:10.0.27-jdk11-corretto
 
 # ロケール言語パック設定
 RUN yum -y update && \
