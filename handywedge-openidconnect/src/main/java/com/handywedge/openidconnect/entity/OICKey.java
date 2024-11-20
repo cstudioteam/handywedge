@@ -7,11 +7,15 @@
  */
 package com.handywedge.openidconnect.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * JWKSのキー情報を保持するクラス。
  *
  * @author takeuchi
  */
+//FIXME 暫定対応で追加されたメタデータ（cloud_instance_name）のデシリアライズを無視
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OICKey {
 
   private String kty;

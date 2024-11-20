@@ -7,11 +7,15 @@
  */
 package com.handywedge.openidconnect.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * OpenId Providerのコンフィグレーションメタデータ。
  *
  * @author takeuchi
  */
+// 今後OICKeyやAzureOICProviderMetadataのようにAPIの変更でプロパティが増えるかもしれないので一律追加
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OICProviderMetadata {
 
   private String issuer;
