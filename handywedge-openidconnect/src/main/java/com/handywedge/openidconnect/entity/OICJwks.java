@@ -7,11 +7,15 @@
  */
 package com.handywedge.openidconnect.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Jwks JW Keyを保持するクラス。
  *
  * @author takeuchi
  */
+// 今後OICKeyやAzureOICProviderMetadataのようにAPIの変更でプロパティが増えるかもしれないので一律追加
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OICJwks {
 
   private OICKey[] keys;

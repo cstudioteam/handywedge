@@ -16,6 +16,7 @@ import java.security.SignatureException;
 import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.handywedge.openidconnect.OICException;
@@ -26,6 +27,8 @@ import com.handywedge.openidconnect.OICUtil;
  *
  * @author takeuchi
  */
+// 今後OICKeyやAzureOICProviderMetadataのようにAPIの変更でプロパティが増えるかもしれないので一律追加
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OICJwt {
 
   private JwtHeader header;
@@ -88,6 +91,8 @@ public class OICJwt {
   }
 
 
+  // 今後OICKeyやAzureOICProviderMetadataのようにAPIの変更でプロパティが増えるかもしれないので一律追加
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public class JwtHeader {
 
     private String coded; // Base64url coded JSON String.
@@ -112,6 +117,8 @@ public class OICJwt {
 
   }
 
+  // 今後OICKeyやAzureOICProviderMetadataのようにAPIの変更でプロパティが増えるかもしれないので一律追加
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public class JwtPayload {
 
     private String coded; // Base64url coded JSON String.
