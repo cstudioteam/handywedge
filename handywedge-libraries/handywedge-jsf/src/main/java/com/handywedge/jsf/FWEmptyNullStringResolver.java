@@ -49,7 +49,7 @@ public class FWEmptyNullStringResolver extends ELResolver {
   public void setValue(ELContext context, Object base, Object property, Object value) {}
 
   @Override
-  public Object convertToType(ELContext context, Object obj, Class<?> targetType) {
+  public <T> T convertToType(ELContext context, Object obj, Class<T> targetType) {
     if (String.class.equals(targetType) && obj instanceof String
         && ((String) obj).trim().isEmpty()) {
       context.setPropertyResolved(true);

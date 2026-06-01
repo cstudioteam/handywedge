@@ -3,22 +3,22 @@
   <parent>
     <groupId>com.handywedge</groupId>
     <artifactId>handywedge-dependencies</artifactId>
-    <version>2.0.0b-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
   </parent>
   <artifactId>handywedge-dependencies-cdi</artifactId>
   <packaging>pom</packaging>
   <dependencies>
     <!-- CDI実装。 APサーバで実装済の場合はコメントアウト -->
-    <!-- jakartaee 9 対応は4x -->
+    <!-- jakartaee 9 対応は4x / jakartaee 10 (CDI 4.0) 対応は5x -->
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
       <artifactId>weld-servlet-core</artifactId>
-      <version>4.0.3.Final</version>
+      <version>5.1.2.Final</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
       <artifactId>weld-servlet-shaded</artifactId>
-      <version>4.0.3.Final</version>
+      <version>5.1.2.Final</version>
     </dependency>
   </dependencies>
 </project>
